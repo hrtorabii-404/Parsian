@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>از پارکینگ تا پناهگاه: معماری تاب‌آوری شهری</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* General Setup */
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            direction: rtl;
+            background-color: #f8fafc; /* bg-slate-50 */
+            transition: background-color 0.5s ease;
+            overflow: hidden; /* Prevent body scrolling */
+        }
+        .main-container {
+            height: 100vh;
+            overflow: hidden;
+        }
+        .view {
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            opacity: 0;
+            pointer-events: none;
+            overflow-y: hidden;
+        }
+        .view.active {
+            position: relative;
+            opacity: 1;
+            pointer-events: auto;
+            transform: none;
+            overflow-y: hidden;
+        }
+        
+        /* 1. Cover Page Styles */
+        .cover-bg {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        }
+        .cover-link:hover .cover-title-inner {
+            transform: scale(1.03);
+            box-shadow: 0 0 30px rgba(96, 165, 250, 1);
+        }
+        .cover-link:hover .cover-icon {
+            content: 'P'; 
+            transition: all 0.3s ease;
+            transform: rotateY(180deg);
+        }
+        .cover-title-inner {
+            transition: all 0.3s ease;
+        }
+        .cover-icon {
+            font-size: 7rem;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        .cover-prompt {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .cover-link:hover .cover-prompt {
+            opacity: 1;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 10px rgba(96, 165, 250, 0.4); }
+            50% { box-shadow: 0 0 20px rgba(96, 165, 250, 0.8); }
+        }
+
+        /* 2. Dashboard/Index UI Styles (Sidebar + Content) */
+        #dashboard-view {
+            display: grid;
+            grid-template-columns: 280px 1fr; /* Fixed Sidebar + Scrollable Content */
+            height: 100%;
+        }
+        #sidebar-menu {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 1rem;
+            border-left: 2px solid #e2e8f0;
+            background-color: #ffffff;
+            box-shadow: 5px 0 15px rgba(0,0,0,0.05);
+        }
+        .menu-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            padding: 0.75rem 1rem;
+            border-right: 4px solid transparent;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .menu-item:hover {
+            background-color: #f1f5f9; /* slate-100 */
+        }
+        .menu-item.active {
+            background-color: #e0f2f4; /* teal-50 */
+            border-right-color: #00897b; /* teal-600 */
+            font-weight: 700;
+            color: #00695c; /* teal-800 */
+            box-shadow: 0 2px 5px rgba(0, 150, 136, 0.3);
+        }
+        #main-content-area {
+            padding: 2rem 2rem 4rem;
+            overflow-y: auto;
+            height: 100vh;
+            background-color: #f8fafc;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app" class="main-container">
+
+        <!-- 1. Cover Page (جلد) -->
+        <div id="cover-view" class="view cover-bg active flex items-center justify-center text-center">
+            <a onclick="navigate('dashboard-intro')" class="cursor-pointer cover-link">
+                <div class="p-10 md:p-16 bg-white/5 backdrop-blur-sm rounded-3xl cover-title border-4 border-blue-400/50 cover-title-inner">
+                    <div class="mb-6 text-blue-300">
+                        <span id="cover-icon-dynamic" class="cover-icon">🛡️</span>
+                    </div>
+                    <h1 class="text-4xl md:text-6xl font-black text-white leading-tight">از پارکینگ تا پناهگاه</h1>
+                    <p class="mt-4 text-xl md:text-3xl font-bold text-blue-200/80">معماری تاب‌آوری شهری: تحلیل راهبردی و طراحی بهینه</p>
+                    <p class="mt-10 text-lg text-slate-300/70 cover-prompt">برای ورود، روی عنوان کلیک کنید</p>
+                </div>
+            </a>
+        </div>
+
+        <!-- 2. Dashboard/Index View (New UI) -->
+        <div id="dashboard-view" class="view">
+            <!-- Sidebar Menu (Fihrist) -->
+            <div id="sidebar-menu">
+                <h2 class="text-2xl font-black text-slate-800 pt-4 pb-4 border-b-2 mb-4">نقشه راه</h2>
+                <div id="menu-items-container">
+                    <!-- Menu items will be generated by JS -->
+                </div>
+                <div class="mt-8 pt-4 border-t-2 border-slate-200">
+                    <p class="text-sm text-slate-500">طراحی شده برای ارائه مدیریتی پویا</p>
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div id="main-content-area">
+                 <div id="dashboard-content" class="max-w-6xl mx-auto">
+                    <!-- Content will be injected here -->
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <script>
+        // --- Core Data: The Presentation Narrative ---
+        const DASHBOARD_STEPS = [
+            { id: 'dashboard-intro', title: '۱. ضرورت و مبانی طراحی پناهگاه', icon: '📝' },
+            { id: 'dashboard-dual-use', title: '۲. اصل کاربری دوگانه: یک سرمایه‌گذاری هوشمند', icon: '💰' },
+            { id: 'dashboard-aset-rset', title: '۳. قانون طلایی ایمنی جان: تحلیل ASET > RSET', icon: '⚖️' },
+            { id: 'dashboard-global', title: '۴. درس‌هایی از تجارب جهانی: پارادایم‌های موفق', icon: '🌍' },
+            { id: 'dashboard-strategic-analysis', title: '۵. تحلیل استراتژیک: تدوین اصل ترکیبی', icon: '🎯' },
+            { id: 'dashboard-architecture', title: '۶. معماری راهکار: سامانه ترکیبی سه‌لایه', icon: '🏗️' },
+            { id: 'dashboard-operational', title: '۷. تحلیل فنی-عملیاتی سامانه سه‌لایه', icon: '⚙️' },
+            { id: 'dashboard-scenarios', title: '۸. انعطاف‌پذیری در اجرا: سه سناریوی اجرایی', icon: '📋' },
+            { id: 'dashboard-layers-detail', title: '۹. جزییات لایه‌ها', icon: '🛠️' },
+            { id: 'dashboard-floor-analysis', title: '۱۰. تحلیل جامع کاربری و مشخصات فنی طبقات (۱- تا ۸-)', icon: '🏢' },
+            { id: 'dashboard-roadmap', title: '۱۱. نقشه راه عملیاتی: از طراحی تا بهره‌برداری', icon: '🚀' },
+            { id: 'dashboard-final', title: '۱۲. جمع‌بندی راهبردی و توصیه قطعی', icon: '✅' },
+        ];
+        
+        // --- State and DOM References ---
+        let currentActiveId = DASHBOARD_STEPS[0].id; 
+        const dashboardContent = document.getElementById('dashboard-content');
+        const sidebarMenu = document.getElementById('menu-items-container');
+        const mainDashboardView = document.getElementById('dashboard-view');
+        const coverView = document.getElementById('cover-view');
+        
+        // --- Utility Functions for Content Generation ---
+        
+        function generateGlobalModelCard(countryCodes, country, philosophy, strengths, weaknesses, lesson, motto, borderColor) {
+            const flagsHtml = countryCodes.map(code => 
+                `<img src="https://flagcdn.com/w40/${code}.png" alt="Flag" class="w-8 h-auto rounded-sm shadow-md">`
+            ).join('<span class="mr-2"></span>');
+
+            return `
+                 <div class="bg-white p-4 rounded-xl shadow-lg border-t-8 ${borderColor} h-full flex flex-col transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
+                    <div class="flex items-start mb-3">
+                        <div class="flex ml-3 flex-shrink-0">${flagsHtml}</div>
+                        <div>
+                            <h3 class="text-xl font-bold text-slate-800">${country}</h3>
+                            <p class="text-sm font-bold text-sky-600">${motto}</p>
+                        </div>
+                    </div>
+                    <div class="flex-grow">
+                        <p class="text-sm text-slate-600 mb-3"><strong class="font-black text-slate-700">فلسفه:</strong> ${philosophy}</p>
+                        <div class="p-3 bg-green-50/70 border-r-4 border-green-500 rounded-md mb-3">
+                            <h4 class="font-bold text-green-800">✅ نقاط قوت</h4>
+                            <p class="text-xs text-slate-600 mt-1">${strengths}</p>
+                        </div>
+                        <div class="p-3 bg-red-50/70 border-r-4 border-red-500 rounded-md">
+                            <h4 class="font-bold text-red-800">❌ نقاط ضعف</h4>
+                            <p class="text-xs text-slate-600 mt-1">${weaknesses}</p>
+                        </div>
+                    </div>
+                    <p class="text-sm font-bold text-amber-800 bg-amber-100 py-2 px-3 rounded-md mt-4 border-t-2 pt-2 flex-shrink-0">💡 <strong class="font-black">درس کلیدی برای ما:</strong> ${lesson}</p>
+                </div>
+            `;
+        }
+        
+        function generateScoreRow(criterion, optionA, optionB, colorA, colorB) {
+            return `
+                <tr class="border-b bg-white">
+                    <td class="p-3 font-bold text-right bg-slate-50">${criterion}</td>
+                    <td class="p-3 font-bold text-${colorA}-700">❌ ${optionA}</td>
+                    <td class="p-3 font-bold text-${colorB}-700">✅ ${optionB}</td>
+                </tr>
+            `;
+        }
+
+        function generateLayer1Details() {
+            return `
+                <h3 class="text-3xl font-black text-green-700 text-center">لایه ۱: پناهگاه دسترسی سریع (طبقه منفی ۴)</h3>
+                <p class="text-center text-slate-600 font-bold max-w-3xl mx-auto">هدف: نجات جان همگانی در ۹۰ ثانیه اول با تمرکز بر مقاومت در برابر بار آوار و دسترسی سریع. کاربری صلح: پارکینگ عمومی.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="p-4 rounded-lg bg-green-50 border-r-4 border-green-500">
+                        <h4 class="font-bold text-lg text-green-700 flex items-center">🛡️ سازه و حفاظت (پایه)</h4>
+                        <ul class="list-disc list-inside text-sm text-slate-600 mt-2 space-y-1">
+                            <li>مقاومت در برابر <strong class="font-black">فروریزش پیش‌رونده</strong> (Survivable Void).</li>
+                            <li>آرماتوربندی عرضی ویژه برای تحمل <strong class="font-black">بار آوار</strong> (خطر نزدیک).</li>
+                        </ul>
+                    </div>
+                    <div class="p-4 rounded-lg bg-green-50 border-r-4 border-green-500">
+                        <h4 class="font-bold text-lg text-green-700 flex items-center">🏃‍♂️ دسترسی و تخلیه (فوری)</h4>
+                        <ul class="list-disc list-inside text-sm text-slate-600 mt-2 space-y-1">
+                            <li>دسترسی از طریق رمپ‌های عریض (شیب حداکثر <strong class="font-black">۸٪</strong>).</li>
+                            <li>تجهیزات: تابلوهای نوری پرنور، کیت‌های تروما و AED.</li>
+                        </ul>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-800 text-white border-r-4 border-green-500">
+                        <h4 class="font-bold text-lg text-green-400">📊 ظرفیت و کاربری</h4>
+                        <p class="text-sm mt-2 text-slate-200">ظرفیت: <strong class="font-black text-yellow-400">۵,۰۰۰ نفر</strong> (۱ م² بر نفر). کاربری صلح: پارکینگ عمومی.</p>
+                        <p class="text-xs text-slate-400 mt-2">هدف: پناه‌گیری کوتاه‌مدت (چند ساعته) و عبور از موج خطر اولیه.</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateLayer2Details() {
+            return `
+                <h3 class="text-3xl font-black text-sky-700 text-center">لایه ۲: پناهگاه اصلی دومنظوره (طبقه منفی ۸)</h3>
+                <p class="text-center text-slate-600 font-bold max-w-3xl mx-auto">هدف: اقامت میان‌مدت (۲۴ تا ۷۲ ساعت) با خودکفایی و سطح حفاظت بالا. کاربری صلح: پارکینگ اختصاصی و انبار.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="p-4 rounded-lg bg-sky-50 border-r-4 border-sky-500">
+                        <h4 class="font-bold text-lg text-sky-700 flex items-center">🏛️ سازه و ایمنی (بالا)</h4>
+                        <ul class="list-disc list-inside text-sm text-slate-600 mt-2 space-y-1">
+                            <li>مقاومت کامل در برابر <strong class="font-black">بارهای انفجاری</strong> (UFC 3-340-02).</li>
+                            <li>ورودی‌ها: <strong class="font-black">محفظه‌های هوابند (Airlocks)</strong> با درب‌های ضد انفجار.</li>
+                        </ul>
+                    </div>
+                    <div class="p-4 rounded-lg bg-sky-50 border-r-4 border-sky-500">
+                        <h4 class="font-bold text-lg text-sky-700 flex items-center">💧 پشتیبانی حیات (خودکفا)</h4>
+                        <ul class="list-disc list-inside text-sm text-slate-600 mt-2 space-y-1">
+                            <li>تهویه: فیلتراسیون کامل <strong class="font-black">CBRN</strong> (فشار مثبت).</li>
+                            <li>انرژی: دو ژنراتور مستقل برای پشتیبانی <strong class="font-black">۷۲ ساعته</strong>.</li>
+                        </ul>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-800 text-white border-r-4 border-sky-500">
+                        <h4 class="font-bold text-lg text-sky-400">📊 سکونت و درمان</h4>
+                        <p class="text-sm mt-2 text-slate-200">ظرفیت: <strong class="font-black text-yellow-400">~۳,۵۰۰ نفر</strong>. مرکز درمانی کوچک، انبار غذا و تخت‌های طبقاتی.</p>
+                        <p class="text-xs text-slate-400 mt-2">هدف: اقامت میان‌مدت (چند روزه) در محیطی کاملاً مستقل و مجهز.</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateLayer3Details() {
+            return `
+                <h3 class="text-3xl font-black text-amber-700 text-center">لایه ۳: خزانه بقا و فرماندهی (طبقه منفی ۱۵)</h3>
+                <p class="text-center text-slate-600 font-bold max-w-3xl mx-auto">هدف: حفاظت مطلق از زیرساخت‌های حیاتی و تیم مدیریت بحران برای تضمین تداوم عملکرد. کاربری صلح: تأسیسات فوق حفاظت‌شده.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="p-4 rounded-lg bg-amber-50 border-r-4 border-amber-500">
+                        <h4 class="font-bold text-lg text-amber-700 flex items-center">💎 حفاظت (حداکثری)</h4>
+                        <ul class="list-disc list-inside text-sm text-slate-600 mt-2 space-y-1">
+                            <li>حفاظت <strong class="font-black">EMP</strong> (قفس فارادی کامل) و مقاومت در برابر نفوذ.</li>
+                            <li>ساختار با <strong class="font-black">بتن عملکرد بالا</strong> (UHPC) برای مقاومت بالا.</li>
+                        </ul>
+                    </div>
+                    <div class="p-4 rounded-lg bg-amber-50 border-r-4 border-amber-500">
+                        <h4 class="font-bold text-lg text-amber-700 flex items-center">🔒 دسترسی و فرماندهی</h4>
+                        <ul class="list-disc list-inside text-sm text-slate-600 mt-2 space-y-1">
+                            <li>دسترسی <strong class="font-black">کاملاً انحصاری</strong> (بیومتریک).</li>
+                            <li>محل استقرار اتاق فرمان، مرکز داده و ژنراتورهای اصلی.</li>
+                        </ul>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-800 text-white border-r-4 border-amber-500">
+                        <h4 class="font-bold text-lg text-amber-400">📊 ظرفیت و هدف</h4>
+                        <p class="text-sm mt-2 text-slate-200">ظرفیت: <strong class="font-black text-yellow-400">۳۰ تا ۵۰ نفر</strong> (پرسنل کلیدی).</p>
+                        <p class="text-xs text-slate-400 mt-2">هدف: تضمین <strong class="font-black">تداوم مدیریت بحران</strong> و عملکرد دارایی‌های حیاتی کل مجموعه.</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateLayerTableContent() {
+            const layersData = [
+                {
+                    icon: '🏃‍♂️', title: 'لایه ۱: پناهگاه دسترسی سریع', floors: '۳- و ۴-', line1: 'خط اول دفاع: تضمین نجات جان در ثانیه‌های اولیه بحران.', line2: 'RSET < ۹۰ ثانیه', line3: 'آوار و فروریزش', line4: 'تقویت ستون و دال', line5: 'برق اضطراری پایه', color: 'green'
+                },
+                {
+                    icon: '🛡️', title: 'لایه ۲: پناهگاه اصلی دو منظوره', floors: '۷- و ۸-', line1: 'قلب تپنده سیستم حفاظتی برای اقامت امن و پایدار.', line2: 'تبدیل در ۴۸ ساعت', line3: 'انفجار و NBC', line4: 'مقاوم در برابر انفجار', line5: 'تهویه دوگانه، درب ضد انفجار', color: 'sky'
+                },
+                {
+                    icon: '💎', title: 'لایه ۳: خزانه بقا و فرماندهی', floors: '۱۵-', line1: 'مرکز فرماندهی و تضمین تداوم عملکرد در بدترین شرایط.', line2: 'همیشه فعال', line3: 'نهایی (EMP, CBRN)', line4: 'فوق مقاوم و آب‌بند', line5: 'سیستم‌های کاملا مستقل', color: 'amber'
+                }
+            ];
+
+            const headers = [
+                'جزئیات فنی و عملکردی لایه‌ها', 'هدف عملیاتی', 'هدف زمانی', 'سطح حفاظت', 'الزامات سازه', 'الزامات تأسیسات'
+            ];
+            
+            const tableRows = layersData.map(layer => `
+                <tr class="border-b-4 border-${layer.color}-500/30 bg-white hover:bg-${layer.color}-50 transition-all cursor-pointer">
+                    <td class="p-3 text-right bg-${layer.color}-100/50 font-black text-${layer.color}-800">
+                        <span class="text-3xl ml-2">${layer.icon}</span> ${layer.title} <br> <span class="text-sm font-normal text-${layer.color}-700">${layer.floors}</span>
+                    </td>
+                    <td class="p-3 text-sm font-bold text-slate-700">${layer.line1}</td>
+                    <td class="p-3 text-sm font-bold text-${layer.color}-600">${layer.line2}</td>
+                    <td class="p-3 text-sm text-red-800 font-bold">${layer.line3}</td>
+                    <td class="p-3 text-sm text-slate-700">${layer.line4}</td>
+                    <td class="p-3 text-sm text-slate-700">${layer.line5}</td>
+                </tr>
+            `).join('');
+
+            return `
+                <div class="overflow-x-auto shadow-2xl rounded-xl">
+                    <table class="w-full text-center border-collapse">
+                        <thead>
+                            <tr class="bg-slate-800 text-white">
+                                ${headers.map(h => `<th class="p-3 font-bold text-lg">${h}</th>`).join('')}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${tableRows}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Detail Buttons -->
+                <div class="mt-8 text-center">
+                    <h3 class="text-xl font-bold text-slate-700 mb-4">مشاهده جزئیات فنی و مهندسی هر لایه:</h3>
+                    <div class="flex justify-center space-x-4 rtl:space-x-reverse">
+                         <button onclick="window.showDetailedLayer('layer1-details')" class="layer-details-btn bg-green-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-green-700 transition-colors">لایه ۱ (دسترسی سریع)</button>
+                         <button onclick="window.showDetailedLayer('layer2-details')" class="layer-details-btn bg-sky-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-sky-700 transition-colors">لایه ۲ (پناهگاه اصلی)</button>
+                         <button onclick="window.showDetailedLayer('layer3-details')" class="layer-details-btn bg-amber-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-amber-700 transition-colors">لایه ۳ (خزانه بقا)</button>
+                    </div>
+                </div>
+                <!-- Container for detailed layer content -->
+                <div id="detailed-layer-content" class="mt-8 p-6 bg-slate-50 rounded-xl shadow-inner border-t-4 border-slate-200 hidden">
+                    <!-- Detailed content will be injected here -->
+                </div>
+            `;
+        }
+
+        function generateFloorCard(floor, height, peacetimeRole, crisisRole, icon, colorClass, keyFeature) {
+            return `
+                <div class="bg-white p-5 rounded-xl shadow-lg border-r-8 ${colorClass} flex flex-col h-full">
+                    <div class="flex items-center mb-3">
+                        <span class="text-4xl ml-4">${icon}</span>
+                        <div>
+                            <h3 class="text-xl font-black text-slate-800">${floor}</h3>
+                            <p class="text-sm font-normal text-slate-500">ارتفاع: ${height}</p>
+                        </div>
+                    </div>
+                    <div class="flex-grow mt-2 space-y-4">
+                        <div>
+                            <h4 class="font-bold text-sky-700">🚗 کاربری در زمان صلح</h4>
+                            <p class="text-sm text-slate-600 mt-1">${peacetimeRole}</p>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-red-700">🚨 نقش در زمان بحران</h4>
+                            <p class="text-sm text-slate-600 mt-1">${crisisRole}</p>
+                        </div>
+                    </div>
+                     <div class="mt-4 pt-3 border-t-2 border-slate-100">
+                        <p class="text-sm font-bold text-slate-700">${keyFeature}</p>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // 1. Generate Sidebar Menu Items
+        function generateSidebar() {
+            sidebarMenu.innerHTML = DASHBOARD_STEPS.map(step => `
+                <div id="menu-${step.id}" class="menu-item" onclick="navigateDashboard('${step.id}')">
+                    <span class="ml-2">${step.icon}</span>
+                    <span class="font-bold">${step.title.split('. ')[0]}.</span>
+                    <span class="text-sm text-slate-600">${step.title.split('. ')[1]}</span>
+                </div>
+            `).join('');
+        }
+
+        // 2. Navigation Function (from Cover/Index to Dashboard) - EXPOSED GLOBALLY
+        function navigate(targetView) {
+            if (targetView.startsWith('dashboard-')) {
+                coverView.classList.remove('active');
+                mainDashboardView.classList.add('active');
+                navigateDashboard(targetView);
+            } else if (targetView === 'cover') {
+                 mainDashboardView.classList.remove('active');
+                 coverView.classList.add('active');
+            }
+        }
+        
+        // 3. Dynamic Dashboard Loader - EXPOSED GLOBALLY
+        function navigateDashboard(id) {
+            const step = DASHBOARD_STEPS.find(s => s.id === id);
+            if (!step) return;
+
+            // Update content and active state
+            const contentHTML = generateContent(id);
+            dashboardContent.innerHTML = `
+                <h1 class="text-4xl md:text-5xl font-black text-slate-800 text-center mb-12">${step.title}</h1>
+                ${contentHTML}
+            `;
+            
+            // Highlight active menu item
+            document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
+            document.getElementById(`menu-${id}`).classList.add('active');
+            
+            currentActiveId = id;
+            
+            // Scroll to top of content area
+            document.getElementById('main-content-area').scrollTop = 0;
+            
+            // Re-render charts post-injection
+            renderCharts(id);
+
+        }
+        
+        // --- Content Generation (The main switch for content loading) ---
+        
+        function generateContent(id) {
+            switch (id) {
+                case 'dashboard-intro':
+                    return `
+                        <div class="space-y-10">
+                             <div class="bg-indigo-700 text-white p-6 rounded-xl shadow-xl border-b-8 border-yellow-300">
+                                <h2 class="text-3xl font-black mb-3 text-center">
+                                    گام اول: تغییر پارادایم - از "چگونه" به "چرا"
+                                </h2>
+                                <p class="text-lg text-indigo-100 max-w-4xl mx-auto text-center leading-relaxed">
+                                    هدف، ایجاد یک <strong class="font-black">چارچوب فکری استراتژیک</strong> است. باید بدانیم که طراحی پناهگاه بدون شناخت دقیق تهدید، مانند ساختن یک کشتی بدون دانستن مقصد است.
+                                </p>
+                            </div>
+                            
+                            <div class="bg-white p-6 rounded-xl shadow-lg">
+                                <h3 class="text-xl font-bold text-slate-700 mb-6 text-center">
+                                    ۱. ضرورت تعریف تهدید مبنای طراحی (DBT)
+                                </h3>
+                                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
+                                    <div class="p-4 border-2 border-red-200 rounded-xl bg-red-50">
+                                        <span class="text-5xl">💣</span>
+                                        <p class="font-bold mt-2 text-red-700">جنگ متعارف</p>
+                                        <p class="text-sm text-slate-600">انفجار و فروریزش (مبحث ۲۱).</p>
+                                    </div>
+                                    <div class="p-4 border-2 border-green-200 rounded-xl bg-green-50">
+                                        <span class="text-5xl">☢️</span>
+                                        <p class="font-bold mt-2 text-green-700">حملات CBRN</p>
+                                        <p class="text-sm text-slate-600">نیاز به فیلتراسیون و فشار مثبت.</p>
+                                    </div>
+                                    <div class="p-4 border-2 border-blue-200 rounded-xl bg-blue-50">
+                                        <span class="text-5xl">⚡</span>
+                                        <p class="font-bold mt-2 text-blue-700">پالس الکترومغناطیسی (EMP)</p>
+                                        <p class="text-sm text-slate-600">تهدید تجهیزات حیاتی.</p>
+                                    </div>
+                                    <div class="p-4 border-2 border-amber-200 rounded-xl bg-amber-50">
+                                        <span class="text-5xl">🚨</span>
+                                        <p class="font-bold mt-2 text-amber-700">حمله تروریستی</p>
+                                        <p class="text-sm text-slate-600">نیاز به پروتکل‌های دسترسی.</p>
+                                    </div>
+                                </div>
+                                <p class="text-center text-red-700 mt-6 font-bold">
+                                    نتیجه: یک پناهگاه عمیق برای انفجار، ممکن است در برابر یک عامل شیمیایی سنگین‌تر از هوا به یک <strong class="font-black">تله مرگ</strong> تبدیل شود.
+                                </p>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div class="p-6 bg-white rounded-xl shadow-lg border-r-4 border-red-500">
+                                    <h3 class="text-xl font-bold text-red-700 mb-3">۲. پارادوکس هدف باارزش</h3>
+                                    <p class="text-slate-700 mt-2">آیا ساخت یک "سوپر-پناهگاه" متمرکز، پروژه ما را به یک <strong class="font-black">هدف استراتژیک (High-Value Target)</strong> برای دشمن تبدیل نمی‌کند؟ دکترین مدرن پدافند غیرعامل بر <strong class="font-black">پراکندگی و پنهان‌سازی</strong> برای کاهش آسیب‌پذیری تاکید دارد، نه تمرکز.</p>
+                                    <div class="mt-4 pt-4 border-t flex justify-around text-center">
+                                        <div><p class="text-4xl">🎯</p><p class="font-bold text-red-600">تمرکز ریسک</p></div>
+                                        <div><p class="text-4xl">🆚</p></div>
+                                        <div><p class="text-4xl">🛡️🛡️</p><p class="font-bold text-green-600">توزیع ریسک</p></div>
+                                    </div>
+                                </div>
+                                <div class="p-6 bg-white rounded-xl shadow-lg border-r-4 border-blue-500">
+                                    <h3 class="text-xl font-bold text-blue-700 mb-3">۳. ریسک شکست آبشاری</h3>
+                                    <p class="text-slate-700 mt-2">هرچه یک سیستم پیچیده‌تر و عمیق‌تر باشد، به دلیل وابستگی به اجزای متعدد، آسیب‌پذیرتر است. شکست یک جزء، کل سیستم را از کار می‌اندازد.</p>
+                                    <div class="mt-4 pt-4 border-t flex items-center justify-center space-x-2 rtl:space-x-reverse font-bold text-center text-sm">
+                                        <div class="p-2 bg-red-100 text-red-700 rounded">قطع برق</div>
+                                        <div class="text-slate-500">➡️</div>
+                                        <div class="p-2 bg-red-100 text-red-700 rounded">نقص ژنراتور</div>
+                                        <div class="text-slate-500">➡️</div>
+                                        <div class="p-2 bg-red-100 text-red-700 rounded">از کار افتادن تهویه</div>
+                                        <div class="text-slate-500">➡️</div>
+                                        <div class="p-2 bg-red-800 text-white rounded">☠️ تله</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                case 'dashboard-dual-use':
+                    // 2. اصل کاربری دوگانه: یک سرمایه‌گذاری هوشمند
+                    return `
+                        <div class="space-y-10">
+                            <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-sky-500">
+                                <h2 class="text-2xl font-black text-slate-800 mb-4 text-center">
+                                    اصل کاربری دوگانه: تبدیل ریسک به سرمایه‌گذاری مولد
+                                </h2>
+                                <p class="text-slate-700 leading-relaxed text-lg max-w-4xl mx-auto text-center">
+                                    تجارب موفق جهانی (مانند نوردیک) نشان می‌دهد که پناهگاه‌های تک‌منظوره «سرمایه مرده» هستند. رویکرد دومنظوره، پایداری اقتصادی و آمادگی عملیاتی را به صورت همزمان تضمین می‌کند.
+                                </p>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                <div class="bg-green-100 p-6 rounded-xl shadow-lg border-r-6 border-green-500 text-center transition duration-300 hover:shadow-xl">
+                                    <div class="text-5xl mb-3 text-green-600">💰</div>
+                                    <h3 class="text-xl font-bold text-slate-800">پایداری اقتصادی</h3>
+                                    <p class="text-slate-600 mt-2">استفاده روزمره (پارکینگ) از فضا، هزینه‌های ساخت و نگهداری سنگین پناهگاه را توجیه کرده و به بازگشت سرمایه کمک می‌کند.</p>
+                                </div>
+                                <div class="bg-sky-100 p-6 rounded-xl shadow-lg border-r-6 border-sky-500 text-center transition duration-300 hover:shadow-xl">
+                                    <div class="text-5xl mb-3 text-sky-600">🔧</div>
+                                    <h3 class="text-xl font-bold text-slate-800">قابلیت اطمینان عملیاتی</h3>
+                                    <p class="text-slate-600 mt-2">تجهیزات (تهویه، برق) به دلیل کاربری روزمره، به طور مداوم تست شده و احتمال نقص فنی در لحظه بحران را کاهش می‌دهد.</p>
+                                </div>
+                                <div class="bg-amber-100 p-6 rounded-xl shadow-lg border-r-6 border-amber-500 text-center transition duration-300 hover:shadow-xl">
+                                    <div class="text-5xl mb-3 text-amber-600">👨‍👩‍👧‍👦</div>
+                                    <h3 class="text-xl font-bold text-slate-800">آشنایی اجتماعی</h3>
+                                    <p class="text-slate-600 mt-2">آشنایی قبلی مردم با مسیرهای دسترسی، در شرایط وحشت و ازدحام، سرعت پناه‌گیری و نظم را افزایش می‌دهد.</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Conversion Timeline -->
+                            <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-slate-700">
+                                <h3 class="text-2xl font-black text-slate-800 mb-6 text-center">
+                                    فرآیند تبدیل: از پارکینگ به پناهگاه (استاندارد ۴۸ ساعته سوئد)
+                                </h3>
+                                <div class="flex items-center justify-between text-center space-x-2 rtl:space-x-reverse">
+                                    <div class="flex-1 p-3 bg-red-100 rounded-lg border border-red-300">
+                                        <div class="text-4xl mb-1">🚨</div>
+                                        <p class="font-bold">۱. اعلام بحران</p>
+                                        <p class="text-xs text-slate-600">دستور تبدیل صادر می‌شود.</p>
+                                    </div>
+                                    <div class="text-2xl text-slate-500">→</div>
+                                    <div class="flex-1 p-3 bg-amber-100 rounded-lg border border-amber-300">
+                                        <div class="text-4xl mb-1">🗑️</div>
+                                        <p class="font-bold">۲. تخلیه فضا</p>
+                                        <p class="text-xs text-slate-600">خودروها و تجهیزات غیرضروری خارج می‌شوند.</p>
+                                    </div>
+                                    <div class="text-2xl text-slate-500">→</div>
+                                    <div class="flex-1 p-3 bg-sky-100 rounded-lg border border-sky-300">
+                                        <div class="text-4xl mb-1">🔌</div>
+                                        <p class="font-bold">۳. فعال‌سازی</p>
+                                        <p class="text-xs text-slate-600">سیستم‌های NBC، برق اضطراری و آب فعال می‌شوند.</p>
+                                    </div>
+                                     <div class="text-2xl text-slate-500">→</div>
+                                    <div class="flex-1 p-3 bg-green-100 rounded-lg border border-green-300">
+                                        <div class="text-4xl mb-1">🛌</div>
+                                        <p class="font-bold">۴. تجهیز نهایی</p>
+                                        <p class="text-xs text-slate-600">کیت‌های بقا، تخت‌ها و سرویس‌های بهداشتی نصب می‌شوند.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                case 'dashboard-aset-rset':
+                    // 3. قانون طلایی ایمنی جان: تحلیل ASET > RSET
+                    return `
+                        <div class="space-y-10">
+                            <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-slate-700">
+                                <h2 class="text-2xl font-black text-slate-800 mb-4 text-center">
+                                    ASET در برابر RSET: اصل بنیادین ایمنی جان (NFPA 101)
+                                </h2>
+                                <p class="text-slate-700 leading-relaxed text-lg max-w-4xl mx-auto text-center">
+                                    موفقیت هر پناهگاه به قانون <strong class="font-black text-green-600">ASET > RSET</strong> وابسته است. یک پناهگاه فوق مستحکم که مردم به موقع به آن نرسند، یک <strong class="font-black text-red-600">تله مرگبار</strong> است.
+                                </p>
+                            </div>
+                            
+                            <!-- Equation -->
+                            <div class="bg-white p-6 rounded-xl shadow-lg">
+                                <div class="flex items-center justify-center space-x-12 rtl:space-x-reverse">
+                                    <div class="text-center p-4 bg-green-100 border-2 border-green-600 rounded-xl w-60">
+                                        <h3 class="text-4xl font-black text-green-800">ASET</h3>
+                                        <p class="mt-1 text-green-700 text-lg">زمان خروج ایمن <strong class="font-black">در دسترس</strong></p>
+                                        <p class="text-xs text-slate-500">(مدت زمان قبل از بحرانی شدن محیط)</p>
+                                    </div>
+                                    <div class="operator text-7xl font-black text-slate-700">></div>
+                                    <div class="text-center p-4 bg-red-100 border-2 border-red-600 rounded-xl w-60">
+                                        <h3 class="text-4xl font-black text-red-800">RSET</h3>
+                                        <p class="mt-1 text-red-700 text-lg">زمان خروج ایمن <strong class="font-black">مورد نیاز</strong></p>
+                                        <p class="text-xs text-slate-500">(مجموع زمان لازم برای تخلیه کامل)</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- RSET Breakdown & Ramp Fallacy -->
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+                                <div class="bg-slate-800 text-white p-6 rounded-xl shadow-xl">
+                                    <h3 class="text-2xl font-black text-sky-300 mb-4 text-center">
+                                        کالبدشکافی RSET: ۴ مؤلفه کلیدی و نرخ حرکت
+                                    </h3>
+                                    <div class="flex flex-col space-y-3">
+                                        <div class="flex items-center"><span class="text-3xl ml-3">🚨</span><p class="font-bold">تشخیص (Detection):</p> <span class="text-sm text-slate-300 mr-2">اعلام هشدار</span></div>
+                                        <div class="flex items-center"><span class="text-3xl ml-3">🧠</span><p class="font-bold">تصمیم (Decision):</p> <span class="text-sm text-slate-300 mr-2">آگاهی و پذیرش خطر (شروع تاخیر)</span></div>
+                                        <div class="flex items-center"><span class="text-3xl ml-3">🏃</span><p class="font-bold">پیش‌حرکت + حرکت (Movement):</p> 
+                                            <span class="text-sm text-slate-300 mr-2">
+                                                <strong class="font-black text-yellow-300">نرخ صعود عمودی:</strong> <span class="font-bold">حدود ۰.۲۵ متر بر ثانیه</span> در شرایط ازدحام (منبع: NFPA).
+                                            </span>
+                                        </div>
+                                        <div class="flex items-center"><span class="text-3xl ml-3">⏱️</span><p class="font-bold">جمع‌بندی (Total Time):</p> <span class="text-sm text-slate-300 mr-2">مجموع زمان لازم برای رسیدن آخرین فرد.</span></div>
+                                    </div>
+                                </div>
+
+                                <div class="bg-red-50 p-6 rounded-xl shadow-xl border-r-4 border-red-600">
+                                    <h3 class="text-2xl font-black text-red-700 mb-4 text-center">
+                                        مغالطه رمپ پارکینگ: یک خطای عملیاتی
+                                    </h3>
+                                    <div class="space-y-4">
+                                        <div class="flex justify-between items-center bg-white p-3 rounded-lg shadow-inner">
+                                            <p class="font-bold">شیب استاندارد پارکینگ</p>
+                                            <p class="text-2xl font-black text-red-800">۱۷٪ ❌</p>
+                                        </div>
+                                         <div class="flex justify-between items-center bg-white p-3 rounded-lg shadow-inner">
+                                            <p class="font-bold">حداکثر شیب اضطراری (ADA/FEMA)</p>
+                                            <p class="text-2xl font-black text-green-800">۸٪ ✅</p>
+                                        </div>
+                                    </div>
+                                    <p class="text-sm text-slate-600 mt-4">
+                                        رمپ‌های تند پارکینگ منجر به سقوط زنجیره‌ای، انسداد مسیر و تبدیل مسیر خروج به <strong class="font-black">تله انسانی</strong> در شرایط وحشت می‌شود. <strong class="font-black text-red-700">صعود از ۱۵ طبقه (۱۷٪) غیرممکن است.</strong>
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <!-- RSET Comparison Chart & Legal Requirements -->
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+                                <div class="bg-white p-6 rounded-xl shadow-lg">
+                                    <h3 class="text-2xl font-black text-slate-700 text-center mb-6">پارادوکس تخلیه: مسابقه با زمانی که از قبل باخته‌ایم</h3>
+                                    <div class="h-80">
+                                        <canvas id="asetRsetChart"></canvas>
+                                    </div>
+                                    <p class="text-center text-red-700 mt-4 font-bold">
+                                        طرح پناهگاه عمیق (منفی ۱۵)، به دلیل <strong class="font-black">صعود عمودی طاقت‌فرسا</strong> و ازدحام، عملاً یک <strong class="font-black">تله انسانی</strong> است.
+                                    </p>
+                                </div>
+                                <div class="bg-slate-800 text-white p-6 rounded-xl shadow-lg">
+                                    <h3 class="text-2xl font-black text-yellow-300 text-center mb-6">الزامات قانونی ایران: مبحث ۲۱</h3>
+                                    <ul class="list-disc list-inside text-slate-300 space-y-3">
+                                        <li class="flex items-start"><span class="text-2xl ml-3">📜</span><div><strong class="font-black text-white">الزام جانمایی:</strong> پناهگاه باید در <strong class="font-black text-yellow-300">تحتانی‌ترین طبقه</strong> و مستقیماً روی خاک ساخته شود.</div></li>
+                                        <li class="flex items-start"><span class="text-2xl ml-3">🌊</span><div><strong class="font-black text-white">محدودیت حیاتی آب:</strong> ساخت پناهگاه <strong class="font-black text-red-400">پایین‌تر از سطح آب‌های زیرزمینی اکیداً ممنوع</strong> است. (تضاد با عمق زیاد در تهران).</div></li>
+                                        <li class="flex items-start"><span class="text-2xl ml-3">⚠️</span><div><strong class="font-black text-white">محدودیت دامنه تهدید:</strong> مبحث ۲۱ الزامات CBRN را پوشش نمی‌دهد. (شکاف استراتژیک).</div></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                case 'dashboard-global':
+                    return `
+                        <div class="space-y-10">
+                            <div class="bg-slate-800 text-white p-6 rounded-xl shadow-xl text-center">
+                                <h2 class="text-2xl font-black mb-2 text-sky-300">
+                                     درس‌هایی از تجارب جهانی: تحلیل عمیق پارادایم‌های موفق و ناموفق
+                                </h2>
+                                <p class="text-lg text-slate-300">ما نباید الگوها را کورکورانه کپی کنیم، بلکه باید از آنها هوشمندانه بیاموزیم.</p>
+                            </div>
+                            
+                            <div class="p-4 bg-green-50 rounded-xl shadow-inner">
+                                 <h3 class="text-2xl font-black text-green-800 mb-4 text-center">✅ پارادایم‌های قابل الگوبرداری (دسترسی سریع و کارایی)</h3>
+                                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    ${generateGlobalModelCard(['il'], 'اسرائیل', 'حفاظت فوری و در دسترس در نزدیک‌ترین نقطه به شهروند (Mamad).', 'حل کامل چالش RSET؛ همیشه آماده و در دسترس در چند ثانیه.', 'حفاظت محدود در برابر تهدیدات سنگین‌تر؛ تمرکز بر راکت و انفجار.', 'اصل <strong class="font-black text-green-600">"دسترسی سریع"</strong> الهام‌بخش لایه ۱ ماست.', 'یک اتاق امن برای هر خانه', 'border-blue-500')}
+                                    ${generateGlobalModelCard(['ch'], 'سوئیس', 'حفاظت همگانی و غیرمتمرکز از طریق پناهگاه‌های کوچک و متعدد.', 'پوشش کامل جمعیت و توزیع ریسک در سطح ملی.', 'زمان آماده‌سازی طولانی (۵ روز)؛ نامناسب برای حملات غافلگیرکننده.', 'اصل <strong class="font-black text-green-600">"پراکندگی"</strong> برای افزایش تاب‌آوری کل سیستم.', '"یک پناهگاه برای هر شهروند"', 'border-red-500')}
+                                    ${generateGlobalModelCard(['fi', 'se'], 'مدل نوردیک (فنلاند و سوئد)', 'حفاظت متمرکز در پناهگاه‌های بزرگ عمومی با کاربری دوگانه.', 'توجیه اقتصادی، نگهداری مداوم، آمادگی سریع (۴۸-۷۲ ساعت) و حفاظت بالا.', 'پوشش محدود به مراکز شهری؛ نیازمند سرمایه‌گذاری عظیم دولتی و زمین‌شناسی خاص.', 'اصل <strong class="font-black text-green-600">"کارایی دوگانه"</strong> الهام‌بخش لایه ۲ ماست.', 'معیار طلایی دوگانه', 'border-sky-500')}
+                                    ${generateGlobalModelCard(['us'], 'آمریکا (FEMA)', 'استانداردسازی فنی برای حفاظت از دارایی‌های حیاتی و بقای فردی.', 'ارائه یک معیار فنی دقیق برای طراحی مراکز فرماندهی و سازه‌های فوق مقاوم.', 'تمرکز بر تهدیدات طبیعی (طوفان) و بقای فردی، نه پدافند غیرعامل ملی.', 'اصل <strong class="font-black text-green-600">"استحکام فنی"</strong> الهام‌بخش لایه ۳ ماست.', 'حفاظت از خود و استاندارد فنی', 'border-indigo-800')}
+                                 </div>
+                            </div>
+                             <div class="p-4 bg-red-50 rounded-xl shadow-inner">
+                                 <h3 class="text-2xl font-black text-red-800 mb-4 text-center">❌ پارادایم‌های نامرتبط (تله پرهزینه)</h3>
+                                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    <div class="bg-white p-4 rounded-lg shadow-lg border-t-8 border-slate-700">
+                                        <h4 class="font-bold text-lg text-slate-800 flex items-center mb-3">
+                                            <img src="https://flagcdn.com/w40/ru.png" alt="Flag" class="w-8 h-auto rounded-sm shadow-md">
+                                            <span class="mr-2"></span>
+                                            <img src="https://flagcdn.com/w40/cn.png" alt="Flag" class="w-8 h-auto rounded-sm shadow-md">
+                                            <span class="mr-3">دژهای فرماندهی (روسیه/چین)</span>
+                                        </h4>
+                                        <ul class="list-disc list-inside text-sm text-slate-700 mt-2 space-y-1">
+                                            <li><strong class="font-black">هدف:</strong> تداوم دولت و فرماندهی، <strong class="font-black text-red-600">نه</strong> پناه‌دهی عمومی.</li>
+                                            <li><strong class="font-black">دسترسی:</strong> کاملا محدود و انحصاری برای نخبگان حاکم.</li>
+                                            <li><strong class="font-black">درس کلیدی:</strong> استفاده از عمق زیاد فقط برای حفاظت از <strong class="font-black text-red-600">پرسنل و تجهیزات کلیدی</strong>، نه مردم. (الهام برای لایه ۳ ما).</li>
+                                        </ul>
+                                    </div>
+                                    <div class="bg-white p-4 rounded-lg shadow-lg border-t-8 border-amber-700">
+                                         <h4 class="font-bold text-lg text-amber-800 mb-3">💎 خزانه‌های بقای نخبگان (Survival Condo)</h4>
+                                        <ul class="list-disc list-inside text-sm text-slate-700 mt-2 space-y-1">
+                                            <li><strong class="font-black">هدف:</strong> بقای بلندمدت فردی و فوق‌لوکس برای تعداد محدودی از ثروتمندان (فقط ۷۵ نفر).</li>
+                                            <li><strong class="font-black">تناسب:</strong> <strong class="font-black text-red-600">کاملاً نامرتبط</strong> با مقیاس و هدف پروژه عمومی و ملی ما.</li>
+                                        </ul>
+                                    </div>
+                                 </div>
+                            </div>
+                            <div class="bg-white p-6 rounded-xl shadow-lg">
+                                <h3 class="text-2xl font-black text-slate-700 text-center mb-6">نمودار مقایسه عمق پناهگاه‌ها در کشورهای مختلف (متر)</h3>
+                                <div class="h-96">
+                                    <canvas id="globalDepthChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                case 'dashboard-strategic-analysis':
+                    return `
+                        <div class="space-y-10">
+                             <div class="bg-slate-800 text-white p-6 rounded-xl shadow-xl text-center">
+                                <h2 class="text-2xl font-black mb-2 text-sky-300">
+                                    سنتز استراتژیک: فرآیند تدوین راهکار بهینه
+                                </h2>
+                                <p class="text-lg text-slate-300">راهکار ما یک انتخاب ساده نیست، بلکه نتیجه یک فرآیند تحلیلی برای ترکیب بهترین ایده‌ها با واقعیت‌های موجود است.</p>
+                            </div>
+                            
+                            <div class="bg-white p-8 rounded-xl shadow-2xl">
+                                <div class="grid grid-cols-1 md:grid-cols-5 items-center gap-6">
+                                    <!-- Inputs -->
+                                    <div class="col-span-2 space-y-4">
+                                        <h3 class="text-xl font-black text-center text-slate-700 mb-4">۱. ورودی‌ها: درس‌های جهانی</h3>
+                                        <div class="p-3 bg-blue-50 border-r-4 border-blue-500 rounded-lg flex items-center">
+                                            <img src="https://flagcdn.com/w40/il.png" alt="Israel Flag" class="w-8 ml-3 rounded-sm">
+                                            <div><p class="font-bold text-blue-800">سرعت از اسرائیل</p><p class="text-xs text-slate-600">اصل دسترسی فوری برای حل قطعی چالش RSET.</p></div>
+                                        </div>
+                                        <div class="p-3 bg-sky-50 border-r-4 border-sky-500 rounded-lg flex items-center">
+                                             <img src="https://flagcdn.com/w40/fi.png" alt="Finland Flag" class="w-8 ml-1 rounded-sm"><img src="https://flagcdn.com/w40/se.png" alt="Sweden Flag" class="w-8 ml-3 rounded-sm">
+                                            <div><p class="font-bold text-sky-800">کارایی از نوردیک</p><p class="text-xs text-slate-600">اصل کاربری دوگانه برای توجیه اقتصادی و آمادگی.</p></div>
+                                        </div>
+                                        <div class="p-3 bg-indigo-50 border-r-4 border-indigo-500 rounded-lg flex items-center">
+                                            <img src="https://flagcdn.com/w40/us.png" alt="USA Flag" class="w-8 ml-3 rounded-sm">
+                                            <div><p class="font-bold text-indigo-800">استحکام از آمریکا</p><p class="text-xs text-slate-600">معیار فنی برای حفاظت از حیاتی‌ترین دارایی‌ها.</p></div>
+                                        </div>
+                                         <div class="p-3 bg-red-50 border-r-4 border-red-500 rounded-lg flex items-center">
+                                            <img src="https://flagcdn.com/w40/ch.png" alt="Swiss Flag" class="w-8 ml-3 rounded-sm">
+                                            <div><p class="font-bold text-red-800">پراکندگی از سوئیس</p><p class="text-xs text-slate-600">اصل توزیع ریسک برای افزایش تاب‌آوری کل سیستم.</p></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Process -->
+                                    <div class="text-center">
+                                         <div class="text-center">
+                                            <svg class="w-24 h-24 text-slate-400 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                                            <div class="p-3 mt-4 bg-slate-800 text-white rounded-xl shadow-lg">
+                                                <p class="font-bold text-yellow-300">فیلتر واقعیت</p>
+                                                <p class="text-xs mt-1">الزامات ملی و محدودیت‌های محلی</p>
+                                            </div>
+                                         </div>
+                                    </div>
+                                    
+                                    <!-- Output -->
+                                    <div class="col-span-2 space-y-4">
+                                        <h3 class="text-xl font-black text-center text-green-700 mb-4">۲. خروجی: راهکار ترکیبی ما</h3>
+                                        <div class="p-3 bg-green-100 border-b-4 border-green-500 rounded-lg shadow">
+                                            <h4 class="font-bold text-green-800">لایه ۱: دسترسی سریع</h4>
+                                            <p class="text-sm text-slate-600">با الهام از <strong class="font-black">اسرائیل</strong>، این لایه مشکل RSET را حل کرده و نجات جان فوری را تضمین می‌کند.</p>
+                                        </div>
+                                        <div class="p-3 bg-sky-100 border-b-4 border-sky-500 rounded-lg shadow">
+                                            <h4 class="font-bold text-sky-800">لایه ۲: پناهگاه اصلی</h4>
+                                            <p class="text-sm text-slate-600">با الهام از مدل <strong class="font-black">نوردیک</strong>، این لایه بقای میان‌مدت و کارایی اقتصادی را فراهم می‌کند.</p>
+                                        </div>
+                                        <div class="p-3 bg-amber-100 border-b-4 border-amber-500 rounded-lg shadow">
+                                            <h4 class="font-bold text-amber-800">لایه ۳: خزانه بقا</h4>
+                                            <p class="text-sm text-slate-600">با الهام از مدل‌های <strong class="font-black">آمریکا و بلوک شرق</strong>، این لایه از تجهیزات حیاتی و تیم مدیریت محافظت می‌کند.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                case 'dashboard-architecture':
+                    // 6. معماری راهکار: سامانه ترکیبی سه‌لایه
+                    return `
+                        <div class="space-y-10">
+                            <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-slate-700">
+                                <h2 class="text-2xl font-black text-slate-800 mb-4 text-center">
+                                    سه اصل بنیادین برای یک طراحی برتر: سرعت، تاب‌آوری و هوشمندی
+                                </h2>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center mt-6">
+                                    <div class="p-4 bg-sky-50 rounded-lg">
+                                        <span class="text-5xl">⚡</span>
+                                        <p class="font-bold">۱. سرعت (Velocity)</p>
+                                        <p class="text-sm text-slate-600 mt-1">اولویت اول، رساندن سریع افراد به یک "فضای امن‌تر" است، نه لزوماً "امن‌ترین فضا". لایه ۱ این اصل را محقق می‌کند.</p>
+                                    </div>
+                                    <div class="p-4 bg-red-50 rounded-lg">
+                                        <span class="text-5xl">🔗</span>
+                                        <p class="font-bold">۲. تاب‌آوری (Resilience)</p>
+                                        <p class="text-sm text-slate-600 mt-1">با توزیع حفاظت در سه لایه، سیستم در برابر شکست‌های آبشاری مقاوم می‌شود. اگر یک لایه دچار مشکل شود، لایه‌های دیگر فعال باقی می‌مانند.</p>
+                                    </div>
+                                    <div class="p-4 bg-green-50 rounded-lg">
+                                        <span class="text-5xl">🧠</span>
+                                        <p class="font-bold">۳. هوشمندی (Intelligence)</p>
+                                        <p class="text-sm text-slate-600 mt-1">از هر عمق، متناسب با ویژگی‌های آن استفاده می‌کنیم. عمق کم برای دسترسی سریع، و عمق زیاد برای حفاظت از تجهیزات حیاتی.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-700 p-8 rounded-xl shadow-xl relative">
+                                <h2 class="text-2xl md:text-3xl font-bold text-center text-sky-300 mb-6">نمای عملکردی سامانه: حفاظت و دسترسی در سه لایه</h2>
+                                <div class="text-2xl font-bold text-white text-center mb-6 py-2 bg-slate-800/80 rounded">سطح زمین (ورود عمومی)</div>
+                                
+                                <!-- Zone 1 -->
+                                <div class="bg-green-100 border-r-8 border-green-500 p-4 rounded-lg mt-4 shadow-md">
+                                    <h3 class="text-xl font-black text-green-800">منطقه ۱: پناهگاه دسترسی سریع</h3>
+                                    <p class="text-green-700">(طبقات ۳- و ۴-)</p>
+                                    <div class="flex justify-between mt-2 text-sm text-slate-700">
+                                        <span>🏃‍♂️ دسترسی: <strong class="font-black">فوری (۹۰ ثانیه)</strong></span>
+                                        <span>🛡️ حفاظت: پایه (بار آوار)</span>
+                                        <span>👥 کاربری: <strong class="font-black">عموم مردم</strong></span>
+                                    </div>
+                                </div>
+                                <div class="text-6xl text-white text-center my-4">⬇️</div>
+
+                                <!-- Zone 2 -->
+                                <div class="bg-sky-100 border-r-8 border-sky-500 p-4 rounded-lg shadow-md">
+                                    <h3 class="text-xl font-black text-sky-800">منطقه ۲: پناهگاه اصلی دومنظوره</h3>
+                                    <p class="text-sky-700">(طبقات ۷- و ۸-)</p>
+                                    <div class="flex justify-between mt-2 text-sm text-slate-700">
+                                        <span>🛌 هدف: <strong class="font-black">اقامت میان‌مدت</strong> (۷۲ ساعت)</span>
+                                        <span>🛡️ حفاظت: بالا (ضد انفجار و NBC)</span>
+                                        <span>👥 کاربری: کنترل‌شده</span>
+                                    </div>
+                                </div>
+                                <div class="text-6xl text-white text-center my-4">⬇️</div>
+
+                                <!-- Zone 3 -->
+                                <div class="bg-amber-100 border-r-8 border-amber-500 p-4 rounded-lg shadow-md">
+                                    <h3 class="text-xl font-black text-amber-800">منطقه ۳: خزانه بقا و فرماندهی</h3>
+                                    <p class="text-amber-700">(طبقه ۱۵-)</p>
+                                    <div class="flex justify-between mt-2 text-sm text-slate-700">
+                                        <span>💎 هدف: <strong class="font-black">تداوم مدیریت</strong> و بقای دارایی‌ها</span>
+                                        <span>🛡️ حفاظت: حداکثری (EMP و نفوذ)</span>
+                                        <span>👥 کاربری: محدود (پرسنل کلیدی)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                case 'dashboard-operational':
+                    // 7. تحلیل فنی-مهندسی و عملیاتی سامانه سه‌لایه
+                    return `
+                        <div class="space-y-10">
+                            <div class="bg-slate-800 text-white p-6 rounded-xl shadow-xl">
+                                <h2 class="text-2xl font-black text-sky-300 text-center">
+                                    وضعیت در زمان صلح: پارکینگ هوشمند و مدرن
+                                </h2>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                                    <div class="bg-slate-700 p-4 rounded-lg">
+                                        <h3 class="font-bold text-lg text-white flex items-center">🚗 ورود عمومی و هوشمند</h3>
+                                        <p class="text-slate-300 text-sm mt-1">مراجعین توسط سیستم مدیریت پارکینگ (PMS) به سمت لایه ۱ (عمومی) هدایت می‌شوند. این فضا به صورت روزمره برای آمادگی تحت نظارت است.</p>
+                                    </div>
+                                    <div class="bg-slate-700 p-4 rounded-lg">
+                                        <h3 class="font-bold text-lg text-white flex items-center">🔒 ورود اختصاصی و فوق امنیتی</h3>
+                                        <p class="text-slate-300 text-sm mt-1">دسترسی به لایه ۳ (تأسیساتی) کاملاً محدود و کنترل‌شده است و تنها پرسنل فنی با احراز هویت چندعاملی برای بازرسی دسترسی دارند.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-slate-700">
+                                <h2 class="text-2xl font-black text-slate-800 text-center mb-6">
+                                    وضعیت در زمان بحران: فعال‌سازی سامانه سه‌لایه
+                                </h2>
+                                <div class="space-y-6">
+                                    <!-- Layer 1 -->
+                                    <div class="p-4 bg-green-50 rounded-xl shadow border-r-4 border-green-500">
+                                        <h3 class="text-xl font-black text-green-700">لایه ۱: منطقه دسترسی سریع (۴-): نجات جان فوری</h3>
+                                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2 text-sm text-slate-700">
+                                            <p><strong class="font-black">سازه‌ای:</strong> مقاومت در برابر فروریزش پیش‌رونده (Survivable Void).</p>
+                                            <p><strong class="font-black">دسترسی:</strong> رمپ‌های عریض با شیب حداکثر ۸٪ (استاندارد دسترسی).</p>
+                                            <p><strong class="font-black">فعال‌سازی:</strong> هدف ۹۰ ثانیه: رساندن حداکثر جمعیت به پوشش سخت در کوتاه‌ترین زمان.</p>
+                                        </div>
+                                    </div>
+                                    <!-- Layer 2 -->
+                                     <div class="p-4 bg-sky-50 rounded-xl shadow border-r-4 border-sky-500">
+                                        <h3 class="text-xl font-black text-sky-700">لایه ۲: پناهگاه اصلی دومنظوره (۸-): سکونت و بقا</h3>
+                                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2 text-sm text-slate-700">
+                                            <p><strong class="font-black">سازه‌ای:</strong> مقاومت کامل در برابر بارهای انفجاری (UFC 3-340-02).</p>
+                                            <p><strong class="font-black">MEP:</strong> سیستم تهویه CBRN، ۲ ژنراتور مستقل ۷۲ ساعته.</p>
+                                            <p><strong class="font-black">فعال‌سازی:</strong> غربالگری از لایه ۱ به لایه ۲. فعال‌سازی محفظه‌های هوابند و تبدیل به جزیره بقا.</p>
+                                        </div>
+                                    </div>
+                                    <!-- Layer 3 -->
+                                     <div class="p-4 bg-amber-50 rounded-xl shadow border-r-4 border-amber-500">
+                                        <h3 class="text-xl font-black text-amber-700">لایه ۳: خزانه بقا و فرماندهی (۱۵-): تداوم عملکرد</h3>
+                                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2 text-sm text-slate-700">
+                                            <p><strong class="font-black">سازه‌ای:</strong> قفس فارادی کامل (EMP) و بتن UHPC (ضد نفوذ).</p>
+                                            <p><strong class="font-black">تجهیزات:</strong> مرکز فرماندهی امن، ژنراتورهای اصلی مجموعه، بانک‌های فیلتراسیون.</p>
+                                            <p><strong class="font-black">عملیات:</strong> مدیریت کامل واکنش اضطراری از مرکز فرماندهی ایزوله.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                case 'dashboard-scenarios':
+                    // 8. انعطاف‌پذیری در راهکار بهینه: سه سناریوی اجرایی
+                    return `
+                        <div class="space-y-10">
+                            <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-slate-700">
+                                <h2 class="text-2xl font-black text-slate-800 mb-4 text-center">
+                                    یک منطق برتر، سه مسیر اجرایی منعطف (متناسب با اولویت و بودجه پروژه)
+                                </h2>
+                                <p class="text-slate-600 text-lg max-w-4xl mx-auto text-center">
+                                    مدل سه‌لایه یک انتخاب از میان چند گزینه نیست، بلکه یک <strong class="font-black">راهکار ترکیبی</strong> است. انتخاب شما تنها در سناریوهای اجرایی آن خواهد بود که همه بر پایه اصول ایمنی استوارند.
+                                </p>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                <!-- Scenario A: Optimal Model -->
+                                <div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-blue-600 h-full">
+                                    <div class="text-4xl mb-2 text-blue-700">🎯</div>
+                                    <h3 class="text-xl font-black text-blue-800">سناریوی الف: مدل بهینه</h3>
+                                    <p class="font-bold text-slate-500 mt-1">(توصیه اصلی)</p>
+                                    <ul class="list-disc list-inside text-sm text-slate-700 mt-4 space-y-2">
+                                        <li><strong class="font-black">مزیت:</strong> کارآمدترین و متعادل‌ترین راهکار. اجرای کامل هر سه لایه.</li>
+                                        <li><strong class="font-black">مناسب برای:</strong> پروژه‌ای که به دنبال پیاده‌سازی کامل و بدون نقص بهترین راهکار موجود است.</li>
+                                        <li><strong class="font-black">چیدمان:</strong> یک طبقه برای هر لایه (۴-، ۸-، ۱۵-).</li>
+                                    </ul>
+                                </div>
+
+                                <!-- Scenario B: High-Capacity Model -->
+                                <div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-green-600 h-full">
+                                    <div class="text-4xl mb-2 text-green-700">👨‍👩‍👧‍👦</div>
+                                    <h3 class="text-xl font-black text-green-800">سناریوی ب: مدل ظرفیت بالا</h3>
+                                    <p class="font-bold text-slate-500 mt-1">(High-Capacity)</p>
+                                     <ul class="list-disc list-inside text-sm text-slate-700 mt-4 space-y-2">
+                                        <li><strong class="font-black">مزیت:</strong> <strong class="font-black text-red-600">دو برابر شدن ظرفیت</strong> پناه‌دهی عمومی با افزایش طبقات لایه‌های ۱ و ۲.</li>
+                                        <li><strong class="font-black">مناسب برای:</strong> پروژه‌ای که مسئولیت اجتماعی و پناه‌دهی به جمعیت بزرگ، اولویت اصلی آن است.</li>
+                                        <li><strong class="font-black">چیدمان:</strong> دو طبقه برای لایه ۱ (مثلاً ۳- و ۴-) و دو طبقه برای لایه ۲ (۷- و ۸-).</li>
+                                    </ul>
+                                </div>
+                                
+                                <!-- Scenario C: Economic Model -->
+                                <div class="bg-white p-6 rounded-xl shadow-lg border-t-8 border-amber-600 h-full">
+                                    <div class="text-4xl mb-2 text-amber-700">📉</div>
+                                    <h3 class="text-xl font-black text-amber-800">سناریوی ج: مدل اقتصادی</h3>
+                                    <p class="font-bold text-slate-500 mt-1">(اجرای فازبندی شده)</p>
+                                    <ul class="list-disc list-inside text-sm text-slate-700 mt-4 space-y-2">
+                                        <li><strong class="font-black">مزیت:</strong> فعال‌سازی حیاتی‌ترین بخش (نجات جان فوری) در فاز اول با سرمایه‌گذاری اولیه کمتر.</li>
+                                        <li><strong class="font-black">مناسب برای:</strong> پروژه‌های با محدودیت‌های بودجه‌ای اولیه که نمی‌خواهند از کیفیت طرح اصلی عدول کنند.</li>
+                                        <li><strong class="font-black">چیدمان:</strong> فاز ۱: تکمیل لایه ۱ + تقویت سازه‌ای لایه ۲. فاز ۲: تجهیز کامل لایه ۲.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                case 'dashboard-layers-detail':
+                    // 9. جزئیات تخصصی لایه‌های ۱، ۲ و ۳ (جدول جدید)
+                    return `
+                        <div class="space-y-10">
+                            <div class="bg-slate-800 text-white p-6 rounded-xl shadow-xl">
+                                <h2 class="text-2xl font-black text-sky-300 mb-2 text-center">
+                                    جزئیات فنی و عملکردی لایه‌ها: طراحی هوشمند برای بقا
+                                </h2>
+                            </div>
+                            
+                            ${generateLayerTableContent()}
+
+                        </div>
+                    `;
+                case 'dashboard-floor-analysis':
+                    // 10. تحلیل جامع کاربری و مشخصات فنی طبقات منفی 1 تا منفی 8
+                    return `
+                        <div class="space-y-10">
+                             <div class="bg-slate-800 text-white p-6 rounded-xl shadow-xl text-center">
+                                <h2 class="text-2xl font-black text-sky-300">
+                                    تحلیل جامع کاربری طبقات: از پارکینگ تا سامانه بقا
+                                </h2>
+                                <p class="text-slate-300 mt-2">هر طبقه، نقشی دوگانه و هوشمند در زمان صلح و بحران ایفا می‌کند.</p>
+                            </div>
+                            
+                            <!-- Floor Detail Cards -->
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                ${generateFloorCard('طبقه منفی ۱', '۳.۲ متر', 'پارکینگ ویژه و مدیریت ترافیک ورودی.', 'اولین نقطه ورود، بافر سازه‌ای و منطقه غربالگری اولیه.', '🅿️', 'border-slate-400', 'ویژگی کلیدی: کنترل و مدیریت ورود')}
+                                ${generateFloorCard('طبقات منفی ۲ و ۳', '۳.۲ متر', 'پارکینگ عمومی و لجستیک اصلی مجموعه.', 'فضای پشتیبانی، مرکز فرماندهی میدانی شهری.', '🚚', 'border-slate-400', 'ویژگی کلیدی: پشتیبانی لجستیک و عملیات')}
+                                ${generateFloorCard('طبقه منفی ۴', '۳.۲ متر', 'پارکینگ عمومی با دسترسی آسان و مداوم.', 'لایه ۱ پناهگاه: منطقه دسترسی سریع برای نجات جان فوری.', '🏃‍♂️', 'border-green-500', 'ویژگی کلیدی: <strong class="text-green-600">نجات جان در ۹۰ ثانیه</strong>')}
+                                ${generateFloorCard('طبقات منفی ۵ و ۶', '۳.۲ متر', 'پارکینگ اختصاصی و انبار تجهیزات.', 'منطقه حائل و ذخیره تجهیزات استراتژیک (غذا، دارو).', '📦', 'border-gray-500', 'ویژگی کلیدی: بافر سازه‌ای و لجستیک بحران')}
+                                ${generateFloorCard('طبقه منفی ۷', '۴.۵ متر', 'مرکز پشتیبانی حیات و تأسیسات سنگین (Life Support Core).', 'قلب تپنده سامانه: ژنراتورهای عظیم و بانک‌های فیلتراسیون.', '⚙️', 'border-blue-500', 'ویژگی کلیدی: <strong class="text-blue-600">تضمین تداوم حیات</strong>')}
+                                ${generateFloorCard('طبقه منفی ۸', '۳.۵ متر', 'پارکینگ امن و انبار ویژه با دسترسی کنترل شده.', 'لایه ۲ پناهگاه: جزیره بقای خودکفا برای اقامت میان‌مدت.', '🛡️', 'border-sky-500', 'ویژگی کلیدی: <strong class="text-sky-600">اقامت امن (۷۲ ساعت)</strong>')}
+                            </div>
+                        </div>
+                    `;
+                case 'dashboard-roadmap':
+                    // 11. نقشه راه عملیاتی: از طراحی تا بهره‌برداری
+                    return `
+                         <div class="space-y-10">
+                            <div class="bg-slate-800 text-white p-6 rounded-xl shadow-xl">
+                                <h2 class="text-2xl font-black text-sky-300 text-center">
+                                    نقشه راه عملیاتی: سه فاز مدیریتی برای تحقق امنیت واقعی
+                                </h2>
+                            </div>
+
+                            <!-- Phase 1: Design & Construction -->
+                            <div class="bg-white p-6 rounded-xl shadow-lg relative border-r-8 border-green-600">
+                                <div class="absolute top-0 right-4 bg-green-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-black text-xl transform -translate-y-1/2">۱</div>
+                                <h3 class="text-2xl font-black text-green-700 pt-4">فاز اول: طراحی هوشمند و ساخت در زمان صلح</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4 text-center">
+                                    <div class="bg-green-50 p-4 rounded-lg">📐<p class="font-bold">طراحی یکپارچه</p><p class="text-sm">ادغام الزامات پناهگاه در تمام نقشه‌های معماری و سازه (MEP).</p></div>
+                                    <div class="bg-green-50 p-4 rounded-lg">🏗️<p class="font-bold">اجرای هوشمند</p><p class="text-sm">ساخت سازه با مناطق مقاوم‌سازی شده و نصب تأسیسات پایه برای کاربری دو حالته.</p></div>
+                                    <div class="bg-green-50 p-4 rounded-lg">📦<p class="font-bold">تجهیزات پیش‌مستقر</p><p class="text-sm">خریداری و انبار کردن تجهیزات زمان‌بر (فیلترها، درب‌ها) در مکانی امن.</p></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Phase 2: Activation -->
+                             <div class="bg-white p-6 rounded-xl shadow-lg relative border-r-8 border-sky-600">
+                                <div class="absolute top-0 right-4 bg-sky-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-black text-xl transform -translate-y-1/2">۲</div>
+                                <h3 class="text-2xl font-black text-sky-700 pt-4">فاز دوم: فعال‌سازی در زمان بحران (نقشه راه ۷۲ ساعته)</h3>
+                                <div class="overflow-x-auto mt-4">
+                                    <table class="w-full text-sm">
+                                        <thead>
+                                            <tr class="bg-sky-700 text-white">
+                                                <th class="p-2">بازه زمانی</th>
+                                                <th class="p-2">اقدام کلیدی</th>
+                                                <th class="p-2">هدف</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="border-b bg-sky-50">
+                                                <td class="p-2 font-bold">ساعت ۰ تا ۱۲</td>
+                                                <td class="p-2">اقدام فوری: تخلیه خودروها، پاکسازی مسیرها، نصب درب‌های ضد انفجار.</td>
+                                                <td class="p-2">ایمن‌سازی لایه‌های ۱ و ۲. فعال‌سازی فرماندهی در لایه ۳.</td>
+                                            </tr>
+                                            <tr class="border-b bg-sky-100">
+                                                <td class="p-2 font-bold">ساعت ۱۲ تا ۷۲</td>
+                                                <td class="p-2">تجهیز کامل: اتصال فیلترهای CBRN، توزیع جیره‌های غذایی و آب.</td>
+                                                <td class="p-2">گشایش رسمی لایه ۲ به عنوان پناهگاه اصلی و پایداری عملیات.</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Phase 3: Maintenance -->
+                            <div class="bg-white p-6 rounded-xl shadow-lg relative border-r-8 border-amber-600">
+                                <div class="absolute top-0 right-4 bg-amber-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-black text-xl transform -translate-y-1/2">۳</div>
+                                <h3 class="text-2xl font-black text-amber-700 pt-4">فاز سوم: نگهداری و آمادگی در زمان صلح</h3>
+                                <ul class="list-none space-y-3 mt-4 text-slate-700">
+                                    <li class="flex items-center"><span class="text-3xl ml-3">🔍</span><div><strong class="font-black">بازرسی منظم:</strong> بررسی‌های دوره‌ای (فصلی/سالانه) تجهیزات و سازه‌ها.</div></li>
+                                    <li class="flex items-center"><span class="text-3xl ml-3">👨‍🏫</span><div><strong class="font-black">آموزش و مانور:</strong> برگزاری دوره‌های آموزشی برای تیم اضطراری و مانورهای عمومی.</div></li>
+                                    <li class="flex items-center"><span class="text-3xl ml-3">📋</span><div><strong class="font-black">مستندسازی:</strong> به‌روزرسانی مداوم برنامه‌های عملیاتی و فهرست موجودی.</div></li>
+                                </ul>
+                            </div>
+                        </div>
+                    `;
+                case 'dashboard-final':
+                    // 12. جمع‌بندی راهبردی و توصیه قطعی
+                    return `
+                        <div class="space-y-10">
+                            <div class="bg-slate-100 p-6 rounded-xl shadow-lg border-r-4 border-slate-700">
+                                <h2 class="text-2xl font-black text-slate-800 mb-2 text-center">
+                                    حکم نهایی: جمع‌بندی راهبردی و توصیه قطعی
+                                </h2>
+                                <p class="text-lg text-slate-700 max-w-4xl mx-auto text-center mt-2">
+                                    بر اساس شواهد قاطع فنی، قانونی و عملیاتی، مسیر بهینه پیش رو کاملاً روشن است.
+                                </p>
+                            </div>
+
+                            <!-- Final Scorecard -->
+                            <section>
+                                <div class="bg-slate-800 text-white p-4 rounded-t-xl text-center">
+                                    <h3 class="text-2xl font-bold">کارت امتیاز تصمیم‌گیری: مدل ترکیبی برنده قطعی است</h3>
+                                </div>
+                                <div class="overflow-x-auto shadow-2xl rounded-b-xl">
+                                    <table class="w-full text-center">
+                                        <thead class="bg-slate-700 text-white">
+                                            <tr>
+                                                <th class="p-3 text-right">پارامتر کلیدی</th>
+                                                <th class="p-3">❌ پناهگاه عمیق (منفی ۱۵)</th>
+                                                <th class="p-3">✅ مدل ترکیبی منطقه‌بندی شده</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${generateScoreRow('ایمنی خروج اضطراری (RSET)', 'بسیار ضعیف (تله انسانی)', 'عالی (نجات جان در ۹۰ ثانیه)', 'red', 'green')}
+                                            ${generateScoreRow('انطباق با مقررات (مبحث ۲۱)', 'مردود (نقض صریح قوانین)', 'کامل (انطباق ۱۰۰٪)', 'red', 'green')}
+                                            ${generateScoreRow('ریسک‌های ژئوتکنیکی', 'بسیار بالا (آسیب‌پذیری شدید)', 'استاندارد و قابل مدیریت', 'red', 'green')}
+                                            ${generateScoreRow('قابلیت اطمینان سامانه', 'پایین (ریسک شکست آبشاری)', 'بالا (تاب‌آوری و پراکندگی)', 'red', 'green')}
+                                            ${generateScoreRow('هزینه و کارایی اقتصادی', 'بسیار گران و ناکارآمد', 'بهینه و اقتصادی (برد-برد)', 'red', 'green')}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </section>
+                            
+                             <!-- The Tehran Trilemma -->
+                            <section class="bg-red-50 p-6 rounded-xl shadow-xl border-r-8 border-red-600">
+                                <h3 class="text-2xl font-black text-red-800 mb-4 text-center">
+                                    سه‌گانه چالش‌برانگیز تهران (Tehran Trilemma): تضادهای غیرقابل حل
+                                </h3>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-slate-700 text-lg text-center">
+                                    <div class="p-3 bg-white rounded-lg shadow h-full">
+                                        <div class="text-4xl mb-2">🌊</div>
+                                        <h4 class="font-bold text-red-700">محدودیت هیدروژئولوژیکی</h4>
+                                        <p class="text-sm">سطح بالای آب‌های زیرزمینی در جنوب تهران، ساخت‌وساز عمیق را ممنوع می‌کند.</p>
+                                    </div>
+                                    <div class="p-3 bg-white rounded-lg shadow h-full">
+                                        <div class="text-4xl mb-2">📜</div>
+                                        <h4 class="font-bold text-red-700">الزام مقرراتی (مبحث ۲۱)</h4>
+                                        <p class="text-sm">اجبار به ساخت پناهگاه در "تحتانی‌ترین طبقه" و "روی خاک" که با عمق زیاد در تضاد است.</p>
+                                    </div>
+                                    <div class="p-3 bg-white rounded-lg shadow h-full">
+                                        <div class="text-4xl mb-2">🌎</div>
+                                        <h4 class="font-bold text-red-700">ضرورت ژئوتکنیکی/لرزه‌ای</h4>
+                                        <p class="text-sm">خطر زلزله در خاک آبرفتی و نیاز به تقویت سازه‌ای عمیق که در تضاد با دو مورد قبلی است.</p>
+                                    </div>
+                                </div>
+                                <p class="text-center text-red-800 mt-4 text-lg font-bold">مدل پناهگاه عمیق، این سه‌گانه را به طور همزمان نقض کرده و به یک ریسک غیرقابل قبول تبدیل می‌شود.</p>
+                            </section>
+                            
+                             <!-- Final Principles -->
+                            <section class="bg-slate-800 text-white p-6 rounded-xl shadow-xl">
+                                <h3 class="text-2xl font-black text-yellow-300 mb-6 text-center">
+                                    اصول راهبردی غیرقابل مذاکره برای موفقیت پروژه
+                                </h3>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                                    <div class="p-4 bg-slate-700 rounded-lg">
+                                        <div class="text-4xl mb-2">🥇</div>
+                                        <h4 class="font-bold text-white">اول ایمنی جان، سپس استحکام</h4>
+                                        <p class="text-sm text-slate-300 mt-1">یک پناهگاه غیرقابل دسترس، یک سازه بی‌فایده است. اولویت مطلق با <strong class="font-black">ASET > RSET</strong> است.</p>
+                                    </div>
+                                    <div class="p-4 bg-slate-700 rounded-lg">
+                                        <div class="text-4xl mb-2">⚖️</div>
+                                        <h4 class="font-bold text-white">قانون، فصل‌الخطاب است</h4>
+                                        <p class="text-sm text-slate-300 mt-1">هیچ ملاحظه‌ای نمی‌تواند الزامات صریح <strong class="font-black">مبحث ۲۱</strong>، به ویژه محدودیت آب‌های زیرزمینی را نادیده بگیرد.</p>
+                                    </div>
+                                    <div class="p-4 bg-slate-700 rounded-lg">
+                                        <div class="text-4xl mb-2">🧠</div>
+                                        <h4 class="font-bold text-white">طراحی هوشمند، نه فقط عمیق</h4>
+                                        <p class="text-sm text-slate-300 mt-1">به جای وسواس بر عمق، باید بر <strong class="font-black">کارایی، تاب‌آوری و منطق استراتژیک</strong> تمرکز کرد. راهکار لایه‌بندی شده این اصل را محقق می‌کند.</p>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <!-- Recommendation Boxes -->
+                            <section class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
+                                <div class="p-6 bg-red-100 border-r-8 border-red-600 shadow-xl">
+                                    <h3 class="text-xl font-black text-red-700 flex items-center"><span class="text-3xl ml-2">🛑</span>۱. رد کامل گزینه پرریسک</h3>
+                                    <p class="text-lg mt-2 text-slate-700">طرح احداث پناهگاه عمومی در طبقه منفی ۱۵ که جان افراد را به خطر می‌اندازد و هزینه‌های اجرایی سرسام‌آور دارد، باید به طور کامل <strong class="font-black">کنار گذاشته شود</strong>.</p>
+                                </div>
+                                <div class="p-6 bg-green-100 border-r-8 border-green-600 shadow-xl">
+                                    <h3 class="text-xl font-black text-green-700 flex items-center"><span class="text-3xl ml-2">✔️</span>۲. اتخاذ چارچوب هوشمند</h3>
+                                    <p class="text-lg mt-2 text-slate-700">«مدل پناهگاه ترکیبی منطقه‌بندی شده» باید به عنوان <strong class="font-black">چارچوب راهبردی و مبنای اصلی</strong> برای تمام مراحل طراحی و مهندسی پروژه اتخاذ گردد.</p>
+                                </div>
+                            </section>
+                        </div>
+                    `;
+                default:
+                    return `<h2 class="text-red-600 text-3xl text-center pt-20">لطفاً یکی از آیتم‌ها را از منوی سمت راست انتخاب کنید.</h2>`;
+            }
+        }
+        
+        // --- Chart Rendering Functions (Global) ---
+        
+        function renderAsetRsetChart() {
+            const ctx = document.getElementById('asetRsetChart')?.getContext('2d');
+            if (!ctx) return;
+            if (window.asetRsetChartInstance) window.asetRsetChartInstance.destroy();
+           
+            window.asetRsetChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['لایه ۱ (۴-)', 'لایه ۲ (۸-)', 'طرح مردود (۱۵-)'],
+                    datasets: [
+                        {
+                            label: 'ASET (زمان ایمن در دسترس)',
+                            data: [3.5, 3.5, 3.5], 
+                            backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                            borderColor: 'rgb(37, 99, 235)',
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'RSET (زمان مورد نیاز خروج)',
+                            data: [1.5, 5, 12], 
+                            backgroundColor: 'rgba(239, 68, 68, 0.7)',
+                            borderColor: 'rgb(185, 28, 28)',
+                            borderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { ticks: { font: { family: 'Vazirmatn' } } },
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'زمان (دقیقه)', font: { family: 'Vazirmatn', size: 14 } },
+                            ticks: { font: { family: 'Vazirmatn' } }
+                        }
+                    },
+                    plugins: {
+                        legend: { labels: { font: { family: 'Vazirmatn' } } },
+                        tooltip: { bodyFont: { family: 'Vazirmatn' }, titleFont: { family: 'Vazirmatn' } }
+                    }
+                }
+            });
+        }
+
+        function renderGlobalDepthChart() {
+            const ctx = document.getElementById('globalDepthChart')?.getContext('2d');
+            if (!ctx) return;
+            if (window.globalDepthChartInstance) window.globalDepthChartInstance.destroy();
+            
+            window.globalDepthChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['آمریکا', 'آلمان', 'سوئیس/اسرائیل', 'کانادا', 'بریتانیا', 'نوردیک', 'روسیه', 'اوکراین'],
+                    datasets: [{
+                        label: 'حداکثر عمق تقریبی پناهگاه (متر)',
+                        data: [10, 20, 20, 23, 30, 60, 80, 105],
+                        backgroundColor: [
+                            'rgba(75, 85, 99, 0.7)',
+                            'rgba(55, 65, 81, 0.7)',
+                            'rgba(239, 68, 68, 0.7)',
+                            'rgba(219, 39, 119, 0.7)',
+                            'rgba(13, 148, 136, 0.7)',
+                            'rgba(14, 165, 233, 0.7)',
+                            'rgba(153, 27, 27, 0.7)',
+                            'rgba(234, 179, 8, 0.7)'
+                        ],
+                        borderColor: 'rgb(55, 65, 81)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'عمق (متر)', font: { family: 'Vazirmatn', size: 14 } },
+                            ticks: { font: { family: 'Vazirmatn' } }
+                        },
+                        y: { ticks: { font: { family: 'Vazirmatn', size: 12 } } }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { bodyFont: { family: 'Vazirmatn' }, titleFont: { family: 'Vazirmatn' } }
+                    }
+                }
+            });
+        }
+        
+        function renderCharts(id) {
+            if (id === 'dashboard-aset-rset') {
+                renderAsetRsetChart();
+            }
+             if (id === 'dashboard-global') {
+                renderGlobalDepthChart();
+            }
+        }
+        
+        // --- Global Exposures and Initial Load ---
+
+        // Exposing main functions globally so onclick events work
+        window.navigate = navigate;
+        window.navigateDashboard = navigateDashboard;
+        
+        // --- Cover Hover Logic ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const coverLink = document.querySelector('.cover-link');
+            const coverIcon = document.getElementById('cover-icon-dynamic');
+            
+            if (coverLink && coverIcon) {
+                coverLink.addEventListener('mouseenter', () => {
+                    coverIcon.textContent = 'P'; 
+                });
+                coverLink.addEventListener('mouseleave', () => {
+                    coverIcon.textContent = '🛡️'; 
+                });
+            }
+            
+            generateSidebar();
+            // Start on the cover view
+            navigate('cover');
+        });
+
+        // Detailed Layer Content Loader (Needed in global scope for onclick)
+        window.showDetailedLayer = function(layerId) {
+            const container = document.getElementById('detailed-layer-content');
+            let content = '';
+
+            switch(layerId) {
+                case 'layer1-details': content = generateLayer1Details(); break;
+                case 'layer2-details': content = generateLayer2Details(); break;
+                case 'layer3-details': content = generateLayer3Details(); break;
+            }
+
+            container.innerHTML = content;
+            container.classList.remove('hidden');
+        };
+
+    </script>
+</body>
+</html>
+
