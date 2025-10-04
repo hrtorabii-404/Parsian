@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد نهایی تحلیل سناریو ۳: مرکز دو منظوره تجاری-پناهگاه</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-medical: #ef4444;
+            --color-store: #3b82f6;
+            --color-sports: #22c55e;
+            --color-mall: #6b7280;
+        }
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #f0f2f5;
+            color: #334155;
+            overflow-x: hidden;
+        }
+        .content-section {
+            display: none;
+            animation: fadeIn 0.8s;
+        }
+        .content-section.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .nav-menu {
+            background-color: rgba(255, 255, 255, 0.15); /* Semi-transparent background */
+            -webkit-backdrop-filter: blur(20px); /* Frosted glass effect */
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+            color: #1f2937; /* Dark text for better contrast */
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100vh;
+            width: 16rem; /* 256px */
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out, background-color 0.3s;
+        }
+        .nav-menu.is-open {
+            transform: translateX(0);
+            background-color: rgba(255, 255, 255, 0.3); /* Slightly more opaque when open */
+        }
+        .nav-button {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 1rem;
+            width: 100%;
+            text-align: right;
+            border-right: 4px solid transparent;
+            transition: background-color 0.3s, border-color 0.3s;
+            gap: 0.75rem;
+            color: #374151; /* Dark gray for button text */
+        }
+        .nav-button:hover {
+            background-color: rgba(209, 213, 229, 0.5); /* Light gray hover on glass */
+            border-color: #0d3b66;
+        }
+        .nav-button.active {
+            background-color: #0d3b66; /* Solid dark blue for active state */
+            border-color: #f9a826; /* Contrasting golden border */
+            font-weight: 700;
+            color: white; /* White text for readability on dark background */
+        }
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+        .section-title {
+            color: #0d3b66;
+            font-weight: 900;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .info-card {
+            background: linear-gradient(145deg, #eef2f7, #ffffff);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 5px 5px 15px #d1d9e6, -5px -5px 15px #ffffff;
+        }
+        /* Styles for Accordion */
+        .accordion-item details summary {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem; cursor: pointer; background-color: #f9fafb;
+            font-weight: bold; transition: background-color 0.3s;
+        }
+        .accordion-item summary::after {
+            content: '\f078'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
+            transition: transform 0.3s;
+        }
+        .accordion-item details[open] summary::after { transform: rotate(180deg); }
+        /* Styles for Progress Bar in Table */
+        .progress-bar-container {
+            width: 100%; height: 24px; background-color: #e5e7eb; border-radius: 6px;
+            overflow: hidden; position: relative;
+        }
+        .progress-bar {
+            height: 100%; display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: bold; font-size: 0.8rem; transition: width 0.5s ease-in-out;
+        }
+        .bg-medical { background-color: var(--color-medical); }
+        .bg-store { background-color: var(--color-store); }
+        .bg-sports { background-color: var(--color-sports); }
+        .bg-mall { background-color: var(--color-mall); }
+        
+        /* Styles for Sensitivity Analysis sliders */
+        .slider-container { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+        .slider-container label { font-weight: bold; flex-basis: 200px; }
+        .slider-container input[type="range"] { -webkit-appearance: none; flex-grow: 1; height: 8px; border-radius: 5px; background: #d3d3d3; outline: none; }
+        .slider-container input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #0d3b66; cursor: pointer; }
+        .slider-container .slider-value { font-weight: bold; min-width: 40px; text-align: center; }
+        
+        /* Operational Plan Timeline */
+        .timeline { border-right: 3px solid #60a5fa; padding-right: 1.5rem; position: relative; }
+        .timeline-item { margin-bottom: 2rem; position: relative; }
+        .timeline-item:last-child { margin-bottom: 0; }
+        .timeline-dot { position: absolute; right: -1.2rem; top: 0; height: 2rem; width: 2rem; background-color: white; border: 3px solid #60a5fa; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .timeline-content h4 { font-weight: 900; }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <button id="menu-toggle" class="fixed top-5 right-5 z-[1001] bg-white text-blue-800 w-12 h-12 rounded-full shadow-lg text-xl flex items-center justify-center">
+        <i class="fa-solid fa-bars"></i>
+    </button>
+    
+    <main class="flex-1 p-6 md:p-10 min-w-0">
+        
+        <section id="intro" class="content-section">
+             <div class="card">
+                <h1 class="section-title text-4xl">معرفی سناریو: سرمایه‌گذاری در تاب‌آوری ملی</h1>
+                <div class="text-center mb-10">
+                    <p class="text-lg text-gray-700 max-w-3xl mx-auto">این داشبورد به تحلیل ۴ سناریوی پیشنهادی برای تبدیل یک پارکینگ زیرزمینی به یک پناهگاه دو منظوره می‌پردازد. هدف، یافتن گزینه‌ای است که بالاترین کارایی را در زمان بحران و بیشترین توجیه اقتصادی را در زمان صلح داشته باشد.</p>
+                    <div class="flex justify-center gap-x-6 gap-y-4 mt-6 flex-wrap">
+                        <span class="font-bold text-lg text-red-600">🏥 مرکز درمانی</span>
+                        <span class="font-bold text-lg text-blue-600">🛒 فروشگاه (هایپر)</span>
+                        <span class="font-bold text-lg text-green-600">🏟️ مجموعه ورزشی</span>
+                        <span class="font-bold text-lg text-gray-600">🏬 پاساژ (مجتمع تجاری)</span>
+                    </div>
+                </div>
+
+                <div class="border-t pt-8">
+                    <h2 class="text-2xl font-bold text-blue-700 mb-4 text-center">شاخص‌های ارزیابی و روش‌شناسی</h2>
+                    <p class="text-center text-gray-600 mb-8">برای یک تحلیل علمی و به دور از سوگیری، از ۷ معیار کلیدی استفاده شده که اهمیت آن‌ها از طریق نظرسنجی کارشناسی تعیین شده است.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-right">
+                         <div class="bg-gray-50 p-4 rounded-lg">
+                            <h3 class="font-bold text-lg">هم‌افزایی بحران</h3>
+                            <p class="text-sm">میزان تطابق کاربری عادی با نیازهای زمان بحران (مانند دسترسی به دارو در مدل درمانی).</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h3 class="font-bold text-lg">تاب‌آوری لجستیکی</h3>
+                            <p class="text-sm">توانایی تأمین منابع حیاتی (غذا، آب، دارو) بدون وابستگی به کمک خارجی.</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h3 class="font-bold text-lg">ریسک امنیتی</h3>
+                            <p class="text-sm">آسیب‌پذیری در برابر تهدیدهایی مانند هجوم جمعیت و غارت در ساعات اولیه بحران.</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h3 class="font-bold text-lg">ریسک سازه‌ای</h3>
+                            <p class="text-sm">میزان آسیب‌پذیری سازه سطح زمین در برابر زلزله یا انفجار که می‌تواند دسترسی به پناهگاه را مختل کند.</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h3 class="font-bold text-lg">توجیه اقتصادی</h3>
+                            <p class="text-sm">میزان درآمدزایی و سرعت بازگشت سرمایه در زمان صلح.</p>
+                        </div>
+                         <div class="bg-gray-50 p-4 rounded-lg">
+                            <h3 class="font-bold text-lg">سادگی اجرا و پذیرش</h3>
+                            <p class="text-sm">سهولت در ساخت و مدیریت، و میزان اعتماد و استقبال عمومی از کاربری.</p>
+                        </div>
+                    </div>
+                     <p class="text-center mt-6 text-sm text-gray-500">امتیازدهی به هر گزینه بر اساس عملکرد واقعی نسبت به بهترین عملکرد ممکن (از ۰ تا ۱۰) و با استفاده از روش تحلیل تصمیم چندمعیاره (MCDA) انجام شده است.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="analysis" class="content-section">
+             <h1 class="section-title text-4xl">تحلیل جامع کاربری‌های پیشنهادی</h1>
+            <div class="space-y-8">
+                <!-- Medical Card -->
+                <div class="card border-l-4 border-red-500">
+                    <div class="flex justify-between items-start">
+                        <h2 class="text-3xl font-bold text-red-700 mb-4">🏥 ۱. مرکز درمانی</h2>
+                        <div class="text-center">
+                             <p class="text-gray-500 text-sm">نمره نهایی</p>
+                             <p class="text-6xl font-black text-blue-600" style="text-shadow: 1px 1px 3px rgba(0,0,0,0.1);">7.38</p>
+                        </div>
+                    </div>
+                    <p class="mb-4">این کاربری، پارکینگ زیرزمینی را به "بیمارستان امن" تبدیل می‌کند. الهام‌گرفته از مدل Sheba Medical Center اسرائیل (۲۰۲۵)، که عملیات حیاتی را به طبقات زیرزمینی منتقل کرده است.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div><h3 class="font-bold text-lg text-green-700">✅ مزایا</h3><ul class="list-disc pr-5 mt-2 space-y-1"><li><b>تداوم خدمات پزشکی:</b> نرخ بقای ۱۰۰% (OCHA, ۲۰۱۴).</li><li><b>کادر متخصص محلی:</b> پزشکان با آموزش cross-training.</li><li><b>اعتماد عمومی بالا:</b> مراجعه غریزی مردم (WHO, ۲۰۱۱).</li></ul></div>
+                        <div><h3 class="font-bold text-lg text-red-800">❌ چالش‌ها</h3><ul class="list-disc pr-5 mt-2 space-y-1"><li><b>اورلود جمعیت:</b> ریسک ۳۸% مرگ قابل پیشگیری (Haiti, ۲۰۱۰).</li><li><b>ریسک بیولوژیکی:</b> نرخ انتقال ۲۳% بدون تهویه مجزا (CDC, ۲۰۲۰).</li></ul></div>
+                    </div>
+                    <div class="accordion-item"><details><summary>جزئیات کامل امتیازات</summary><div class="p-4"><table class="w-full text-sm text-right">
+                        <thead class="bg-gray-50 font-bold"><tr><th class="p-2">معیار</th><th class="p-2">روش محاسبه</th><th class="p-2">امتیاز</th></tr></thead>
+                        <tbody>
+                            <tr class="border-b"><td class="p-2">هم‌افزایی بحران</td><td class="p-2">دسترسی فوری به کادر درمان (10/10) + تجهیزات (9/10)</td><td class="p-2 font-bold">9.5</td></tr>
+                            <tr class="border-b"><td class="p-2">تاب‌آوری لجستیکی</td><td class="p-2">ذخیره دارویی ۱۴ روزه (استاندارد)</td><td class="p-2 font-bold">7.0</td></tr>
+                            <tr class="border-b"><td class="p-2">ریسک امنیتی</td><td class="p-2">احتمال هجوم در بحران: ۴۰٪ (مدل‌سازی)</td><td class="p-2 font-bold">6.0</td></tr>
+                            <tr class="border-b"><td class="p-2">ریسک سازه‌ای</td><td class="p-2">ساختمان بتنی استاندارد، ریسک کم</td><td class="p-2 font-bold">8.0</td></tr>
+                            <tr class="border-b"><td class="p-2">توجیه اقتصادی</td><td class="p-2">ROI واقعی ۱۲-۱۵ سال</td><td class="p-2 font-bold">7.0</td></tr>
+                            <tr class="border-b"><td class="p-2">سادگی اجرا</td><td class="p-2">پیچیدگی بالا (مجوزهای پزشکی)</td><td class="p-2 font-bold">4.0</td></tr>
+                            <tr><td class="p-2">پذیرش اجتماعی</td><td class="p-2">بالاترین اعتماد عمومی</td><td class="p-2 font-bold">10.0</td></tr>
+                        </tbody>
+                    </table></div></details></div>
+                    <div class="bg-gray-100 text-blue-800 p-4 rounded-b-lg mt-4 text-center font-semibold"><b>ارزیابی استراتژیک:</b> ایده‌آل برای مناطق پرتلفات. با تحریم‌ها، تمرکز روی تجهیزات داخلی ضروری است.</div>
+                </div>
+                <!-- Sports Card -->
+                <div class="card border-l-4 border-green-500">
+                     <div class="flex justify-between items-start">
+                        <h2 class="text-3xl font-bold text-green-700 mb-4">🏟️ ۲. مجموعه ورزشی</h2>
+                        <div class="text-center">
+                             <p class="text-gray-500 text-sm">نمره نهایی</p>
+                             <p class="text-6xl font-black text-blue-600" style="text-shadow: 1px 1px 3px rgba(0,0,0,0.1);">6.07</p>
+                        </div>
+                    </div>
+                    <p class="mb-4">پارکینگ به "مرکز اسکان انعطاف‌پذیر" تبدیل می‌شود. الهام‌گرفته از مدل Tokyo Dome ژاپن (۲۰۱۱)، که ۵۰۰۰ نفر را برای ۱۱ روز اسکان داد.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div><h3 class="font-bold text-lg text-green-700">✅ مزایا</h3><ul class="list-disc pr-5 mt-2 space-y-1"><li><b>ظرفیت اسکان بالا:</b> انعطاف‌پذیری با پارتیشن‌بندی.</li><li><b>زیرساخت بهداشتی آماده:</b> دوش‌ها و تهویه صنعتی.</li><li><b>سادگی اجرا:</b> کمترین تغییرات سازه‌ای.</li></ul></div>
+                        <div><h3 class="font-bold text-lg text-red-800">❌ چالش‌ها</h3><ul class="list-disc pr-5 mt-2 space-y-1"><li><b>آسیب‌پذیری سازه:</b> ریسک فروریزش سقف wide-span (Katowice, ۲۰۰۶).</li><li><b>فقدان لجستیک:</b> نیاز به هزینه بالا برای ذخیره‌سازی اولیه.</li></ul></div>
+                    </div>
+                     <div class="accordion-item"><details><summary>جزئیات کامل امتیازات</summary><div class="p-4"><table class="w-full text-sm text-right">
+                        <thead class="bg-gray-50 font-bold"><tr><th class="p-2">معیار</th><th class="p-2">روش محاسبه</th><th class="p-2">امتیاز</th></tr></thead>
+                        <tbody>
+                            <tr class="border-b"><td class="p-2">هم‌افزایی بحران</td><td class="p-2">فضای وسیع (9) + بهداشت (8) - نبود تجهیزات (-3)</td><td class="p-2 font-bold">7.0</td></tr>
+                            <tr class="border-b"><td class="p-2">تاب‌آوری لجستیکی</td><td class="p-2">صفر ذخیره + نیاز به خرید کامل</td><td class="p-2 font-bold">2.0</td></tr>
+                            <tr class="border-b"><td class="p-2">ریسک امنیتی</td><td class="p-2">کمترین ریسک غارت</td><td class="p-2 font-bold">9.0</td></tr>
+                            <tr class="border-b"><td class="p-2">ریسک سازه‌ای</td><td class="p-2">سقف wide-span، آسیب‌پذیری بالا</td><td class="p-2 font-bold">4.0</td></tr>
+                            <tr class="border-b"><td class="p-2">توجیه اقتصادی</td><td class="p-2">درآمد متوسط</td><td class="p-2 font-bold">6.0</td></tr>
+                            <tr class="border-b"><td class="p-2">سادگی اجرا</td><td class="p-2">ساده‌ترین گزینه</td><td class="p-2 font-bold">9.0</td></tr>
+                            <tr><td class="p-2">پذیرش اجتماعی</td><td class="p-2">مثبت، مرکز اجتماعی</td><td class="p-2 font-bold">8.0</td></tr>
+                        </tbody>
+                    </table></div></details></div>
+                    <div class="bg-gray-100 text-blue-800 p-4 rounded-b-lg mt-4 text-center font-semibold"><b>ارزیابی استراتژیک:</b> مناسب شهرهای متوسط با بودجه محدود. تقویت سقف الزامی است.</div>
+                </div>
+                <!-- Store Card -->
+                <div class="card border-l-4 border-blue-500">
+                    <div class="flex justify-between items-start">
+                        <h2 class="text-3xl font-bold text-blue-700 mb-4">🛒 ۳. فروشگاه (هایپر)</h2>
+                        <div class="text-center">
+                             <p class="text-gray-500 text-sm">نمره نهایی</p>
+                             <p class="text-6xl font-black text-blue-600" style="text-shadow: 1px 1px 3px rgba(0,0,0,0.1);">7.21</p>
+                        </div>
+                    </div>
+                    <p class="mb-4">پارکینگ به "هاب لجستیک" متصل به انبار فروشگاه تبدیل می‌شود. الهام‌گرفته از برنامه BBK آلمان ۲۰۲۵، که استفاده از زیرساخت‌های تجاری را ترویج می‌دهد.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                         <div><h3 class="font-bold text-lg text-green-700">✅ مزایا</h3><ul class="list-disc pr-5 mt-2 space-y-1"><li><b>تاب‌آوری لجستیکی:</b> دسترسی به ذخیره عظیم آب و کنسرو.</li><li><b>پرسنل متخصص:</b> مهارت در توزیع و انبارداری.</li><li><b>توجیه اقتصادی:</b> بالاترین درآمد در زمان صلح.</li></ul></div>
+                        <div><h3 class="font-bold text-lg text-red-800">❌ چالش‌ها</h3><ul class="list-disc pr-5 mt-2 space-y-1"><li><b>ریسک غارت:</b> کاترینا ۲۰۰۵ (۲۳۷ مورد)، شیلی ۲۰۱۹ (۱۴۸۵ مورد).</li><li><b>کالاهای فاسدشدنی:</b> ۴۰٪ موجودی، نیازمند انتقال سریع.</li></ul></div>
+                    </div>
+                     <div class="accordion-item"><details><summary>جزئیات کامل امتیازات</summary><div class="p-4"><table class="w-full text-sm text-right">
+                        <thead class="bg-gray-50 font-bold"><tr><th class="p-2">معیار</th><th class="p-2">روش محاسبه</th><th class="p-2">امتیاز</th></tr></thead>
+                        <tbody>
+                            <tr class="border-b"><td class="p-2">هم‌افزایی بحران</td><td class="p-2">اتصال مستقیم به منبع تدارکات</td><td class="p-2 font-bold">10.0</td></tr>
+                            <tr class="border-b"><td class="p-2">تاب‌آوری لجستیکی</td><td class="p-2">۸,۰۰۰ قلم کالا برای ۳۰ روز</td><td class="p-2 font-bold">9.0</td></tr>
+                            <tr class="border-b"><td class="p-2">ریسک امنیتی</td><td class="p-2">احتمال غارت: ۷۰-۸۰٪ در بحران شدید</td><td class="p-2 font-bold">2.0</td></tr>
+                            <tr class="border-b"><td class="p-2">ریسک سازه‌ای</td><td class="p-2">ساختمان بتنی، ریسک متوسط</td><td class="p-2 font-bold">6.0</td></tr>
+                            <tr class="border-b"><td class="p-2">توجیه اقتصادی</td><td class="p-2">بالاترین درآمد</td><td class="p-2 font-bold">10.0</td></tr>
+                            <tr class="border-b"><td class="p-2">سادگی اجرا</td><td class="p-2">نیاز به امنیت پیچیده</td><td class="p-2 font-bold">5.0</td></tr>
+                            <tr><td class="p-2">پذیرش اجتماعی</td><td class="p-2">بالا</td><td class="p-2 font-bold">8.0</td></tr>
+                        </tbody>
+                    </table></div></details></div>
+                    <div class="bg-gray-100 text-blue-800 p-4 rounded-b-lg mt-4 text-center font-semibold"><b>ارزیابی استراتژیک:</b> برتر برای بحران‌های طولانی. نیازمند سرمایه‌گذاری سنگین در امنیت است.</div>
+                </div>
+                <!-- Mall Card -->
+                <div class="card border-l-4 border-gray-500">
+                    <div class="flex justify-between items-start">
+                        <h2 class="text-3xl font-bold text-gray-700 mb-4">🏬 ۴. پاساژ (مجتمع تجاری)</h2>
+                        <div class="text-center">
+                             <p class="text-gray-500 text-sm">نمره نهایی</p>
+                             <p class="text-6xl font-black text-blue-600" style="text-shadow: 1px 1px 3px rgba(0,0,0,0.1);">3.79</p>
+                        </div>
+                    </div>
+                    <p class="mb-4">پارکینگ به "انبار متنوع" متصل می‌شود. اما چالش‌ها بر مزایا غلبه دارند. مثال‌های جهانی (پلاسکو ۲۰۱۷، ورشو ۲۰۲۴) شکست این مدل را نشان می‌دهند.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                         <div><h3 class="font-bold text-lg text-green-700">✅ مزایا</h3><ul class="list-disc pr-5 mt-2 space-y-1"><li>تنوع منابع (تخصصی).</li><li>فضای عمومی برای اسکان اولیه.</li><li>درآمد بالا در زمان صلح.</li></ul></div>
+                        <div><h3 class="font-bold text-lg text-red-800">❌ چالش‌ها</h3><ul class="list-disc pr-5 mt-2 space-y-1"><li><b>پیچیدگی مدیریتی:</b> هماهنگی با ۸۰ مالک در بحران غیرممکن است.</li><li><b>ریسک آتش‌سوزی بالا:</b> ۱۴۰۰ واحد در آتش‌سوزی ورشو نابود شد.</li></ul></div>
+                    </div>
+                     <div class="accordion-item"><details><summary>جزئیات کامل امتیازات</summary><div class="p-4"><table class="w-full text-sm text-right">
+                        <thead class="bg-gray-50 font-bold"><tr><th class="p-2">معیار</th><th class="p-2">روش محاسبه</th><th class="p-2">امتیاز</th></tr></thead>
+                        <tbody>
+                            <tr class="border-b"><td class="p-2">هم‌افزایی بحران</td><td class="p-2">تنوع منابع اما پراکنده</td><td class="p-2 font-bold">4.0</td></tr>
+                            <tr class="border-b"><td class="p-2">تاب‌آوری لجستیکی</td><td class="p-2">دسترسی محدود به انبارها</td><td class="p-2 font-bold">5.0</td></tr>
+                            <tr class="border-b"><td class="p-2">ریسک امنیتی</td><td class="p-2">بالاترین ریسک</td><td class="p-2 font-bold">1.0</td></tr>
+                            <tr class="border-b"><td class="p-2">ریسک سازه‌ای</td><td class="p-2">+ ریسک آتش‌سوزی بالا</td><td class="p-2 font-bold">3.0</td></tr>
+                            <tr class="border-b"><td class="p-2">توجیه اقتصادی</td><td class="p-2">درآمد خوب در صلح</td><td class="p-2 font-bold">8.0</td></tr>
+                            <tr class="border-b"><td class="p-2">سادگی اجرا</td><td class="p-2">پیچیده‌ترین گزینه</td><td class="p-2 font-bold">1.0</td></tr>
+                            <tr><td class="p-2">پذیرش اجتماعی</td><td class="p-2">متوسط</td><td class="p-2 font-bold">6.0</td></tr>
+                        </tbody>
+                    </table></div></details></div>
+                    <div class="bg-gray-100 text-blue-800 p-4 rounded-b-lg mt-4 text-center font-semibold"><b>ارزیابی استراتژیک:</b> پرریسک و غیرقابل توصیه.</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="comparison" class="content-section">
+             <h1 class="section-title text-4xl">ماتریس تصمیم‌گیری و تحلیل مقایسه‌ای</h1>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 text-center">
+                <div class="info-card"><div class="text-4xl text-blue-500 mb-2"><i class="fas fa-exchange-alt"></i></div><h3 class="font-bold text-lg mb-1">معادله ۱: لجستیک در برابر امنیت</h3><p class="text-sm text-gray-600"><strong>فروشگاه</strong> قدرت لجستیکی بی‌نظیری دارد اما امنیتی آسیب‌پذیر است. در مقابل، <strong>مرکز ورزشی</strong> بسیار امن است اما یک بیابان لجستیکی است.</p></div>
+                <div class="info-card"><div class="text-4xl text-red-500 mb-2"><i class="fas fa-heartbeat"></i></div><h3 class="font-bold text-lg mb-1">معادله ۲: پزشکی در برابر پایداری</h3><p class="text-sm text-gray-600"><strong>مرکز درمانی</strong> قابلیت نجات جان را دارد اما بدون منابع غذایی، پایدار نیست.</p></div>
+                <div class="info-card"><div class="text-4xl text-green-500 mb-2"><i class="fas fa-running"></i></div><h3 class="font-bold text-lg mb-1">معادله ۳: سرعت در برابر خودکفایی</h3><p class="text-sm text-gray-600"><strong>مرکز ورزشی</strong> سریع‌ترین گزینه برای اسکان است اما کاملاً وابسته است. <strong>فروشگاه</strong> خودکفاست.</p></div>
+            </div>
+            <div class="card overflow-x-auto"><table id="comparison-table" class="w-full min-w-[800px] text-center">
+                    <thead><tr class="border-b-2 border-gray-200"><th class="p-4 text-right font-bold">معیار (امتیاز خام)</th><th class="p-4"><i class="fa-solid fa-clinic-medical text-red-500 text-3xl"></i><p>مرکز درمانی</p></th><th class="p-4"><i class="fa-solid fa-store text-blue-500 text-3xl"></i><p>فروشگاه (هایپر)</p></th><th class="p-4"><i class="fa-solid fa-futbol text-green-500 text-3xl"></i><p>مجموعه ورزشی</p></th><th class="p-4"><i class="fa-solid fa-gem text-gray-400 text-3xl"></i><p>پاساژ (مجتمع تجاری)</p></th></tr></thead>
+                    <tbody>
+                         <tr data-scores='{"medical": 9.5, "store": 10, "sports": 7, "mall": 4}'><td class="p-4 font-bold text-right">هم‌افزایی بحران</td><td class="p-2"><div class="progress-bar-container"><div class="progress-bar bg-medical"></div></div></td><td class="p-2"><div class="progress-bar-container"><div class="progress-bar bg-store"></div></div></td><td class="p-2"><div class="progress-bar-container"><div class="progress-bar bg-sports"></div></div></td><td class="p-2"><div class="progress-bar-container"><div class="progress-bar bg-mall"></div></div></td></tr>
+                         <tr data-scores='{"medical": 7, "store": 9, "sports": 2, "mall": 5}'><td class="p-4 font-bold text-right">تاب‌آوری لجستیکی</td><td class="p-2"><div class="progress-bar-container"><div class="progress-bar bg-medical"></div></div></td><td class="p-2"><div class="progress-bar-container"><div class="progress-bar bg-store"></div></div></td><td class="p-2"><div class="progress-bar-container"><div class="progress-bar bg-sports"></div></div></td><td class="p-2"><div class="progress-bar-container"><div class="progress-bar bg-mall"></div></div></td></tr>
+                         <tr data-scores='{"medical": 6, "store": 2, "sports": 9, "mall": 1}'><td class="p-4 font-bold text-right">ریسک امنیتی</td><td class="p-2"><div class="progress-bar-container"><div class="progress-bar bg-medical"></div></div></td><td class="p-2"><div class="progress-bar-container"><div class="progress-bar bg-store"></div></div></td><td class="p-2"><div class="progress-bar-container"><div class="progress-bar bg-sports"></div></div></td><td class="p-2"><div class="progress-bar-container"><div class="progress-bar bg-mall"></div></div></td></tr>
+                         <tr data-scores='{"medical": 8, "store": 6, "sports": 4, "mall": 3}'><td class="p-4 font-bold text-right">ریسک سازه‌ای</td><td class="p-2"><div class="progress-bar-container"><div class="progress-bar bg-medical"></div></div></td><td class="p-2"><div class="progress-bar-container"><div class="progress-bar bg-store"></div></div></td><td class="p-2"><div class="progress-bar-container"><div class="progress-bar bg-sports"></div></div></td><td class="p-2"><div class="progress-bar-container"><div class="progress-bar bg-mall"></div></div></td></tr>
+                         <tr data-scores='{"medical": 7, "store": 10, "sports": 6, "mall": 8}'><td class="p-4 font-bold text-right">توجیه اقتصادی</td><td class="p-2"><div class="progress-bar-container"><div class="progress-bar bg-medical"></div></div></td><td class="p-2"><div class="progress-bar-container"><div class="progress-bar bg-store"></div></div></td><td class="p-2"><div class="progress-bar-container"><div class="progress-bar bg-sports"></div></div></td><td class="p-2"><div class="progress-bar-container"><div class="progress-bar bg-mall"></div></div></td></tr>
+                         <tr data-scores='{"medical": 4, "store": 5, "sports": 9, "mall": 1}'><td class="p-4 font-bold text-right">سادگی اجرا</td><td class="p-2"><div class="progress-bar-container"><div class="progress-bar bg-medical"></div></div></td><td class="p-2"><div class="progress-bar-container"><div class="progress-bar bg-store"></div></div></td><td class="p-2"><div class="progress-bar-container"><div class="progress-bar bg-sports"></div></div></td><td class="p-2"><div class="progress-bar-container"><div class="progress-bar bg-mall"></div></div></td></tr>
+                         <tr data-scores='{"medical": 10, "store": 8, "sports": 8, "mall": 6}'><td class="p-4 font-bold text-right">پذیرش اجتماعی</td><td class="p-2"><div class="progress-bar-container"><div class="progress-bar bg-medical"></div></div></td><td class="p-2"><div class="progress-bar-container"><div class="progress-bar bg-store"></div></div></td><td class="p-2"><div class="progress-bar-container"><div class="progress-bar bg-sports"></div></div></td><td class="p-2"><div class="progress-bar-container"><div class="progress-bar bg-mall"></div></div></td></tr>
+                    </tbody>
+                </table></div>
+        </section>
+
+        <section id="operation" class="content-section">
+             <h1 class="section-title text-4xl">نقشه‌های عملیاتی در زمان بحران</h1>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Medical Timeline -->
+                <div class="card"><h3 class="font-bold text-xl text-center text-red-700 mb-6">🏥 نقشه عملیاتی مرکز درمانی</h3><div class="timeline"><div class="timeline-item"><div class="timeline-dot"><i class="fa-solid fa-bolt text-red-500"></i></div><div class="timeline-content"><h4>ساعت اول (H+1)</h4><p>فعال‌سازی پروتکل بحران، تبدیل پارکینگ به تریاژ، فراخوان کادر درمان.</p></div></div><div class="timeline-item"><div class="timeline-dot"><i class="fa-solid fa-truck-medical text-red-500"></i></div><div class="timeline-content"><h4>ساعت ششم (H+6)</h4><p>استقرار کامل بیمارستان صحرایی، انتقال تجهیزات حیاتی از سطح زمین.</p></div></div><div class="timeline-item"><div class="timeline-dot"><i class="fa-solid fa-bed-pulse text-red-500"></i></div><div class="timeline-content"><h4>روز اول (H+24)</h4><p>مدیریت مصدومان، ایجاد بخش نقاهتگاه در طبقات پایین‌تر، برقراری امنیت.</p></div></div></div></div>
+                <!-- Store Timeline -->
+                <div class="card"><h3 class="font-bold text-xl text-center text-blue-700 mb-6">🛒 نقشه عملیاتی فروشگاه (هایپر)</h3><div class="timeline"><div class="timeline-item"><div class="timeline-dot"><i class="fa-solid fa-shield-halved text-blue-500"></i></div><div class="timeline-content"><h4>ساعت اول (H+1)</h4><p>بستن فروشگاه، فعال‌سازی تیم امنیتی، شروع انتقال کالاهای حیاتی به پناهگاه.</p></div></div><div class="timeline-item"><div class="timeline-dot"><i class="fa-solid fa-boxes-stacked text-blue-500"></i></div><div class="timeline-content"><h4>ساعت ششم (H+6)</h4><p>تکمیل انتقال منابع (آب، کنسرو، دارو)، تبدیل پارکینگ به هاب لجستیک.</p></div></div><div class="timeline-item"><div class="timeline-dot"><i class="fa-solid fa-people-group text-blue-500"></i></div><div class="timeline-content"><h4>روز اول (H+24)</h4><p>پذیرش پناهجویان ثبت‌نام‌شده، شروع سیستم جیره‌بندی، مدیریت انبار.</p></div></div></div></div>
+                <!-- Sports Timeline -->
+                <div class="card"><h3 class="font-bold text-xl text-center text-green-700 mb-6">🏟️ نقشه عملیاتی مجموعه ورزشی</h3><div class="timeline"><div class="timeline-item"><div class="timeline-dot"><i class="fa-solid fa-door-open text-green-500"></i></div><div class="timeline-content"><h4>ساعت اول (H+1)</h4><p>بازگشایی درها برای پذیرش عمومی، فعال‌سازی زیرساخت بهداشتی.</p></div></div><div class="timeline-item"><div class="timeline-dot"><i class="fa-solid fa-hands-holding-child text-green-500"></i></div><div class="timeline-content"><h4>ساعت ششم (H+6)</h4><p>پارتیشن‌بندی فضای اسکان، استقرار تیم‌های امدادی، درخواست کمک‌های خارجی.</p></div></div><div class="timeline-item"><div class="timeline-dot"><i class="fa-solid fa-truck-ramp-box text-green-500"></i></div><div class="timeline-content"><h4>روز اول (H+24)</h4><p>مدیریت دریافت و توزیع کمک‌های رسیده، سازماندهی جمعیت اسکان‌یافته.</p></div></div></div></div>
+            </div>
+        </section>
+        
+        <section id="cases" class="content-section">
+            <h1 class="section-title text-4xl">تحلیل جامع نمونه‌های موردی جهانی</h1>
+             <div class="space-y-10">
+                <div class="card"><div class="flex flex-col md:flex-row gap-6"><div class="md:w-1/3 text-center flex flex-col items-center"><img src="https://flagcdn.com/w80/il.png" alt="Israel Flag" class="w-16 h-16 rounded-full shadow-lg mb-3"><h2 class="text-xl font-bold text-red-700">۱. مدل درمانی (رامبام، حیفا)</h2><i class="fas fa-hospital-user text-8xl text-red-200 mt-4"></i></div><div class="md:w-2/3"><h3 class="font-bold text-lg mb-2">تحلیل:</h3><p class="text-gray-700 mb-4">برجسته‌ترین نمونه جهانی پناهگاه-بیمارستان که در زمان صلح پارکینگ است و در ۷۲ ساعت به یک بیمارستان امن ۲۰۰۰ تخت‌خوابی تبدیل می‌شود.</p><div class="bg-red-50 p-3 rounded-lg"><h3 class="font-bold text-md mb-1 text-red-800">💡 درس کلیدی:</h3><p class="text-gray-600 text-sm">تضمین <strong>"تداوم خدمات پزشکی"</strong> در بدترین شرایط، یک مزیت استراتژیک بی‌نظیر است.</p></div></div></div></div>
+                <div class="card"><div class="flex flex-col md:flex-row gap-6"><div class="md:w-1/3 text-center flex flex-col items-center"><img src="https://flagcdn.com/w80/il.png" alt="Israel Flag" class="w-16 h-16 rounded-full shadow-lg mb-3"><h2 class="text-xl font-bold text-blue-700">۲. مدل تجاری (دیزنگوف، تل‌آویو)</h2><i class="fas fa-shopping-cart text-8xl text-blue-200 mt-4"></i></div><div class="md:w-2/3"><h3 class="font-bold text-lg mb-2">تحلیل:</h3><p class="text-gray-700 mb-4">مرکز خرید دیزنگوف یکی از شناخته‌شده‌ترین نمونه‌های پناهگاه دو منظوره است که پناهگاه عمومی بزرگ آن در طبقات زیرین، هزاران نفر را در زمان بحران جای می‌دهد.</p><div class="bg-blue-50 p-3 rounded-lg"><h3 class="font-bold text-md mb-1 text-blue-800">💡 درس کلیدی:</h3><p class="text-gray-600 text-sm"><strong>آشنایی مردم با فضا</strong> به دلیل کاربری روزمره، فرآیند پناهگیری را تسریع و استرس را کاهش می‌دهد.</p></div></div></div></div>
+                <div class="card"><div class="flex flex-col md:flex-row gap-6"><div class="md:w-1/3 text-center flex flex-col items-center"><img src="https://flagcdn.com/w80/us.png" alt="USA Flag" class="w-16 h-16 rounded-full shadow-lg mb-3"><h2 class="text-xl font-bold text-gray-700">۳. ریسک غارت (کاترینا، آمریکا)</h2><i class="fas fa-person-military-rioting text-8xl text-gray-300 mt-4"></i></div><div class="md:w-2/3"><h3 class="font-bold text-lg mb-2">تحلیل:</h3><p class="text-gray-700 mb-4">در هرج‌ومرج پس از طوفان کاترینا (۲۰۰۵)، ۲۳۷ فروشگاه در نیواورلئان غارت شد. این نشان داد که در غیاب نیروی انتظامی، منابع غذایی به اولین هدف تبدیل می‌شوند.</p><div class="bg-gray-50 p-3 rounded-lg"><h3 class="font-bold text-md mb-1 text-gray-800">💡 درس کلیدی:</h3><p class="text-gray-600 text-sm">مدل <strong>فروشگاه بزرگ</strong> بدون یک طرح امنیتی بسیار قوی و هماهنگی قبلی با نیروهای نظامی/انتظامی، محکوم به شکست است.</p></div></div></div></div>
+                <div class="card"><div class="flex flex-col md:flex-row gap-6"><div class="md:w-1/3 text-center flex flex-col items-center"><img src="https://flagcdn.com/w80/fi.png" alt="Finland Flag" class="w-16 h-16 rounded-full shadow-lg mb-3"><h2 class="text-xl font-bold text-green-700">۴. مدل ورزشی (هلسینکی، فنلاند)</h2><i class="fas fa-swimmer text-8xl text-green-200 mt-4"></i></div><div class="md:w-2/3"><h3 class="font-bold text-lg mb-2">تحلیل:</h3><p class="text-gray-700 mb-4">پناهگاه ایتَکِسکوس با یک مرکز ورزشی یکپارچه شده و ظرفیت اسکان ۳۸۰۰ نفر را دارد. وجود زیرساخت‌های بهداشتی (دوش و توالت) یک مزیت بزرگ است.</p><div class="bg-green-50 p-3 rounded-lg"><h3 class="font-bold text-md mb-1 text-green-800">💡 درس کلیدی:</h3><p class="text-gray-600 text-sm">استفاده از <strong>زیرساخت‌های بهداشتی موجود</strong>، هزینه‌ها را کاهش داده و سادگی اجرا را افزایش می‌دهد، اما مشکل کمبود لجستیک را حل نمی‌کند.</p></div></div></div></div>
+            </div>
+        </section>
+
+        <section id="sensitivity-analysis" class="content-section">
+            <h1 class="section-title text-4xl">تحلیل حساسیت داینامیک</h1>
+            <p class="text-center text-gray-600 mb-10 -mt-6">با تغییر وزن هر معیار، مشاهده کنید که چگونه رتبه‌بندی گزینه‌ها تغییر می‌کند.</p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="card">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">۱. تنظیم ضرایب اهمیت معیارها</h2>
+                    <div id="sliders-container"></div>
+                    <button id="reset-weights" class="mt-4 w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition-colors">بازنشانی به مقادیر پیش‌فرض</button>
+                </div>
+                <div class="card">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">۲. نتایج و رتبه‌بندی لحظه‌ای</h2>
+                    <div id="results-container" class="space-y-4"></div>
+                </div>
+            </div>
+             <div class="card mt-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">نمودار حساسیت نمرات به تغییر وزن معیارها</h2>
+                <canvas id="sensitivityChart"></canvas>
+            </div>
+        </section>
+
+        <section id="conclusion" class="content-section">
+            <h1 class="section-title text-4xl">جمع‌بندی نهایی و توصیه‌های راهبردی</h1>
+            
+            <div class="card">
+                <h2 class="text-2xl font-bold text-center mb-8">رتبه‌بندی نهایی و سناریوهای کاربردی</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Rank 1 -->
+                    <div class="p-6 rounded-lg border-4 border-yellow-400 bg-yellow-50 relative">
+                        <div class="absolute -top-5 -right-5 bg-yellow-400 text-white rounded-full w-12 h-12 flex items-center justify-center text-2xl font-bold shadow-lg">🥇</div>
+                        <h3 class="text-2xl font-black text-red-700 mb-2">🏥 مرکز درمانی</h3>
+                        <p class="text-4xl font-bold text-gray-800 mb-4">7.38 <span class="text-lg font-normal text-gray-500">/ 10</span></p>
+                        <div class="text-right space-y-3">
+                            <div><h4 class="font-bold text-green-600">✅ بهترین برای:</h4><p class="text-sm">مناطق پرخطر (زلزله، جنگ)، شهرهای بزرگ با تراکم بالا.</p></div>
+                            <div><h4 class="font-bold text-red-600">❌ بدترین برای:</h4><p class="text-sm">شهرهای کوچک (عدم توجیه اقتصادی)، مناطق بدون ریسک تلفات بالا.</p></div>
+                        </div>
+                    </div>
+                    <!-- Rank 2 -->
+                    <div class="p-6 rounded-lg border-4 border-gray-300 bg-gray-50 relative">
+                        <div class="absolute -top-5 -right-5 bg-gray-300 text-white rounded-full w-12 h-12 flex items-center justify-center text-2xl font-bold shadow-lg">🥈</div>
+                        <h3 class="text-2xl font-black text-blue-700 mb-2">🛒 فروشگاه (هایپر)</h3>
+                        <p class="text-4xl font-bold text-gray-800 mb-4">7.21 <span class="text-lg font-normal text-gray-500">/ 10</span></p>
+                        <div class="text-right space-y-3">
+                            <div><h4 class="font-bold text-green-600">✅ بهترین برای:</h4><p class="text-sm">بحران‌های طولانی‌مدت (محاصره)، کلان‌شهرها.</p></div>
+                            <div><h4 class="font-bold text-red-600">❌ بدترین برای:</h4><p class="text-sm">مناطق بدون پوشش امنیتی قوی (ریسک بالای غارت).</p></div>
+                        </div>
+                    </div>
+                    <!-- Rank 3 -->
+                    <div class="p-6 rounded-lg border-4 border-amber-600 bg-amber-50 relative">
+                        <div class="absolute -top-5 -right-5 bg-amber-600 text-white rounded-full w-12 h-12 flex items-center justify-center text-2xl font-bold shadow-lg">🥉</div>
+                        <h3 class="text-2xl font-black text-green-700 mb-2">🏟️ مجموعه ورزشی</h3>
+                        <p class="text-4xl font-bold text-gray-800 mb-4">6.07 <span class="text-lg font-normal text-gray-500">/ 10</span></p>
+                        <div class="text-right space-y-3">
+                            <div><h4 class="font-bold text-green-600">✅ بهترین برای:</h4><p class="text-sm">شهرهای کوچک و متوسط، سناریوهای با بودجه محدود.</p></div>
+                            <div><h4 class="font-bold text-red-600">❌ بدترین برای:</h4><p class="text-sm">بحران‌های طولانی‌مدت (وابستگی کامل به کمک خارجی).</p></div>
+                        </div>
+                    </div>
+                    <!-- Rank 4 -->
+                    <div class="p-6 rounded-lg border-4 border-gray-500 bg-gray-100 relative">
+                        <div class="absolute -top-5 -right-5 bg-gray-500 text-white rounded-full w-12 h-12 flex items-center justify-center text-2xl font-bold shadow-lg">4️⃣</div>
+                        <h3 class="text-2xl font-black text-gray-700 mb-2">🏬 پاساژ (مجتمع تجاری)</h3>
+                        <p class="text-4xl font-bold text-gray-800 mb-4">3.79 <span class="text-lg font-normal text-gray-500">/ 10</span></p>
+                        <div class="text-right space-y-3">
+                            <div><h4 class="font-bold text-green-600">✅ بهترین برای:</h4><p class="text-sm">تقریباً هیچ سناریویی (مگر شرایط بسیار خاص تک‌مالکیتی).</p></div>
+                            <div><h4 class="font-bold text-red-600">❌ بدترین برای:</h4><p class="text-sm">اکثر سناریوهای بحرانی به دلیل پیچیدگی مدیریتی و امنیتی.</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="text-2xl font-bold text-center mb-8">🎓 درس‌های کلیدی برای تصمیم‌گیرندگان</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="flex items-start gap-4 p-4 rounded-lg bg-gray-50">
+                        <img src="https://flagcdn.com/w40/ch.png" class="w-10 h-10 rounded-full mt-1">
+                        <div><h4 class="font-bold">ساده بهتر از پیچیده است</h4><p class="text-sm">یک طرح ۵۰۰ نفری عملیاتی، بهتر از یک طرح ۲۰,۰۰۰ نفری شکست‌خورده است (مورد سوئیس).</p></div>
+                    </div>
+                    <div class="flex items-start gap-4 p-4 rounded-lg bg-gray-50">
+                        <img src="https://flagcdn.com/w40/us.png" class="w-10 h-10 rounded-full mt-1">
+                        <div><h4 class="font-bold">امنیت عملیاتی > امنیت سازه‌ای</h4><p class="text-sm">شکست در بحران‌های بزرگ (کاترینا، هائیتی) بیشتر مدیریتی بوده تا فنی.</p></div>
+                    </div>
+                    <div class="flex items-start gap-4 p-4 rounded-lg bg-gray-50">
+                        <img src="https://flagcdn.com/w40/ir.png" class="w-10 h-10 rounded-full mt-1">
+                        <div><h4 class="font-bold">منابع محلی حیاتی‌تر از واردات است</h4><p class="text-sm">در شرایط تحریم، یک فروشگاه با کالای داخلی، از درمانگاه وابسته به تجهیزات وارداتی، تاب‌آورتر است.</p></div>
+                    </div>
+                    <div class="flex items-start gap-4 p-4 rounded-lg bg-gray-50">
+                        <img src="https://flagcdn.com/w40/jp.png" class="w-10 h-10 rounded-full mt-1">
+                        <div><h4 class="font-bold">پناهگاه باید "زنده" باشد</h4><p class="text-sm">بهترین پناهگاه، مکانی است که مردم روزانه از آن استفاده می‌کنند (مورد ژاپن).</p></div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mt-8 bg-gradient-to-tr from-blue-900 to-gray-800 text-white p-8 rounded-2xl">
+                <h2 class="text-3xl font-bold text-center mb-4 text-yellow-300">توصیه نهایی</h2>
+                <p class="text-center text-lg leading-relaxed max-w-4xl mx-auto">این پروژه یک سرمایه‌گذاری برای روزی است که امیدواریم هرگز نیاید؛ اما در آن روز، ارزش واقعی آن با جان انسان‌ها و تاب‌آوری ملی سنجیده خواهد شد. <strong>تصمیم را بر اساس داده، نه احساس، اتخاذ کنید.</strong></p>
+            </div>
+        </section>
+    </main>
+
+    <nav id="nav-menu" class="nav-menu">
+        <div class="p-4 flex justify-between items-center border-b border-white/20">
+            <h2 class="text-2xl font-black">داشبورد سناریو 3</h2>
+            <button id="menu-close" class="text-2xl"><i class="fa-solid fa-times"></i></button>
+        </div>
+        <div class="flex-1 overflow-y-auto">
+            <button class="nav-button active" onclick="showSection('intro')"><i class="fa-solid fa-lightbulb w-6"></i><span>معرفی سناریو</span></button>
+            <button class="nav-button" onclick="showSection('analysis')"><i class="fa-solid fa-tasks w-6"></i><span>تحلیل جامع کاربری‌ها</span></button>
+            <button class="nav-button" onclick="showSection('comparison')"><i class="fa-solid fa-chart-pie w-6"></i><span>ماتریس تصمیم‌گیری</span></button>
+            <button class="nav-button" onclick="showSection('operation')"><i class="fa-solid fa-sitemap w-6"></i><span>نقشه عملیاتی</span></button>
+            <button class="nav-button" onclick="showSection('cases')"><i class="fa-solid fa-globe w-6"></i><span>نمونه‌های موردی</span></button>
+            <button class="nav-button" onclick="showSection('sensitivity-analysis')"><i class="fa-solid fa-sliders w-6"></i><span>تحلیل حساسیت</span></button>
+            <button class="nav-button" onclick="showSection('conclusion')"><i class="fa-solid fa-flag-checkered w-6"></i><span>جمع‌بندی نهایی</span></button>
+        </div>
+    </nav>
+
+    <script>
+        const menuToggle = document.getElementById('menu-toggle');
+        const menuClose = document.getElementById('menu-close');
+        const navMenu = document.getElementById('nav-menu');
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(section => section.classList.remove('active'));
+            document.querySelectorAll('.nav-button').forEach(button => button.classList.remove('active'));
+            
+            const activeSection = document.getElementById(sectionId);
+            if (activeSection) {
+                 activeSection.classList.add('active');
+                 if (sectionId === 'comparison') updateProgressBars();
+            }
+            
+            const targetButton = document.querySelector(`.nav-button[onclick="showSection('${sectionId}')"]`);
+            if (targetButton) targetButton.classList.add('active');
+            
+            navMenu.classList.remove('is-open');
+            window.scrollTo(0, 0);
+        }
+
+        function updateProgressBars() {
+            const table = document.getElementById('comparison-table');
+            const rows = table.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                const scores = JSON.parse(row.dataset.scores);
+                const bars = row.querySelectorAll('.progress-bar');
+                setTimeout(() => {
+                    bars[0].style.width = `${scores.medical * 10}%`; bars[0].textContent = scores.medical;
+                    bars[1].style.width = `${scores.store * 10}%`; bars[1].textContent = scores.store;
+                    bars[2].style.width = `${scores.sports * 10}%`; bars[2].textContent = scores.sports;
+                    bars[3].style.width = `${scores.mall * 10}%`; bars[3].textContent = scores.mall;
+                }, 100);
+            });
+        }
+
+        menuToggle.addEventListener('click', () => navMenu.classList.add('is-open'));
+        menuClose.addEventListener('click', () => navMenu.classList.remove('is-open'));
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            showSection('intro');
+            initializeSensitivityAnalysis();
+            Chart.defaults.font.family = 'Vazirmatn';
+        });
+
+        function initializeSensitivityAnalysis() {
+            const criteria = [ { id: 'hem-afzayi', name: 'هم‌افزایی بحران', defaultWeight: 3.0 }, { id: 'logistics', name: 'تاب‌آوری لجستیکی', defaultWeight: 3.0 }, { id: 'security-risk', name: 'ریسک امنیتی', defaultWeight: 2.5 }, { id: 'structural-risk', name: 'ریسک سازه‌ای', defaultWeight: 2.0 }, { id: 'economic', name: 'توجیه اقتصادی', defaultWeight: 1.5 }, { id: 'execution', name: 'سادگی اجرا', defaultWeight: 1.5 }, { id: 'social', name: 'پذیرش اجتماعی', defaultWeight: 1.0 }, ];
+            const options = { 'درمانی': { scores: { 'hem-afzayi': 9.5, 'logistics': 7.0, 'security-risk': 6.0, 'structural-risk': 8.0, 'economic': 7.0, 'execution': 4.0, 'social': 10.0 }, color: 'text-red-600', icon: 'fa-clinic-medical' }, 'فروشگاه (هایپر)': { scores: { 'hem-afzayi': 10.0, 'logistics': 9.0, 'security-risk': 2.0, 'structural-risk': 6.0, 'economic': 10.0, 'execution': 5.0, 'social': 8.0 }, color: 'text-blue-600', icon: 'fa-store' }, 'ورزشی': { scores: { 'hem-afzayi': 7.0, 'logistics': 2.0, 'security-risk': 9.0, 'structural-risk': 4.0, 'economic': 6.0, 'execution': 9.0, 'social': 8.0 }, color: 'text-green-600', icon: 'fa-futbol' }, 'پاساژ (مجتمع تجاری)': { scores: { 'hem-afzayi': 4.0, 'logistics': 5.0, 'security-risk': 1.0, 'structural-risk': 3.0, 'economic': 8.0, 'execution': 1.0, 'social': 6.0 }, color: 'text-gray-500', icon: 'fa-gem' } };
+            const slidersContainer = document.getElementById('sliders-container');
+            const resultsContainer = document.getElementById('results-container');
+            const resetButton = document.getElementById('reset-weights');
+            if(!slidersContainer || !resultsContainer || !resetButton) return;
+            slidersContainer.innerHTML = '';
+            criteria.forEach(c => { slidersContainer.innerHTML += `<div class="slider-container"><label for="${c.id}">${c.name}</label><input type="range" id="${c.id}" min="0" max="5" step="0.1" value="${c.defaultWeight}" data-id="${c.id}"><span class="slider-value" id="${c.id}-value">${c.defaultWeight.toFixed(1)}</span></div>`; });
+            const sliders = slidersContainer.querySelectorAll('input[type="range"]');
+            function calculateScores() {
+                const currentWeights = {}; let totalWeight = 0;
+                sliders.forEach(slider => { const weight = parseFloat(slider.value); currentWeights[slider.dataset.id] = weight; totalWeight += weight; });
+                const finalScores = [];
+                for (const optionName in options) {
+                    let weightedSum = 0;
+                    for (const criterionId in options[optionName].scores) { weightedSum += options[optionName].scores[criterionId] * currentWeights[criterionId]; }
+                    finalScores.push({ name: optionName, score: totalWeight > 0 ? (weightedSum / totalWeight) : 0, color: options[optionName].color, icon: options[optionName].icon });
+                }
+                finalScores.sort((a, b) => b.score - a.score); displayResults(finalScores);
+            }
+            function displayResults(sortedScores) {
+                resultsContainer.innerHTML = ''; const medals = ['🥇', '🥈', '🥉', '4️⃣'];
+                sortedScores.forEach((item, index) => { resultsContainer.innerHTML += `<div class="flex items-center p-3 rounded-lg ${index === 0 ? 'bg-yellow-100' : 'bg-gray-50'}"><span class="text-2xl w-8">${medals[index]}</span><i class="fas ${item.icon} ${item.color} text-2xl w-10 text-center"></i><span class="font-bold flex-grow ${item.color}">${item.name}</span><span class="font-black text-2xl ${item.color}">${item.score.toFixed(2)}</span></div>`; });
+            }
+            sliders.forEach(slider => { slider.addEventListener('input', () => { document.getElementById(`${slider.dataset.id}-value`).textContent = parseFloat(slider.value).toFixed(1); calculateScores(); }); });
+            resetButton.addEventListener('click', () => { criteria.forEach(c => { const slider = document.getElementById(c.id); slider.value = c.defaultWeight; document.getElementById(`${c.id}-value`).textContent = c.defaultWeight.toFixed(1); }); calculateScores(); });
+            calculateScores();
+
+            // Sensitivity Chart Logic
+            const ctx = document.getElementById('sensitivityChart')?.getContext('2d');
+            if(!ctx) return;
+            const sensitivityData = { 'فروشگاه (هایپر)': { 'لجستیک': 2.1, 'امنیت': -1.7, 'سازه': 0.4 }, 'درمانی': { 'لجستیک': 1.4, 'امنیت': 1.0, 'سازه': 0.6 }, 'ورزشی': { 'لجستیک': 0.4, 'امنیت': 1.5, 'سازه': -0.8 }, 'پاساژ (مجتمع تجاری)': { 'لجستیک': 1.0, 'امنیت': -0.3, 'سازه': -0.3 } };
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['حساسیت به لجستیک', 'حساسیت به امنیت', 'حساسیت به سازه'],
+                    datasets: [ { label: 'فروشگاه (هایپر)', data: [2.1, 1.7, 0.4], backgroundColor: 'rgba(59, 130, 246, 0.7)' }, { label: 'درمانی', data: [1.4, 1.0, 0.6], backgroundColor: 'rgba(239, 68, 68, 0.7)' }, { label: 'ورزشی', data: [0.4, 1.5, 0.8], backgroundColor: 'rgba(34, 197, 94, 0.7)' }, { label: 'پاساژ (مجتمع تجاری)', data: [1.0, 0.3, 0.3], backgroundColor: 'rgba(107, 114, 128, 0.7)' } ]
+                },
+                options: { responsive: true, indexAxis: 'y', scales: { x: { beginAtZero: true, title: { display: true, text: 'میزان تغییر نمره' } } },
+                    plugins: { tooltip: { callbacks: { label: (context) => {
+                        const option = context.dataset.label;
+                        const criterion = context.label.split(' ')[2];
+                        const value = sensitivityData[option] ? Math.abs(sensitivityData[option][criterion] || 0) : 0;
+                        return `نوسان: ${value.toFixed(2)}`;
+                    } } } }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+
+
