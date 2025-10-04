@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد اینفوگرافیک: پارکینگ چندمنظوره</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            overflow-x: hidden;
+            background-color: #f0f2f5;
+            color: #334155;
+        }
+        
+        /* New Menu Styles based on scenario3.html */
+        .nav-menu {
+            background-color: rgba(255, 255, 255, 0.3);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            border-left: 1px solid rgba(255, 255, 255, 0.2);
+            color: #1f2937;
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100vh;
+            width: 16rem; /* 256px */
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        .nav-menu.is-open {
+            transform: translateX(0);
+        }
+        .nav-button {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 1rem;
+            width: 100%;
+            text-align: right;
+            border-right: 4px solid transparent;
+            transition: background-color 0.3s, border-color 0.3s;
+            gap: 0.75rem;
+            color: #374151;
+        }
+        .nav-button:hover {
+            background-color: rgba(209, 213, 229, 0.5);
+            border-color: #0d3b66;
+        }
+        .nav-button.active {
+            background-color: #0d3b66; /* Solid dark blue for active state */
+            border-color: #f9a826; /* Contrasting golden border */
+            font-weight: 700;
+            color: white;
+        }
+        #menu-toggle {
+            position: fixed;
+            top: 1.25rem;
+            right: 1.25rem;
+            z-index: 1001;
+            background-color: white;
+            color: #0d3b66;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 9999px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .content-slide {
+            display: none;
+            animation: fadeIn 0.7s ease-in-out;
+        }
+        .content-slide.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .main-content-area {
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .main-content-area::-webkit-scrollbar {
+            width: 8px;
+        }
+        .main-content-area::-webkit-scrollbar-thumb {
+            background-color: #4f46e5;
+            border-radius: 10px;
+        }
+        .main-content-area::-webkit-scrollbar-track {
+            background-color: #e0e7ff;
+        }
+        .chart-container {
+            position: relative;
+            height: 350px;
+            width: 100%;
+        }
+        .card {
+            background-color: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .flag-icon {
+            width: 32px;
+            height: 24px;
+            border-radius: 4px;
+            object-fit: cover;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        .star-rating .fa-star, .star-rating .fa-star-half-alt {
+            color: #f59e0b;
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <div class="flex h-screen">
+        <!-- New Menu Button -->
+        <button id="menu-toggle">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <!-- New Sidebar Menu -->
+        <nav id="nav-menu" class="nav-menu">
+            <div class="p-4 flex justify-between items-center border-b border-white/20">
+                <h2 class="text-xl font-bold text-slate-800">داشبورد سناریو 2</h2>
+                <button id="menu-close" class="text-2xl text-slate-600 hover:text-slate-900"><i class="fa-solid fa-times"></i></button>
+            </div>
+            <div id="main-menu" class="flex-1 overflow-y-auto mt-2">
+                <!-- Menu items dynamically inserted here -->
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content-area flex-1 p-4 sm:p-8">
+            <div id="content-container">
+                
+                <!-- Slide 1: مقدمه و تعریف پروژه -->
+                <section id="slide-1" class="content-slide">
+                    <h2 class="text-4xl font-extrabold text-slate-900 mb-2">مقدمه: از بحران تا فرصت</h2>
+                    <p class="text-lg text-slate-500 mb-8">چگونه یک پروژه می‌تواند همزمان امنیت شهر و پویایی اقتصاد را تضمین کند؟</p>
+                    
+                    <!-- Visual Concept -->
+                    <div class="card p-6 mb-8 bg-slate-800 text-white flex flex-col md:flex-row items-center justify-center gap-6">
+                        <div class="text-center">
+                            <i class="fa-solid fa-car text-6xl text-blue-400"></i>
+                            <p class="mt-2 font-bold">پارکینگ ۸ طبقه</p>
+                            <p class="text-sm text-slate-400">در زمان صلح</p>
+                        </div>
+                        <div class="text-center text-4xl text-slate-500 transform rotate-90 md:rotate-0">
+                            <i class="fa-solid fa-arrows-left-right"></i>
+                        </div>
+                        <div class="text-center">
+                            <i class="fa-solid fa-house-chimney-user text-6xl text-green-400"></i>
+                             <p class="mt-2 font-bold">پناهگاه امن</p>
+                            <p class="text-sm text-slate-400">در زمان بحران</p>
+                        </div>
+                    </div>
+
+
+                    <div class="grid lg:grid-cols-2 gap-8 mb-8">
+                        <!-- The Challenge Card -->
+                        <div class="card p-6 border-t-4 border-red-500">
+                            <h3 class="text-2xl font-bold mb-4 text-red-700 flex items-center"><i class="fa-solid fa-triangle-exclamation text-3xl ml-3"></i>دو چالش، یک بحران شهری</h3>
+                            <p class="text-slate-600 leading-relaxed">
+                                در دنیای امروز، شهرهای بزرگ با تهدیدهای امنیتی فزاینده و کمبود فضاهای امن روبرو هستند. در ایران، با توجه به تنش‌های منطقه‌ای و هشدارهای کوتاه ۳۰-۹۰ ثانیه‌ای، کمبود پناهگاه‌های عمومی به یک بحران جدی تبدیل شده است. همزمان، کمبود پارکینگ ترافیک و آلودگی را تشدید کرده و نیاز به زیرساخت‌های کارآمد را دوچندان می‌کند.
+                            </p>
+                        </div>
+                        <!-- The Opportunity Card -->
+                        <div class="card p-6 border-t-4 border-green-500">
+                            <h3 class="text-2xl font-bold mb-4 text-green-700 flex items-center"><i class="fa-solid fa-lightbulb text-3xl ml-3"></i>یک راه حل هوشمندانه: تلفیق امنیت و اقتصاد</h3>
+                            <p class="text-slate-600 leading-relaxed">
+                                مدل‌های موفق جهانی مانند پارکینگ-پناهگاه‌های تل‌آویو نشان می‌دهند که استفاده چندمنظوره از فضاهای زیرزمینی نه تنها جان هزاران نفر را نجات می‌دهد، بلکه با ایجاد درآمد پایدار، از هدررفت منابع جلوگیری کرده و بازگشت سرمایه را تضمین می‌کند. این پروژه پاسخی نوآورانه به این دوگانه است.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Project Definition Card -->
+                    <div class="card p-8">
+                        <h2 class="text-3xl font-extrabold text-slate-900 mb-6 text-center">معرفی پروژه: پارکینگ-پناهگاه هوشمند ۸ طبقه</h2>
+                        <div class="grid md:grid-cols-3 gap-8 text-center">
+                            <!-- Structure -->
+                            <div class="flex flex-col items-center">
+                                <div class="w-20 h-20 rounded-full bg-indigo-100 flex items-center justify-center text-3xl mb-3 text-indigo-600"><i class="fa-solid fa-layer-group"></i></div>
+                                <h4 class="text-xl font-bold mb-2">ساختار و عمق استراتژیک</h4>
+                                <p class="text-sm text-slate-500">
+                                    ۸ طبقه زیرزمینی (عمق ۲۴-۳۲ متر) با سه منطقه عملکردی: <strong>A</strong> (پارکینگ)، <strong>B</strong> (ورزشی-اجتماعی)، و <strong>C</strong> (لجستیک و تاسیسات حیاتی).
+                                </p>
+                            </div>
+                            <!-- Safety -->
+                            <div class="flex flex-col items-center">
+                                <div class="w-20 h-20 rounded-full bg-red-100 flex items-center justify-center text-3xl mb-3 text-red-600"><i class="fa-solid fa-shield-halved"></i></div>
+                                <h4 class="text-xl font-bold mb-2">ایمنی و تبدیل سریع</h4>
+                                <p class="text-sm text-slate-500">
+                                    عمق کافی برای مقاومت در برابر حملات سطحی (استاندارد NATO) و پروتکل تبدیل هوشمند در کمتر از <strong>۶۰ دقیقه</strong> برای نجات جان در هشدارهای کوتاه.
+                                </p>
+                            </div>
+                            <!-- Economy -->
+                            <div class="flex flex-col items-center">
+                                <div class="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center text-3xl mb-3 text-green-600"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+                                <h4 class="text-xl font-bold mb-2">اقتصاد پایدار و کاربری دوگانه</h4>
+                                <p class="text-sm text-slate-500">
+                                    جلوگیری از هدررفت ۹۹٪ فضا با کاربری تجاری در زمان صلح (پارکینگ، ورزش، آموزش) و تامین هزینه‌های نگهداری از درآمد روزانه.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 2: اهداف پروژه -->
+                <section id="slide-2" class="content-slide">
+                    <h2 class="text-4xl font-extrabold text-slate-900 mb-8">2. اهداف پروژه</h2>
+                    <div class="grid md:grid-cols-2 gap-8">
+                         <div class="card p-6">
+                            <h3 class="text-2xl font-bold mb-6 text-cyan-700">🎯 اهداف اصلی</h3>
+                            <div class="space-y-6">
+                               <p class="flex items-start text-lg"><i class="fa-solid fa-users text-cyan-500 text-3xl ml-4"></i><span>ایجاد ظرفیت پناهگاهی برای <strong>۴۰۰۰-۵۰۰۰ نفر</strong> جهت حفاظت در برابر حملات.</span></p>
+                               <p class="flex items-start text-lg"><i class="fa-solid fa-hand-holding-dollar text-cyan-500 text-3xl ml-4"></i><span>تأمین <strong>درآمد پایدار</strong> از طریق کاربری‌های تجاری در زمان صلح.</span></p>
+                               <p class="flex items-start text-lg"><i class="fa-solid fa-bolt text-cyan-500 text-3xl ml-4"></i><span><strong>تبدیل سریع</strong> از حالت عادی به پناهگاه در کمتر از <strong>۶۰ دقیقه</strong>.</span></p>
+                               <p class="flex items-start text-lg"><i class="fa-solid fa-earth-americas text-cyan-500 text-3xl ml-4"></i><span>انطباق کامل با <strong>استانداردهای بین‌المللی</strong> پناهگاه‌سازی.</span></p>
+                            </div>
+                        </div>
+                         <div class="card p-6">
+                            <h3 class="text-2xl font-bold mb-6 text-teal-700">🌱 اهداف فرعی</h3>
+                            <div class="space-y-6">
+                               <p class="flex items-start text-lg"><i class="fa-solid fa-bullhorn text-teal-500 text-3xl ml-4"></i><span>افزایش آگاهی عمومی درباره آمادگی در بحران.</span></p>
+                               <p class="flex items-start text-lg"><i class="fa-solid fa-person-running text-teal-500 text-3xl ml-4"></i><span>ایجاد فضاهای ورزشی و اجتماعی پویا در محله.</span></p>
+                               <p class="flex items-start text-lg"><i class="fa-solid fa-car text-teal-500 text-3xl ml-4"></i><span>کاهش ترافیک سطحی با افزایش ظرفیت پارکینگ.</span></p>
+                               <p class="flex items-start text-lg"><i class="fa-solid fa-briefcase text-teal-500 text-3xl ml-4"></i><span>ایجاد فرصت‌های شغلی (مدیریت، نگهبانی، خدمات).</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Slide 3: تعریف مدل پیشنهادی -->
+                <section id="slide-3" class="content-slide">
+                    <h2 class="text-4xl font-extrabold text-slate-900 mb-8">3. تعریف مدل پیشنهادی: سازه ۸ طبقه</h2>
+                     <div class="card p-6 mb-8">
+                        <h3 class="text-2xl font-bold text-slate-800 mb-4"><i class="fa-solid fa-ruler-combined ml-2 text-indigo-500"></i> مشخصات کلی</h3>
+                        <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                            <div class="bg-slate-100 p-4 rounded-lg">
+                                <p class="font-bold text-2xl text-indigo-600">۸</p><p class="text-sm text-slate-500">طبقه زیرزمین</p>
+                            </div>
+                            <div class="bg-slate-100 p-4 rounded-lg">
+                                <p class="font-bold text-2xl text-indigo-600">۲۴-۳۲</p><p class="text-sm text-slate-500">متر عمق</p>
+                            </div>
+                            <div class="bg-slate-100 p-4 rounded-lg">
+                                <p class="font-bold text-2xl text-indigo-600">~۳۵۰۰</p><p class="text-sm text-slate-500">مترمربع مساحت هر طبقه</p>
+                            </div>
+                            <div class="bg-slate-100 p-4 rounded-lg">
+                                <p class="font-bold text-2xl text-indigo-600">۳.۵-۴</p><p class="text-sm text-slate-500">متر ارتفاع سقف</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid lg:grid-cols-3 gap-6">
+                         <!-- Zone A -->
+                        <div class="card flex flex-col">
+                            <div class="p-6">
+                                <div class="text-center mb-4">
+                                    <div class="w-20 h-20 mx-auto rounded-full bg-blue-100 flex items-center justify-center text-4xl text-blue-600"><i class="fa-solid fa-square-parking"></i></div>
+                                    <h3 class="text-2xl font-bold text-blue-700 mt-3">منطقه A: پارکینگ</h3>
+                                    <p class="text-slate-500 font-medium">(طبقات ۱- تا ۳-)</p>
+                                </div>
+                                <div class="space-y-4">
+                                    <div>
+                                        <h4 class="font-bold text-lg mb-2 text-slate-800 border-r-4 border-slate-400 pr-2">✅ در زمان صلح</h4>
+                                        <ul class="list-disc pr-6 space-y-1 text-slate-600 text-sm">
+                                            <li>ظرفیت ۶۰۰-۹۰۰ خودرو</li>
+                                            <li>سیستم پرداخت ساعتی/روزانه</li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-lg mb-2 text-red-700 border-r-4 border-red-400 pr-2">🚨 در زمان بحران</h4>
+                                        <ul class="list-disc pr-6 space-y-1 text-slate-600 text-sm">
+                                            <li>پذیرش اولیه ۲۰۰۰-۲۵۰۰ نفر</li>
+                                            <li>اقامت کوتاه مدت (۶-۲۴ ساعت)</li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-lg mb-2 text-indigo-700 border-r-4 border-indigo-400 pr-2">⚙️ ویژگی‌های طراحی</h4>
+                                        <ul class="list-disc pr-6 space-y-1 text-slate-600 text-sm">
+                                            <li>سیستم هدایت هوشمند خودرو</li>
+                                            <li>روشنایی اضطراری مستقل</li>
+                                            <li>علامت‌گذاری خطوط تبدیل</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Zone B -->
+                        <div class="card flex flex-col">
+                            <div class="p-6">
+                                <div class="text-center mb-4">
+                                    <div class="w-20 h-20 mx-auto rounded-full bg-green-100 flex items-center justify-center text-4xl text-green-600"><i class="fa-solid fa-futbol"></i></div>
+                                    <h3 class="text-2xl font-bold text-green-700 mt-3">منطقه B: ورزشی-اجتماعی</h3>
+                                    <p class="text-slate-500 font-medium">(طبقات ۴- تا ۵-)</p>
+                                </div>
+                                <div class="space-y-4">
+                                    <div>
+                                        <h4 class="font-bold text-lg mb-2 text-slate-800 border-r-4 border-slate-400 pr-2">✅ در زمان صلح</h4>
+                                        <ul class="list-disc pr-6 space-y-1 text-slate-600 text-sm">
+                                            <li>سالن‌های ورزشی، یوگا، اجتماعات</li>
+                                             <li>کافی‌شاپ و فضای بازی کودکان</li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-lg mb-2 text-red-700 border-r-4 border-red-400 pr-2">🚨 در زمان بحران</h4>
+                                        <ul class="list-disc pr-6 space-y-1 text-slate-600 text-sm">
+                                            <li>پناهگاه اصلی ۱۵۰۰-۲۰۰۰ نفر</li>
+                                            <li>اقامت میان مدت (۲-۷ روز)</li>
+                                        </ul>
+                                    </div>
+                                     <div>
+                                        <h4 class="font-bold text-lg mb-2 text-indigo-700 border-r-4 border-indigo-400 pr-2">⚙️ ویژگی‌های طراحی</h4>
+                                        <ul class="list-disc pr-6 space-y-1 text-slate-600 text-sm">
+                                           <li>کف مناسب برای استقرار تخت</li>
+                                           <li>دیوارهای با قابلیت نصب پارتیشن</li>
+                                           <li>تأسیسات بهداشتی تقویت‌شده</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Zone C -->
+                         <div class="card flex flex-col">
+                            <div class="p-6">
+                                <div class="text-center mb-4">
+                                    <div class="w-20 h-20 mx-auto rounded-full bg-amber-100 flex items-center justify-center text-4xl text-amber-600"><i class="fa-solid fa-server"></i></div>
+                                    <h3 class="text-2xl font-bold text-amber-700 mt-3">منطقه C: لجستیک و کنترل</h3>
+                                    <p class="text-slate-500 font-medium">(طبقات ۶- تا ۸-)</p>
+                                </div>
+                                 <div class="space-y-4">
+                                    <div>
+                                        <h4 class="font-bold text-lg mb-2 text-slate-800 border-r-4 border-slate-400 pr-2">🎯 عملکرد طبقات</h4>
+                                        <ul class="list-disc pr-6 space-y-1 text-slate-600 text-sm">
+                                             <li><strong>طبقه ۶:</strong> آموزش ایمنی / بیمارستان صحرایی</li>
+                                             <li><strong>طبقه ۷:</strong> انبار تجهیزات / مرکز کنترل</li>
+                                             <li><strong>طبقه ۸:</strong> تاسیسات حیاتی و پشتیبانی</li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-lg mb-2 text-indigo-700 border-r-4 border-indigo-400 pr-2">⚙️ ویژگی‌های کلیدی</h4>
+                                        <ul class="list-disc pr-6 space-y-1 text-slate-600 text-sm">
+                                           <li>ژنراتورهای برق اضطراری</li>
+                                           <li>مخازن آب و سیستم تصفیه</li>
+                                           <li>سیستم تهویه NBC پیشرفته</li>
+                                           <li>سیستم‌های ارتباطی ماهواره‌ای</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Slide 4: تحلیل فنی و اقتصادی -->
+                <section id="slide-4" class="content-slide">
+                    <h2 class="text-4xl font-extrabold text-slate-900 mb-8">4. تحلیل فنی و اقتصادی</h2>
+                    <div class="card p-6 mb-6 bg-indigo-50 border-indigo-200 flex items-center">
+                         <i class="fa-solid fa-magnifying-glass-chart text-5xl text-indigo-500 ml-5"></i>
+                         <div>
+                            <h3 class="text-xl font-bold text-indigo-800">بررسی توجیه‌پذیری مالی پروژه</h3>
+                            <p class="text-slate-600">این بخش به تحلیل منابع درآمدی، هزینه‌های ساخت و جاری، و در نهایت، ارزیابی بازگشت سرمایه (ROI) پروژه می‌پردازد تا پایداری اقتصادی آن را نشان دهد.</p>
+                         </div>
+                    </div>
+                     <div class="card p-6 mb-6">
+                        <h3 class="text-xl font-bold text-slate-800 mb-4"><i class="fa-solid fa-circle-info ml-2 text-slate-500"></i>تحلیل اعداد و ارقام: منابع و مفروضات</h3>
+                        <div class="grid md:grid-cols-2 gap-6 text-slate-600">
+                            <div>
+                                <h4 class="font-bold text-green-700 mb-2">💰 منابع درآمد:</h4>
+                                <p class="text-sm">درآمدها بر اساس ظرفیت‌ها و نرخ‌های رایج در مراکز شهری بزرگ تخمین زده شده‌اند. درآمد پارکینگ با فرض ضریب اشغال متوسط و درآمد فضاهای تجاری بر اساس اجاره‌بهای اماکن ورزشی و فرهنگی مشابه محاسبه شده است.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-red-700 mb-2">🛠️ منابع هزینه:</h4>
+                                 <p class="text-sm">هزینه‌های ساخت به دلیل نیاز به حفاری عمیق، سازه‌های بتنی مسلح، و تجهیزات تخصصی مانند درب‌های ضد انفجار و سیستم‌های تهویه NBC (استاندارد ناتو) بالا برآورد شده‌اند. این ارقام اولیه بوده و به مطالعات دقیق‌تر مهندسی بستگی دارند.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid lg:grid-cols-5 gap-6">
+                        <div class="lg:col-span-2 card p-6">
+                            <h3 class="text-xl font-bold text-green-700 mb-4">📊 منابع درآمد ماهانه (میلیون تومان)</h3>
+                            <div class="chart-container"><canvas id="incomeChart"></canvas></div>
+                        </div>
+                         <div class="lg:col-span-3 card p-6">
+                            <h3 class="text-xl font-bold text-indigo-700 mb-4">📈 مقایسه هزینه ساخت و سودآوری (میلیارد تومان)</h3>
+                            <div class="chart-container"><canvas id="costBenefitChart"></canvas></div>
+                        </div>
+                        <div class="lg:col-span-5 card p-8 bg-slate-800 text-white">
+                            <h3 class="text-2xl font-bold text-center text-violet-300 mb-6">💰 خلاصه بازگشت سرمایه (ROI)</h3>
+                            <div class="flex flex-wrap justify-around text-center">
+                                <div class="p-4">
+                                    <p class="text-slate-400 text-lg">هزینه کل ساخت</p>
+                                    <p class="text-4xl font-bold text-red-400 mt-2">۳۰۰-۴۲۵</p>
+                                    <p class="text-sm">میلیارد تومان</p>
+                                </div>
+                                <div class="p-4">
+                                    <p class="text-slate-400 text-lg">سود خالص سالانه</p>
+                                    <p class="text-4xl font-bold text-green-400 mt-2">۶.۵-۱۷.۵</p>
+                                    <p class="text-sm">میلیارد تومان</p>
+                                </div>
+                                <div class="p-4">
+                                    <p class="text-slate-400 text-lg">مدت بازگشت سرمایه</p>
+                                    <p class="text-4xl font-bold text-amber-400 mt-2">۱۵-۲۵ سال</p>
+                                    <p class="text-sm">(با احتساب یارانه‌های دولتی)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Slide 5: سناریوی تبدیل -->
+                <section id="slide-5" class="content-slide">
+                    <h2 class="text-4xl font-extrabold text-slate-900 mb-8">5. سناریوی تبدیل در ۶۰ دقیقه</h2>
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                         <div class="card p-6 text-center">
+                            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-yellow-100 flex items-center justify-center text-3xl text-yellow-600"><i class="fa-solid fa-bell"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-2">فاز ۱: هشدار اولیه</h3>
+                            <p class="text-sm font-semibold text-slate-500 mb-3">(T-60 تا T-45)</p>
+                            <p class="text-slate-600">فعال‌سازی پروتکل اضطراری، ارسال پیامک و پخش آژیر.</p>
+                        </div>
+                         <div class="card p-6 text-center">
+                            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-orange-100 flex items-center justify-center text-3xl text-orange-600"><i class="fa-solid fa-person-walking-arrow-right"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-2">فاز ۲: تخلیه</h3>
+                            <p class="text-sm font-semibold text-slate-500 mb-3">(T-45 تا T-30)</p>
+                            <p class="text-slate-600">باز شدن خودکار درها و معافیت از پرداخت هزینه برای خروج سریع.</p>
+                        </div>
+                         <div class="card p-6 text-center">
+                            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-sky-100 flex items-center justify-center text-3xl text-sky-600"><i class="fa-solid fa-box-open"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-2">فاز ۳: آماده‌سازی</h3>
+                            <p class="text-sm font-semibold text-slate-500 mb-3">(T-30 تا T-20)</p>
+                            <p class="text-slate-600">ورود تیم عملیاتی و انتقال تجهیزات اضطراری از انبارها.</p>
+                        </div>
+                         <div class="card p-6 text-center">
+                            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-teal-100 flex items-center justify-center text-3xl text-teal-600"><i class="fa-solid fa-door-open"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-2">فاز ۴: پذیرش مردم</h3>
+                            <p class="text-sm font-semibold text-slate-500 mb-3">(T-20 تا T-0)</p>
+                            <p class="text-slate-600">باز شدن ورودی‌های مجزا و راهنمایی مردم به طبقات مختلف.</p>
+                        </div>
+                         <div class="card p-6 text-center col-span-1 md:col-span-2 lg:col-span-1">
+                             <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center text-3xl text-red-600"><i class="fa-solid fa-lock"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-2">فاز ۵: قفل‌شدن</h3>
+                             <p class="text-sm font-semibold text-slate-500 mb-3">(T-0)</p>
+                            <p class="text-slate-600">بسته شدن درهای ضد انفجار و فعال‌سازی کامل حالت پناهگاه.</p>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Slide 6: جزئیات فنی تخلیه -->
+                <section id="slide-6" class="content-slide">
+                     <h2 class="text-4xl font-extrabold text-slate-900 mb-8">6. جزئیات فنی تخلیه و چالش‌ها</h2>
+                     <div class="grid lg:grid-cols-2 gap-6">
+                         <div class="card p-6 row-span-2">
+                             <h3 class="text-2xl font-bold mb-4 text-sky-700">📣 سیستم هشدار هوشمند چندلایه</h3>
+                             <div class="space-y-4">
+                                <div class="flex items-start p-4 bg-sky-50 rounded-lg">
+                                    <i class="fa-solid fa-satellite-dish text-sky-500 text-3xl ml-4"></i>
+                                    <div><strong class="block">لایه ۱: اتصال به پدافند کشور</strong><span>واکنش خودکار و آنی در کمتر از ۵ ثانیه.</span></div>
+                                </div>
+                                <div class="flex items-start p-4 bg-sky-50 rounded-lg">
+                                    <i class="fa-solid fa-mobile-screen-button text-sky-500 text-3xl ml-4"></i>
+                                    <div><strong class="block">لایه ۲: پیامک انبوه</strong><span>ارسال به ۱۰۰۰۰ کاربر ثبت‌شده با سرعت بالا.</span></div>
+                                </div>
+                                <div class="flex items-start p-4 bg-sky-50 rounded-lg">
+                                    <i class="fa-solid fa-volume-high text-sky-500 text-3xl ml-4"></i>
+                                    <div><strong class="block">لایه ۳: سیستم صوتی یکپارچه</strong><span>پخش همزمان اعلامیه به ۳ زبان در تمام طبقات.</span></div>
+                                </div>
+                                 <div class="flex items-start p-4 bg-sky-50 rounded-lg">
+                                    <i class="fa-solid fa-traffic-light text-sky-500 text-3xl ml-4"></i>
+                                    <div><strong class="block">لایه ۴: علائم بصری</strong><span>چراغ‌های LED قرمز چشمک‌زن و تابلوهای دیجیتال.</span></div>
+                                </div>
+                             </div>
+                         </div>
+                         <div class="card p-6">
+                             <h3 class="text-2xl font-bold mb-4 text-rose-700">🚗 مدیریت خودروهای باقی‌مانده</h3>
+                             <p class="mb-4 text-slate-600">برای ۱۰-۲۰٪ خودروهایی که ممکن است باقی بمانند، راهکارهای زیر پیش‌بینی شده است:</p>
+                             <div class="flex flex-col sm:flex-row gap-4">
+                                <div class="flex-1 p-3 text-center rounded-lg bg-rose-50 border border-rose-200">
+                                    <i class="fa-solid fa-truck-pickup text-3xl text-rose-500"></i>
+                                    <strong class="block mt-1">گزینه A: جابجایی</strong>
+                                    <p class="text-sm">انتقال با جک هیدرولیک</p>
+                                </div>
+                                <div class="flex-1 p-3 text-center rounded-lg bg-amber-50 border border-amber-200">
+                                    <i class="fa-solid fa-people-arrows text-3xl text-amber-500"></i>
+                                    <strong class="block mt-1">گزینه B: استقرار</strong>
+                                    <p class="text-sm">پناه گرفتن بین خودروها</p>
+                                </div>
+                                <div class="flex-1 p-3 text-center rounded-lg bg-green-50 border border-green-200">
+                                    <i class="fa-solid fa-key text-3xl text-green-500"></i>
+                                    <strong class="block mt-1">گزینه C: خدمات وَلِت</strong>
+                                    <p class="text-sm">تحویل کلید برای جابجایی</p>
+                                </div>
+                             </div>
+                         </div>
+                         <div class="card p-6">
+                             <h3 class="text-2xl font-bold mb-4 text-orange-700">🤔 چالش‌ها و راهکارها</h3>
+                             <div class="grid grid-cols-2 gap-4 text-sm">
+                                <div><strong class="text-orange-800">ترافیک خروج:</strong> چند خروجی + هدایت هوشمند</div>
+                                <div><strong class="text-orange-800">وحشت و هجوم:</strong> پرسنل آموزش‌دیده</div>
+                                <div><strong class="text-orange-800">قطع برق:</strong> ژنراتور + باتری UPS</div>
+                                <div><strong class="text-orange-800">ارتباطات:</strong> رادیو VHF + تلفن ماهواره‌ای</div>
+                             </div>
+                         </div>
+                     </div>
+                </section>
+
+                <!-- Slide 7: نمونه‌های جهانی -->
+                <section id="slide-7" class="content-slide">
+                    <h2 class="text-4xl font-extrabold text-slate-900 mb-8">7. بررسی نمونه‌های موفق جهانی</h2>
+                    <div class="space-y-8">
+                        <!-- Finland -->
+                        <div class="card p-6 overflow-hidden">
+                            <div class="flex items-center mb-4">
+                                <img src="https://flagcdn.com/w40/fi.png" alt="Finland Flag" class="flag-icon ml-4">
+                                <h3 class="text-2xl font-bold text-slate-800">فنلاند: الگوی پیشرفته پناهگاه‌های چندمنظوره</h3>
+                            </div>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="text-slate-600">
+                                    <p><strong>ظرفیت کل:</strong> 4.4 میلیون نفر (80% جمعیت). <strong>نمونه:</strong> پناهگاه Itäkeskus در هلسینکی که در زمان صلح مرکز خرید، پارکینگ، استخر و سالن ورزشی است.</p>
+                                    <p class="mt-2"><strong>ویژگی فنی:</strong> عمق ۳۰ متر، ظرفیت ۳۸۰۰ نفر، ۱۲ درب ضد انفجار ۵ تنی و سیستم تهویه NBC مستقل برای ۷۲ ساعت.</p>
+                                    <p class="mt-2"><strong>زمان تبدیل:</strong> ۷۲ ساعت (در صورت هشدار قبلی).</p>
+                                </div>
+                                <div class="bg-indigo-50 p-4 rounded-lg border-l-4 border-indigo-500">
+                                    <h4 class="font-bold text-indigo-800 mb-2">✅ درس‌های کلیدی از فنلاند:</h4>
+                                    <ul class="list-disc pr-4 space-y-1 text-indigo-700">
+                                        <li>فضای عمومی همیشه فعال = درآمد پایدار + آشنایی مردم</li>
+                                        <li>طراحی دوگانه از ابتدا برای جلوگیری از تغییرات اساسی</li>
+                                        <li>انجام تمرین‌های دوره‌ای برای حفظ آمادگی</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Sweden -->
+                        <div class="card p-6 overflow-hidden">
+                            <div class="flex items-center mb-4">
+                                <img src="https://flagcdn.com/w40/se.png" alt="Sweden Flag" class="flag-icon ml-4">
+                                <h3 class="text-2xl font-bold text-slate-800">سوئد: مدل پارکینگ-پناهگاه سریع‌التبدیل</h3>
+                            </div>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="text-slate-600">
+                                    <p><strong>ظرفیت:</strong> ۷ میلیون نفر (70% جمعیت). <strong>نمونه:</strong> پارکینگ P-Huset در استکهلم.</p>
+                                    <p class="mt-2"><strong>ویژگی فنی:</strong> عمق ۱۸ متر، ظرفیت بحران ۲۵۰۰ نفر و سیستم تخلیه سریع خودکار.</p>
+                                    <p class="mt-2"><strong>زمان تبدیل:</strong> ۳۰-۴۵ دقیقه.</p>
+                                    <p class="mt-2"><strong>نوآوری:</strong> سیستم "Pay & Leave" که در زمان هشدار، پارکینگ را رایگان کرده و خروج را تسریع می‌کند.</p>
+                                </div>
+                                <div class="bg-indigo-50 p-4 rounded-lg border-l-4 border-indigo-500">
+                                    <h4 class="font-bold text-indigo-800 mb-2">✅ درس‌های کلیدی از سوئد:</h4>
+                                    <ul class="list-disc pr-4 space-y-1 text-indigo-700">
+                                        <li>تخلیه سریع با انگیزه مالی (رایگان کردن پارکینگ)</li>
+                                        <li>سادگی طراحی برای تبدیل سریع و بدون پیچیدگی</li>
+                                        <li>یکپارچه‌سازی با سیستم هشدار ملی</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                         <!-- Switzerland -->
+                        <div class="card p-6 overflow-hidden">
+                            <div class="flex items-center mb-4">
+                                <img src="https://flagcdn.com/w40/ch.png" alt="Switzerland Flag" class="flag-icon ml-4">
+                                <h3 class="text-2xl font-bold text-slate-800">سوئیس: استاندارد طلایی پناهگاه‌سازی</h3>
+                            </div>
+                             <div class="grid md:grid-cols-2 gap-6">
+                                <div class="text-slate-600">
+                                    <p><strong>ظرفیت کل:</strong> ۹ میلیون نفر (۱۱۰٪ جمعیت!). قانون هر خانه یک پناهگاه.</p>
+                                    <p class="mt-2"><strong>ویژگی منحصربه‌فرد:</strong> پناهگاه‌های زیرزمینی در داخل کوه‌ها با مقاومت در برابر حمله هسته‌ای و خودکفایی ۲ هفته‌ای.</p>
+                                    <p class="mt-2"><strong>مدل مالی:</strong> دولت ۶۰٪ هزینه ساخت را پرداخت کرده و معافیت مالیاتی ۲۰ ساله ارائه می‌دهد.</p>
+                                </div>
+                                <div class="bg-indigo-50 p-4 rounded-lg border-l-4 border-indigo-500">
+                                    <h4 class="font-bold text-indigo-800 mb-2">✅ درس‌های کلیدی از سوئیس:</h4>
+                                    <ul class="list-disc pr-4 space-y-1 text-indigo-700">
+                                        <li>حمایت مالی گسترده دولت برای تسهیل سرمایه‌گذاری خصوصی</li>
+                                        <li>استانداردهای اجرایی بسیار سختگیرانه</li>
+                                        <li>فرهنگ‌سازی و آموزش از سنین پایه</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Singapore -->
+                        <div class="card p-6 overflow-hidden">
+                            <div class="flex items-center mb-4">
+                                <img src="https://flagcdn.com/w40/sg.png" alt="Singapore Flag" class="flag-icon ml-4">
+                                <h3 class="text-2xl font-bold text-slate-800">سنگاپور: هوشمندسازی و اتوماسیون کامل</h3>
+                            </div>
+                             <div class="grid md:grid-cols-2 gap-6">
+                                <div class="text-slate-600">
+                                    <p><strong>تمرکز:</strong> بر فناوری و اتوماسیون به دلیل تراکم بالای جمعیت. <strong>نمونه:</strong> پارکینگ رباتیک Marina Bay.</p>
+                                    <p class="mt-2"><strong>نوآوری:</strong> سیستم پارکینگ رباتیک خودروها را جابجا کرده و در زمان هشدار، تمام خودروها را در ۲۵ دقیقه به صورت خودکار خارج می‌کند. استفاده از اپلیکیشن موبایل و سنسورهای IoT.</p>
+                                    <p class="mt-2"><strong>زمان تبدیل:</strong> ۲۵-۳۰ دقیقه (سریع‌ترین در جهان!).</p>
+                                </div>
+                                <div class="bg-indigo-50 p-4 rounded-lg border-l-4 border-indigo-500">
+                                    <h4 class="font-bold text-indigo-800 mb-2">✅ درس‌های کلیدی از سنگاپور:</h4>
+                                    <ul class="list-disc pr-4 space-y-1 text-indigo-700">
+                                        <li>اتوماسیون کامل برای کاهش وابستگی به نیروی انسانی</li>
+                                        <li>یکپارچه‌سازی دیجیتال (اپلیکیشن + سنسور + هوش مصنوعی)</li>
+                                        <li>پارکینگ رباتیک برای تخلیه کارآمد و سریع</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Israel -->
+                        <div class="card p-6 overflow-hidden">
+                            <div class="flex items-center mb-4">
+                                <img src="https://flagcdn.com/w40/il.png" alt="Israel Flag" class="flag-icon ml-4">
+                                <h3 class="text-2xl font-bold text-slate-800">اسرائیل: مدل پناهگاه سریع‌الوصول</h3>
+                            </div>
+                             <div class="grid md:grid-cols-2 gap-6">
+                                <div class="text-slate-600">
+                                    <p><strong>استاندارد:</strong> هر نقطه باید در ۹۰ ثانیه به پناهگاه دسترسی داشته باشد.</p>
+                                    <p class="mt-2"><strong>ویژگی منحصربه‌فرد:</strong> پناهگاه‌های کوچک و پراکنده در هر ساختمان. ورودی مستقیم از خیابان به پارکینگ‌های پناهگاهی. سیستم همیشه آماده است.</p>
+                                    <p class="mt-2"><strong>زمان تبدیل:</strong> ۰ دقیقه! (همیشه آماده است).</p>
+                                </div>
+                                <div class="bg-indigo-50 p-4 rounded-lg border-l-4 border-indigo-500">
+                                    <h4 class="font-bold text-indigo-800 mb-2">✅ درس‌های کلیدی از اسرائیل:</h4>
+                                    <ul class="list-disc pr-4 space-y-1 text-indigo-700">
+                                        <li>دسترسی سریع (۹۰ ثانیه) حیاتی است</li>
+                                        <li>پناهگاه‌های کوچک و پراکنده بهتر از یک پناهگاه بزرگ است</li>
+                                        <li>حالت "همیشه آماده" ریسک را به حداقل می‌رساند</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Slide 8: استخراج نکات کلیدی -->
+                <section id="slide-8" class="content-slide">
+                    <h2 class="text-4xl font-extrabold text-slate-900 mb-8">8. استخراج نکات کلیدی برای پروژه ما</h2>
+                    <div class="space-y-6">
+                        <div class="card p-6">
+                             <div class="flex items-center mb-4">
+                                <img src="https://flagcdn.com/w40/fi.png" class="flag-icon ml-2"><img src="https://flagcdn.com/w40/se.png" class="flag-icon ml-3">
+                                <h4 class="font-bold text-xl text-slate-800">درس‌هایی از فنلاند و سوئد: کارایی و سادگی</h4>
+                             </div>
+                            <ul class="list-disc pr-5 space-y-2 text-slate-600">
+                                <li><strong>نگهداری مستمر:</strong> فضای تجاری فعال، کارآمدی تجهیزات در روز بحران را تضمین می‌کند.</li>
+                                <li><strong>آموزش عمومی:</strong> تمرین‌های سالانه و پوسترهای آموزشی، آرامش را در لحظه بحران افزایش می‌دهد.</li>
+                                <li><strong>انگیزه مالی:</strong> رایگان کردن پارکینگ در بحران، تخلیه را به شکل چشمگیری تسریع می‌کند.</li>
+                            </ul>
+                        </div>
+                        <div class="card p-6">
+                            <div class="flex items-center mb-4">
+                               <img src="https://flagcdn.com/w40/ch.png" class="flag-icon ml-2"><img src="https://flagcdn.com/w40/sg.png" class="flag-icon ml-3">
+                               <h4 class="font-bold text-xl text-slate-800">درس‌هایی از سوئیس و سنگاپور: استاندارد و هوشمندی</h4>
+                            </div>
+                            <ul class="list-disc pr-5 space-y-2 text-slate-600">
+                                <li><strong>حمایت دولتی:</strong> یارانه دولتی کلید توجیه پذیری پروژه و کاهش دوره بازگشت سرمایه است.</li>
+                                <li><strong>استاندارد بالا:</strong> اخذ گواهینامه‌های بین‌المللی باعث اعتماد مردم و خلق برند "پارکینگ امن" می‌شود.</li>
+                                <li><strong>هوشمندسازی:</strong> اپلیکیشن موبایل و سنسورهای IoT کارایی را افزایش و نیاز به پرسنل را کاهش می‌دهند.</li>
+                             </ul>
+                        </div>
+                        <div class="card p-6">
+                            <div class="flex items-center mb-4">
+                               <img src="https://flagcdn.com/w40/il.png" class="flag-icon ml-3">
+                               <h4 class="font-bold text-xl text-slate-800">درس‌هایی از اسرائیل: سرعت و آمادگی</h4>
+                            </div>
+                            <ul class="list-disc pr-5 space-y-2 text-slate-600">
+                                 <li><strong>دسترسی سریع مهم‌تر از آسایش است:</strong> در لحظه بحران، ۹۰ ثانیه تفاوت بین مرگ و زندگی است. باید ورودی‌های مستقیم و متعدد از خیابان طراحی شود.</li>
+                                 <li><strong>پناهگاه باید همیشه آماده باشد:</strong> مدل تبدیل صفر دقیقه ریسک را به حداقل می‌رساند. تجهیزات حیاتی باید همیشه فعال و درهای ضد انفجار در کمترین زمان قابل بسته شدن باشند.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Slide 9: طراحی نهایی و مقایسه -->
+                <section id="slide-9" class="content-slide">
+                    <h2 class="text-4xl font-extrabold text-slate-900 mb-8">9. طراحی نهایی و مقایسه با نمونه‌های جهانی</h2>
+                     <div class="card p-6 mb-8">
+                         <h3 class="text-2xl font-bold text-teal-700 mb-4">ویژگی‌های کلیدی طرح بهبودیافته ما</h3>
+                         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4 text-slate-700">
+                             <p class="flex items-center"><i class="fa-solid fa-check-circle text-teal-500 ml-2"></i> فضای تجاری فعال و نگهداری مستمر</p>
+                             <p class="flex items-center"><i class="fa-solid fa-check-circle text-teal-500 ml-2"></i> تمرین تبدیل سالانه برای آمادگی</p>
+                             <p class="flex items-center"><i class="fa-solid fa-check-circle text-teal-500 ml-2"></i> تخلیه سریع با انگیزه مالی</p>
+                             <p class="flex items-center"><i class="fa-solid fa-check-circle text-teal-500 ml-2"></i> استاندارد بالا و گواهینامه بین‌المللی</p>
+                             <p class="flex items-center"><i class="fa-solid fa-check-circle text-teal-500 ml-2"></i> درخواست حمایت مالی دولت</p>
+                             <p class="flex items-center"><i class="fa-solid fa-check-circle text-teal-500 ml-2"></i> هوشمندسازی با IoT و اپلیکیشن</p>
+                             <p class="flex items-center"><i class="fa-solid fa-check-circle text-teal-500 ml-2"></i> ورودی‌های مستقیم از خیابان</p>
+                             <p class="flex items-center"><i class="fa-solid fa-check-circle text-teal-500 ml-2"></i> آمادگی دائمی و تبدیل سریع</p>
+                         </div>
+                     </div>
+                     <div class="card p-6">
+                         <h3 class="text-2xl font-bold text-indigo-700 mb-4">جدول مقایسه پروژه ما با نمونه‌های جهانی</h3>
+                         <div class="overflow-x-auto">
+                            <table class="w-full text-center">
+                                <thead class="bg-slate-100">
+                                    <tr>
+                                        <th class="p-3 font-bold">معیار</th>
+                                        <th class="p-3">فنلاند</th>
+                                        <th class="p-3">سوئد</th>
+                                        <th class="p-3">سوئیس</th>
+                                        <th class="p-3">سنگاپور</th>
+                                        <th class="p-3">اسرائیل</th>
+                                        <th class="p-3 font-extrabold text-indigo-700 bg-indigo-50 rounded-t-lg">پروژه ما</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b">
+                                        <td class="p-3 font-semibold">زمان تبدیل</td>
+                                        <td>۷۲ ساعت</td>
+                                        <td>۳۰-۴۵ دقیقه</td>
+                                        <td>۴-۶ ساعت</td>
+                                        <td>۲۵ دقیقه</td>
+                                        <td>۰ (آماده)</td>
+                                        <td class="font-bold text-indigo-700 bg-indigo-50">۳۰-۶۰ دقیقه</td>
+                                    </tr>
+                                     <tr class="border-b">
+                                        <td class="p-3 font-semibold">ظرفیت (نفر/مترمربع)</td>
+                                        <td>۰.۰۸</td>
+                                        <td>۰.۱۲</td>
+                                        <td>۰.۱۰</td>
+                                        <td>۰.۱۵</td>
+                                        <td>۰.۲۰</td>
+                                        <td class="font-bold text-indigo-700 bg-indigo-50">۰.۱۵-۰.۱۸</td>
+                                    </tr>
+                                     <tr class="border-b">
+                                        <td class="p-3 font-semibold">هزینه ساخت (میلیون یورو/هزار نفر)</td>
+                                        <td>۸-۱۰</td>
+                                        <td>۴-۶</td>
+                                        <td>۱۲-۱۵</td>
+                                        <td>۶-۸</td>
+                                        <td>۳-۵</td>
+                                        <td class="font-bold text-indigo-700 bg-indigo-50">۵-۷</td>
+                                    </tr>
+                                     <tr class="border-b">
+                                        <td class="p-3 font-semibold">مدت اقامت طراحی</td>
+                                        <td>۷-۱۴ روز</td>
+                                        <td>۳-۷ روز</td>
+                                        <td>۱۴ روز</td>
+                                        <td>۲-۵ روز</td>
+                                        <td>۱-۶ ساعت</td>
+                                        <td class="font-bold text-indigo-700 bg-indigo-50">۲-۷ روز</td>
+                                    </tr>
+                                     <tr class="border-b">
+                                        <td class="p-3 font-semibold">درآمد زمان صلح</td>
+                                        <td class="text-green-600">بالا</td>
+                                        <td class="text-yellow-600">متوسط</td>
+                                        <td class="text-green-600">بالا</td>
+                                        <td class="text-green-600">بالا</td>
+                                        <td class="text-red-600">پایین</td>
+                                        <td class="font-bold text-green-700 bg-indigo-50">بالا</td>
+                                    </tr>
+                                     <tr class="border-b">
+                                        <td class="p-3 font-semibold">فناوری</td>
+                                        <td class="text-yellow-600">متوسط</td>
+                                        <td class="text-yellow-600">متوسط</td>
+                                        <td class="text-green-600">بالا</td>
+                                        <td class="text-green-600 font-bold">بسیار بالا</td>
+                                        <td class="text-green-600">بالا</td>
+                                        <td class="font-bold text-green-700 bg-indigo-50">بالا</td>
+                                    </tr>
+                                     <tr class="star-rating">
+                                        <td class="p-3 font-semibold">امتیاز کلی</td>
+                                        <td><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i></td>
+                                        <td><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-alt"></i><i class="fa-regular fa-star"></i></td>
+                                        <td><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></td>
+                                        <td><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></td>
+                                        <td><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i></td>
+                                        <td class="font-bold text-indigo-700 bg-indigo-50 rounded-b-lg"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-alt"></i></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                         </div>
+                     </div>
+                </section>
+
+                <!-- Slide 10: نتیجه‌گیری نهایی -->
+                <section id="slide-10" class="content-slide">
+                     <h2 class="text-4xl font-extrabold text-slate-900 mb-8">10. نتیجه‌گیری نهایی: چرا این پروژه باید اجرا شود؟</h2>
+                     <div class="grid lg:grid-cols-2 gap-8">
+                         <div class="card p-8 flex flex-col justify-center items-center text-center bg-gradient-to-br from-indigo-50 to-purple-50">
+                             <div class="w-24 h-24 rounded-full bg-white shadow-lg flex items-center justify-center mb-4">
+                                <i class="fa-solid fa-puzzle-piece text-5xl text-indigo-500"></i>
+                             </div>
+                             <h3 class="text-2xl font-bold text-indigo-800 mb-4">تحلیل منطقی: ادغام درس‌های جهانی</h3>
+                             <p class="text-slate-600">این پروژه صرفا یک کپی‌برداری نیست؛ بلکه یک <strong class="text-indigo-600">بومی‌سازی هوشمندانه</strong> از موفق‌ترین تجربیات جهانی برای پاسخ به نیازهای منحصر به فرد ماست.</p>
+                             <div class="mt-6 space-y-3 text-right">
+                                <p class="flex items-center"><i class="fa-solid fa-check text-indigo-500 ml-3"></i><span><strong class="font-semibold">سادگی سوئد + استاندارد سوئیس</strong> = کارایی و اعتماد</span></p>
+                                <p class="flex items-center"><i class="fa-solid fa-check text-indigo-500 ml-3"></i><span><strong class="font-semibold">هوشمندی سنگاپور + سرعت اسرائیل</strong> = آمادگی و واکنش سریع</span></p>
+                             </div>
+                         </div>
+                         <div class="card p-8 flex flex-col justify-center items-center text-center bg-gradient-to-br from-green-50 to-cyan-50">
+                             <div class="w-24 h-24 rounded-full bg-white shadow-lg flex items-center justify-center mb-4">
+                                <i class="fa-solid fa-shield-heart text-5xl text-green-500"></i>
+                             </div>
+                             <h3 class="text-2xl font-bold text-green-800 mb-4">نتیجه‌گیری: یک سرمایه‌گذاری استراتژیک</h3>
+                             <p class="text-slate-600">این مدل، تعادل بی‌نظیری بین <strong class="text-green-600">امنیت ملی و توسعه اقتصادی</strong> ایجاد کرده و با تبدیل شدن به "برند ملی امنیت پایدار"، الگویی برای تمام شهرهای کشور خواهد بود.</p>
+                         </div>
+                         <div class="lg:col-span-2 card p-6 bg-slate-800 text-white">
+                             <h3 class="text-2xl font-bold text-blue-300 mb-4 text-center">🗓️ نقشه راه اجرایی پروژه</h3>
+                             <div class="flex flex-col md:flex-row justify-between items-center text-center mt-6">
+                                 <!-- Step 1 -->
+                                 <div class="flex-1 flex flex-col items-center">
+                                    <div class="w-16 h-16 rounded-full bg-blue-500 flex items-center justify-center text-2xl mb-2"><i class="fa-solid fa-flask-vial"></i></div>
+                                    <p class="font-bold">فاز ۱: مطالعه و طراحی</p>
+                                    <p class="text-sm text-slate-400">۳ ماه</p>
+                                 </div>
+                                 <div class="flex-1 w-full h-1 bg-slate-600 my-4 md:my-0 md:w-auto md:h-1"></div>
+                                 <!-- Step 2 -->
+                                  <div class="flex-1 flex flex-col items-center">
+                                    <div class="w-16 h-16 rounded-full bg-blue-500 flex items-center justify-center text-2xl mb-2"><i class="fa-solid fa-file-signature"></i></div>
+                                    <p class="font-bold">فاز ۲: تامین مالی و مجوزها</p>
+                                    <p class="text-sm text-slate-400">۶ ماه</p>
+                                 </div>
+                                 <div class="flex-1 w-full h-1 bg-slate-600 my-4 md:my-0 md:w-auto md:h-1"></div>
+                                 <!-- Step 3 -->
+                                  <div class="flex-1 flex flex-col items-center">
+                                    <div class="w-16 h-16 rounded-full bg-blue-500 flex items-center justify-center text-2xl mb-2"><i class="fa-solid fa-helmet-safety"></i></div>
+                                    <p class="font-bold">فاز ۳: ساخت و نصب</p>
+                                    <p class="text-sm text-slate-400">۱ سال</p>
+                                 </div>
+                                 <div class="flex-1 w-full h-1 bg-slate-600 my-4 md:my-0 md:w-auto md:h-1"></div>
+                                 <!-- Step 4 -->
+                                  <div class="flex-1 flex flex-col items-center">
+                                    <div class="w-16 h-16 rounded-full bg-blue-500 flex items-center justify-center text-2xl mb-2"><i class="fa-solid fa-ribbon"></i></div>
+                                    <p class="font-bold">فاز ۴: راه‌اندازی و افتتاح</p>
+                                    <p class="text-sm text-slate-400">۳ ماه</p>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                </section>
+                
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const menuItems = [
+                { id: 1, title: "مقدمه و تعریف", icon: "fa-lightbulb" },
+                { id: 2, title: "اهداف پروژه", icon: "fa-bullseye" },
+                { id: 3, title: "تعریف مدل", icon: "fa-sitemap" },
+                { id: 4, title: "تحلیل اقتصادی", icon: "fa-chart-pie" },
+                { id: 5, title: "سناریوی تبدیل", icon: "fa-arrows-rotate" },
+                { id: 6, title: "جزئیات تخلیه", icon: "fa-person-walking-arrow-right" },
+                { id: 7, title: "نمونه‌های جهانی", icon: "fa-globe" },
+                { id: 8, title: "نکات کلیدی", icon: "fa-key" },
+                { id: 9, title: "طراحی نهایی", icon: "fa-pen-ruler" },
+                { id: 10, title: "نتیجه‌گیری", icon: "fa-flag-checkered" },
+            ];
+
+            const navMenu = document.getElementById('nav-menu');
+            const mainMenu = document.getElementById('main-menu');
+            const menuToggle = document.getElementById('menu-toggle');
+            const menuClose = document.getElementById('menu-close');
+
+            let chartsInitialized = false;
+
+            // Populate menu
+            menuItems.forEach(item => {
+                const button = document.createElement('button');
+                button.className = 'nav-button';
+                button.dataset.slideId = `slide-${item.id}`;
+                
+                const icon = document.createElement('i');
+                icon.className = `fa-solid ${item.icon} w-6`;
+                
+                const span = document.createElement('span');
+                span.textContent = item.title;
+                
+                button.appendChild(icon);
+                button.appendChild(span);
+                mainMenu.appendChild(button);
+            });
+
+            const slides = document.querySelectorAll('.content-slide');
+            const menuLinks = document.querySelectorAll('.nav-button');
+
+            function showSlide(slideId) {
+                slides.forEach(slide => slide.classList.remove('active'));
+                menuLinks.forEach(link => link.classList.remove('active'));
+
+                const activeSlide = document.getElementById(slideId);
+                const activeLink = document.querySelector(`.nav-button[data-slide-id="${slideId}"]`);
+                
+                if (activeSlide) activeSlide.classList.add('active');
+                if (activeLink) activeLink.classList.add('active');
+                
+                navMenu.classList.remove('is-open');
+
+                if (slideId === 'slide-4' && !chartsInitialized) {
+                    initCharts();
+                    chartsInitialized = true;
+                }
+            }
+
+            mainMenu.addEventListener('click', (e) => {
+                const button = e.target.closest('.nav-button');
+                if (button) {
+                    e.preventDefault();
+                    const slideId = button.dataset.slideId;
+                    showSlide(slideId);
+                }
+            });
+            
+            menuToggle.addEventListener('click', () => navMenu.classList.add('is-open'));
+            menuClose.addEventListener('click', () => navMenu.classList.remove('is-open'));
+
+            showSlide('slide-1'); // Show first slide by default
+
+            function initCharts() {
+                Chart.defaults.font.family = 'Vazirmatn';
+                Chart.defaults.color = '#334155';
+
+                // Income Chart
+                const incomeCtx = document.getElementById('incomeChart').getContext('2d');
+                new Chart(incomeCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['پارکینگ', 'سالن ورزشی', 'سالن اجتماعات', 'کافی‌شاپ', 'موزه و آموزش'],
+                        datasets: [{
+                            label: 'درآمد ماهانه (میلیون تومان)',
+                            data: [650, 650, 75, 40, 35],
+                            backgroundColor: ['#4f46e5', '#6366f1', '#818cf8', '#a5b4fc', '#c7d2fe'],
+                            borderColor: '#ffffff',
+                            borderWidth: 4,
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { position: 'bottom' } }
+                    }
+                });
+
+                // Cost/Benefit Chart
+                const costBenefitCtx = document.getElementById('costBenefitChart').getContext('2d');
+                new Chart(costBenefitCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['سناریوی بدبینانه', 'سناریوی خوش‌بینانه'],
+                        datasets: [
+                            {
+                                label: 'هزینه کل ساخت', data: [425, 300],
+                                backgroundColor: '#f43f5e', borderRadius: 6,
+                            },
+                            {
+                                label: 'سود خالص در ۲۰ سال', data: [130, 350], // 6.5*20, 17.5*20
+                                backgroundColor: '#22c55e', borderRadius: 6,
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        scales: {
+                            y: { beginAtZero: true, grid: { color: '#e2e8f0' } },
+                            x: { grid: { display: false } }
+                        },
+                         plugins: { legend: { position: 'top' } }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
+
