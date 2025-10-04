@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد جامع پدافند غیرعامل متروی تهران</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-primary: #0d3b66;
+            --color-secondary: #f9a826;
+            --color-line-1: #e6194b;
+            --color-line-2: #3cb44b;
+            --color-line-3: #f58231;
+            --color-line-5: #f032e6;
+            --color-line-6: #911eb4;
+            --color-line-7: #4363d8;
+        }
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #f0f2f5;
+            color: #334155;
+            overflow-x: hidden;
+        }
+        .content-section { display: none; animation: fadeIn 0.8s; }
+        .content-section.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .nav-menu {
+            background-color: rgba(25, 42, 86, 0.5); /* Glassmorphism background */
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-left: 1px solid rgba(255, 255, 255, 0.2); /* Border on the left */
+            color: white;
+            position: fixed; top: 0; right: 0; height: 100vh; width: 16rem; z-index: 1000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out, background-color 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        .nav-menu.is-open { transform: translateX(0); background-color: rgba(25, 42, 86, 0.75); }
+        .nav-button {
+            display: flex; align-items: center; justify-content: flex-start;
+            padding: 1rem; width: 100%; text-align: right; border-right: 4px solid transparent;
+            transition: background-color 0.3s, border-color 0.3s; gap: 0.75rem;
+        }
+        .nav-button:hover { background-color: rgba(26, 90, 150, 0.5); border-color: var(--color-secondary); }
+        .nav-button.active { background-color: var(--color-primary); border-color: var(--color-secondary); font-weight: 900; }
+        .card {
+            background-color: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            padding: 1.5rem 2rem; margin-bottom: 2rem; transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
+        .section-title { color: var(--color-primary); font-weight: 900; margin-bottom: 2rem; text-align: center; }
+        .stat-card {
+            background: linear-gradient(145deg, #eef2f7, #ffffff); border-radius: 1rem; padding: 1.5rem;
+            box-shadow: 5px 5px 15px #d1d9e6, -5px -5px 15px #ffffff; text-align: center;
+        }
+        .accordion-item details summary {
+            display: flex; justify-content: space-between; align-items: center; padding: 1rem; cursor: pointer;
+            background-color: #f9fafb; font-weight: bold; transition: background-color 0.3s; border-radius: 8px;
+        }
+        .accordion-item summary::after { content: '\f078'; font-family: 'Font Awesome 6 Free'; font-weight: 900; transition: transform 0.3s; }
+        .accordion-item details[open] summary { background-color: #f0f9ff; color: var(--color-primary); }
+        .accordion-item details[open] summary::after { transform: rotate(180deg); }
+        .accordion-content { padding: 1.5rem; background-color: #fff; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 8px 8px; }
+        .line-badge {
+            display: inline-block; width: 24px; height: 24px; border-radius: 50%; color: white;
+            font-weight: bold; text-align: center; line-height: 24px; font-size: 0.9rem;
+        }
+        .legend-dot { height: 15px; width: 15px; border-radius: 50%; display: inline-block; margin-left: 5px; }
+        .equipment-card {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .kpi-bar-bg {
+            position: relative;
+            width: 100%;
+            background-color: #e5e7eb;
+            height: 1.5rem;
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+        .kpi-bar-target {
+            position: absolute;
+            height: 100%;
+            border-radius: 9999px;
+        }
+        .kpi-bar-current {
+            position: absolute;
+            height: 100%;
+            border-radius: 9999px 0 0 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+        .kpi-bar-label {
+            padding-right: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: black;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <button id="menu-toggle" class="fixed top-5 right-5 z-[1001] bg-white text-blue-800 w-12 h-12 rounded-full shadow-lg text-xl flex items-center justify-center">
+        <i class="fa-solid fa-bars"></i>
+    </button>
+    
+    <main class="flex-1 p-6 md:p-10 min-w-0">
+        
+        <section id="intro" class="content-section">
+             <div class="card text-center bg-cover bg-center" style="background-image: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), url('https://placehold.co/1200x400/0d3b66/ffffff?text=Metro');">
+                <i class="fas fa-subway text-6xl text-blue-800 mb-4"></i>
+                <h1 class="section-title text-4xl">ارزیابی و اولویت‌بندی ۲۱ ایستگاه مترو تهران به‌عنوان پناهگاه اضطراری</h1>
+                <p class="text-lg text-gray-700 max-w-4xl mx-auto">
+                    این داشبورد بر اساس ارزیابی علمی ۲۱ ایستگاه برتر با ۱۰ شاخص کمی، یک نقشه راه استراتژیک برای تقویت زیرساخت‌های پدافند غیرعامل پایتخت ارائه می‌دهد.
+                </p>
+            </div>
+            <div class="card">
+                <h2 class="text-2xl font-bold text-blue-700 mb-6 text-center">ضرورت پژوهش (بر اساس آمار واقعی)</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                    <div class="stat-card">
+                        <p class="text-4xl font-black text-gray-800">۹.۷ میلیون</p>
+                        <h3 class="font-bold text-lg mt-2">جمعیت تهران</h3>
+                    </div>
+                    <div class="stat-card">
+                        <p class="text-4xl font-black text-red-600">~۱٪</p>
+                        <h3 class="font-bold text-lg mt-2">استفاده واقعی از مترو در بحران</h3>
+                         <p class="text-sm text-gray-500">(تخمین ۵۰-۹۷ هزار نفر در ژوئن ۲۰۲۵)</p>
+                    </div>
+                    <div class="stat-card">
+                         <p class="text-4xl font-black text-green-600">۱۶۲,۲۶۶</p>
+                        <h3 class="font-bold text-lg mt-2">ظرفیت اسمی پناهگاهی</h3>
+                         <p class="text-sm text-gray-500">(۲۱ ایستگاه برتر)</p>
+                    </div>
+                </div>
+                 <p class="text-center mt-6 text-red-700 font-semibold">شکاف کلیدی: وجود پتانسیل بالا در شبکه مترو (۱۶۰ ایستگاه) اما استفاده حداقلی به دلیل کمبود تجهیزات و گلوگاه‌های ورودی.</p>
+            </div>
+             <div class="card">
+                <h2 class="text-2xl font-bold text-blue-700 mb-6 text-center">روش‌شناسی و ۱۰ شاخص اولویت‌بندی</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="space-y-6">
+                         <div>
+                            <h3 class="font-bold text-lg mb-4 text-center">فرآیند پژوهش</h3>
+                            <div class="flex justify-between items-center text-sm text-center">
+                                <div class="flex-1"><i class="fas fa-database text-2xl text-blue-500"></i><p>جمع‌آوری داده</p></div>
+                                <div class="flex-1 text-gray-400">&rarr;</div>
+                                <div class="flex-1"><i class="fas fa-check-double text-2xl text-green-500"></i><p>صحت‌سنجی</p></div>
+                                <div class="flex-1 text-gray-400">&rarr;</div>
+                                <div class="flex-1"><i class="fas fa-chart-bar text-2xl text-yellow-500"></i><p>تحلیل شاخص‌ها</p></div>
+                                <div class="flex-1 text-gray-400">&rarr;</div>
+                                <div class="flex-1"><i class="fas fa-trophy text-2xl text-orange-500"></i><p>اولویت‌بندی</p></div>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg mb-4 mt-6 text-center">معیارهای انتخاب ۲۱ ایستگاه</h3>
+                            <ul class="list-disc pr-5 space-y-2">
+                                <li><strong>عمق:</strong> بیشتر از ۱۹ متر (مطابق استاندارد FEMA برای حفاظت).</li>
+                                <li><strong>مساحت:</strong> بیشتر از ۶,۵۰۰ متر مربع (برای ظرفیت اسکان مناسب).</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                         <div class="grid grid-cols-3 items-center gap-2"><div class="font-semibold">عمق</div><div class="w-full bg-gray-200 rounded-full h-2.5"><div class="bg-blue-600 h-2.5 rounded-full" style="width: 90%"></div></div><div class="text-right font-mono text-sm">18%</div></div>
+                         <div class="grid grid-cols-3 items-center gap-2"><div class="font-semibold">شدت گلوگاه (معکوس)</div><div class="w-full bg-gray-200 rounded-full h-2.5"><div class="bg-blue-600 h-2.5 rounded-full" style="width: 90%"></div></div><div class="text-right font-mono text-sm">18%</div></div>
+                         <div class="grid grid-cols-3 items-center gap-2"><div class="font-semibold">ظرفیت عملی</div><div class="w-full bg-gray-200 rounded-full h-2.5"><div class="bg-yellow-500 h-2.5 rounded-full" style="width: 75%"></div></div><div class="text-right font-mono text-sm">15%</div></div>
+                         <div class="grid grid-cols-3 items-center gap-2"><div class="font-semibold">تراکم جمعیت</div><div class="w-full bg-gray-200 rounded-full h-2.5"><div class="bg-yellow-500 h-2.5 rounded-full" style="width: 75%"></div></div><div class="text-right font-mono text-sm">15%</div></div>
+                         <div class="grid grid-cols-3 items-center gap-2"><div class="font-semibold">دسترسی</div><div class="w-full bg-gray-200 rounded-full h-2.5"><div class="bg-orange-500 h-2.5 rounded-full" style="width: 60%"></div></div><div class="text-right font-mono text-sm">12%</div></div>
+                         <div class="grid grid-cols-3 items-center gap-2"><div class="font-semibold">مساحت</div><div class="w-full bg-gray-200 rounded-full h-2.5"><div class="bg-orange-500 h-2.5 rounded-full" style="width: 60%"></div></div><div class="text-right font-mono text-sm">12%</div></div>
+                         <div class="grid grid-cols-3 items-center gap-2"><div class="font-semibold">ورودی</div><div class="w-full bg-gray-200 rounded-full h-2.5"><div class="bg-red-500 h-2.5 rounded-full" style="width: 20%"></div></div><div class="text-right font-mono text-sm">4%</div></div>
+                         <div class="grid grid-cols-3 items-center gap-2"><div class="font-semibold">آسانسور</div><div class="w-full bg-gray-200 rounded-full h-2.5"><div class="bg-red-500 h-2.5 rounded-full" style="width: 15%"></div></div><div class="text-right font-mono text-sm">3%</div></div>
+                         <div class="grid grid-cols-3 items-center gap-2"><div class="font-semibold">آمادگی NBC</div><div class="w-full bg-gray-200 rounded-full h-2.5"><div class="bg-red-500 h-2.5 rounded-full" style="width: 10%"></div></div><div class="text-right font-mono text-sm">2%</div></div>
+                         <div class="grid grid-cols-3 items-center gap-2"><div class="font-semibold">جریان</div><div class="w-full bg-gray-200 rounded-full h-2.5"><div class="bg-red-500 h-2.5 rounded-full" style="width: 5%"></div></div><div class="text-right font-mono text-sm">1%</div></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="ranking" class="content-section">
+            <h1 class="section-title text-4xl">رتبه‌بندی، ماتریس بصری و تحلیل ایستگاه‌ها</h1>
+             <div class="card bg-gray-50 border-l-4 border-blue-500">
+                <div class="flex items-center gap-4">
+                    <i class="fas fa-chart-line text-4xl text-blue-600"></i>
+                    <div>
+                        <h2 class="text-xl font-bold">تحلیل جامع ۲۱ ایستگاه منتخب</h2>
+                        <p class="text-sm">در این بخش، داده‌های کامل ایستگاه‌ها به همراه ماتریس بصری و تحلیل ۱۰ ایستگاه برتر ارائه می‌شود تا یک دید کامل از وضعیت موجود فراهم گردد.</p>
+                    </div>
+                </div>
+            </div>
+             <div class="card mt-8 overflow-x-auto">
+                 <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">جدول کامل ۲۱ ایستگاه و آمار کلی</h2>
+                <table class="w-full min-w-[950px] text-center" id="full-station-table">
+                    <thead>
+                        <tr class="border-b-2 border-gray-200">
+                            <th class="p-3 font-bold">رتبه</th><th class="p-3 font-bold text-right">ایستگاه</th><th class="p-3 font-bold">خط</th><th class="p-3 font-bold">عمق (متر)</th><th class="p-3 font-bold">مساحت (م²)</th><th class="p-3 font-bold">ورودی</th><th class="p-3 font-bold">پله‌برقی</th><th class="p-3 font-bold">آسانسور</th><th class="p-3 font-bold">امتیاز</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="card">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2 text-center">ماتریس بصری اولویت‌بندی</h2>
+                <p class="text-center text-sm text-gray-500 mb-4">محور افقی: امتیاز نهایی | محور عمودی: عمق (متر) | اندازه حباب: ظرفیت (نفر)</p>
+                <canvas id="rankingBubbleChart" height="150"></canvas>
+                <div class="flex justify-center items-center gap-4 mt-4 text-sm flex-wrap">
+                    <strong>راهنمای رنگ گلوگاه:</strong>
+                    <span class="flex items-center"><div class="legend-dot" style="background-color: rgba(34, 197, 94, 0.8);"></div>عالی</span>
+                    <span class="flex items-center"><div class="legend-dot" style="background-color: rgba(234, 179, 8, 0.8);"></div>قابل قبول</span>
+                    <span class="flex items-center"><div class="legend-dot" style="background-color: rgba(249, 115, 22, 0.8);"></div>متوسط</span>
+                    <span class="flex items-center"><div class="legend-dot" style="background-color: rgba(239, 68, 68, 0.8);"></div>بحرانی</span>
+                </div>
+            </div>
+            <div class="card">
+                <h2 class="text-2xl font-bold text-center mb-6">تحلیل ۱۰ ایستگاه برتر</h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full min-w-[800px]">
+                        <thead>
+                            <tr class="border-b-2">
+                                <th class="p-2 text-right">رتبه</th>
+                                <th class="p-2 text-right">ایستگاه</th>
+                                <th class="p-2">امتیاز</th>
+                                <th class="p-2">عمق (متر)</th>
+                                <th class="p-2">ظرفیت (نفر)</th>
+                                <th class="p-2 text-right">مهم‌ترین ویژگی</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="bg-green-50"><td class="p-2 font-bold">🥇 ۱</td><td class="p-2 font-semibold">توحید</td><td class="p-2 font-bold">74.5</td><td class="p-2">46.0</td><td class="p-2">2,000</td><td class="p-2 text-right">بزرگ‌ترین مساحت و بهترین تعادل شاخص‌ها</td></tr>
+                            <tr class="bg-green-50"><td class="p-2 font-bold">🥈 ۲</td><td class="p-2 font-semibold">بوستان گفتگو</td><td class="p-2 font-bold">64.3</td><td class="p-2">35.5</td><td class="p-2">1,640</td><td class="p-2 text-right">گلوگاه عالی و طراحی مدرن</td></tr>
+                            <tr class="bg-green-50"><td class="p-2 font-bold">🥉 ۳</td><td class="p-2 font-semibold">امام خمینی</td><td class="p-2 font-bold">62.9</td><td class="p-2">19.2</td><td class="p-2">1,600</td><td class="p-2 text-right">موقعیت استراتژیک و بالاترین دسترسی</td></tr>
+                            <tr class="bg-yellow-50"><td class="p-2 font-bold">۴</td><td class="p-2 font-semibold">مولوی</td><td class="p-2 font-bold">61.8</td><td class="p-2">26.0</td><td class="p-2">1,680</td><td class="p-2 text-right">تراکم جمعیتی و دسترسی فوق‌العاده</td></tr>
+                            <tr class="bg-yellow-50"><td class="p-2 font-bold">۵</td><td class="p-2 font-semibold">هلال احمر</td><td class="p-2 font-bold">54.6</td><td class="p-2">26.0</td><td class="p-2">1,200</td><td class="p-2 text-right">مجاورت با مرکز پزشکی و گلوگاه عالی</td></tr>
+                            <tr class="bg-yellow-50"><td class="p-2 font-bold">۶</td><td class="p-2 font-semibold">برج میلاد</td><td class="p-2 font-bold">53.7</td><td class="p-2">55.0</td><td class="p-2">960</td><td class="p-2 text-right">عمیق‌ترین ایستگاه (حفاظت حداکثری)</td></tr>
+                            <tr class="bg-orange-50"><td class="p-2 font-bold">۷</td><td class="p-2 font-semibold">تجریش</td><td class="p-2 font-bold">48.4</td><td class="p-2">51.0</td><td class="p-2">1,200</td><td class="p-2 text-right">عمق بسیار بالا اما گلوگاه بحرانی</td></tr>
+                            <tr class="bg-orange-50"><td class="p-2 font-bold">۸</td><td class="p-2 font-semibold">قیطریه</td><td class="p-2 font-bold">44.9</td><td class="p-2">30.0</td><td class="p-2">800</td><td class="p-2 text-right">گلوگاه عالی اما ظرفیت محدود</td></tr>
+                            <tr class="bg-orange-50"><td class="p-2 font-bold">۹</td><td class="p-2 font-semibold">مدافعان سلامت</td><td class="p-2 font-bold">43.2</td><td class="p-2">49.0</td><td class="p-2">912</td><td class="p-2 text-right">عمق بالا در منطقه درمانی</td></tr>
+                            <tr class="bg-red-50"><td class="p-2 font-bold">۱۰</td><td class="p-2 font-semibold">شهرک آزمایش</td><td class="p-2 font-bold">38.7</td><td class="p-2">36.0</td><td class="p-2">1,040</td><td class="p-2 text-right">شاخص‌های متعادل اما نیاز محلی کم</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-4 p-4 bg-gray-50 rounded-lg">
+                    <h4 class="font-bold text-lg">تحلیل کلیدی</h4>
+                    <p class="text-sm">ایستگاه <strong>توحید</strong> به دلیل تعادل عالی بین تمام شاخص‌ها، به ویژه مساحت و ظرفیت، رتبه اول را کسب کرده است. در مقابل، <strong>برج میلاد</strong> با وجود عمق فوق‌العاده، به دلیل تراکم جمعیتی پایین در منطقه، در رتبه ششم قرار گرفته است. این نشان می‌دهد که عمق به تنهایی عامل تعیین‌کننده نیست.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="public-willingness" class="content-section">
+            <h1 class="section-title text-4xl">اینفوگرافیک تحلیل تمایل عمومی</h1>
+             <div class="card">
+                <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-center">
+                    <div class="lg:col-span-2 text-center">
+                        <h2 class="text-2xl font-bold text-gray-800">📊 شکاف بین پتانسیل و واقعیت</h2>
+                        <p class="text-gray-600 mb-4">نمودار زیر رفتار واقعی جمعیت تهران در بحران ژوئن ۲۰۲۵ را نشان می‌دهد.</p>
+                        <canvas id="willingnessDoughnutChart" height="250"></canvas>
+                    </div>
+                     <div class="lg:col-span-3 p-4 bg-blue-50 rounded-lg">
+                        <h3 class="font-bold text-lg mb-4 text-blue-800">تحلیل رفتار جمعیت (بحران ژوئن ۲۰۲۵)</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-4">
+                                <i class="fas fa-car text-2xl text-orange-500 mt-1"></i>
+                                <div>
+                                    <h4 class="font-bold">فرار گسترده (۵۱٪ جمعیت)</h4>
+                                    <p class="text-sm">حدود ۵ میلیون نفر با خودرو تهران را به مقصد شمال ترک کردند که منجر به ترافیک شدید (سفر ۳ ساعته به ۱۴ ساعت) و کاهش استفاده از مترو شد. <span class="text-xs text-gray-500">(منبع: Clash Report, Mario Nawfal)</span></p>
+                                </div>
+                            </div>
+                             <div class="flex items-start gap-4">
+                                <i class="fas fa-subway text-2xl text-green-500 mt-1"></i>
+                                <div>
+                                    <h4 class="font-bold">استفاده واقعی از مترو (۱٪~ جمعیت)</h4>
+                                    <p class="text-sm">با وجود باز بودن ۲۴ ساعته ایستگاه‌ها، تنها حدود ۵۰ تا ۹۷ هزار نفر از مترو به عنوان پناهگاه استفاده کردند که بسیار کمتر از ظرفیت اسمی بود. <span class="text-xs text-gray-500">(منبع: Guardian, PBS, RFE/RL)</span></p>
+                                </div>
+                            </div>
+                             <div class="flex items-start gap-4">
+                                <i class="fas fa-times-circle text-2xl text-red-500 mt-1"></i>
+                                <div>
+                                    <h4 class="font-bold">دلایل استفاده پایین</h4>
+                                    <p class="text-sm">ترس از هدف‌گیری مترو، ترجیح فرار به حومه به جای پناه گرفتن در شهر، و کمبود تجهیزات واقعی (مانند آب، غذا و تهویه) از دلایل اصلی عدم استقبال مردم بود. <span class="text-xs text-gray-500">(منبع: Al Jazeera, CNN)</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+             <div class="card">
+                 <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">📈 نقشه راه افزایش تمایل عمومی</h2>
+                 <div class="relative pt-4">
+                     <div class="border-r-2 border-dashed border-gray-300 absolute h-full top-0 right-1/2"></div>
+                     <!-- Item 1 -->
+                     <div class="mb-8 flex justify-between items-center w-full">
+                         <div class="order-1 w-5/12"></div>
+                         <div class="z-20 flex items-center order-1 bg-gray-800 shadow-xl w-12 h-12 rounded-full"><h1 class="mx-auto font-bold text-lg text-white">۱</h1></div>
+                         <div class="order-1 bg-gray-50 rounded-lg shadow-xl w-5/12 px-6 py-4">
+                             <h3 class="font-bold text-gray-800 text-xl">۱۴۰۴: وضعیت فعلی (۳۵٪)</h3>
+                             <p class="text-sm leading-snug tracking-wide text-gray-900 text-opacity-100">تمایل نظری و پیش از بحران، مبتنی بر عدم آگاهی و ترس.</p>
+                         </div>
+                     </div>
+                      <!-- Item 2 -->
+                     <div class="mb-8 flex justify-between flex-row-reverse items-center w-full">
+                         <div class="order-1 w-5/12"></div>
+                         <div class="z-20 flex items-center order-1 bg-red-500 shadow-xl w-12 h-12 rounded-full"><h1 class="mx-auto text-white font-bold text-lg">۲</h1></div>
+                         <div class="order-1 bg-red-50 rounded-lg shadow-xl w-5/12 px-6 py-4">
+                             <h3 class="font-bold text-red-800 text-xl">۲۰۲۵: تجربه بحران (۴۵٪)</h3>
+                             <p class="text-sm leading-snug tracking-wide text-gray-900 text-opacity-100">افزایش اندک در عمل، اما فرار ۷۰٪ جمعیت به دلیل پانیک.</p>
+                         </div>
+                     </div>
+                      <!-- Item 3 -->
+                     <div class="mb-8 flex justify-between items-center w-full">
+                         <div class="order-1 w-5/12"></div>
+                         <div class="z-20 flex items-center order-1 bg-yellow-500 shadow-xl w-12 h-12 rounded-full"><h1 class="mx-auto text-white font-bold text-lg">۳</h1></div>
+                         <div class="order-1 bg-yellow-50 rounded-lg shadow-xl w-5/12 px-6 py-4">
+                             <h3 class="font-bold text-yellow-800 text-xl">۱۴۰۵: هدف با اپلیکیشن (۶۰٪)</h3>
+                             <p class="text-sm leading-snug tracking-wide text-gray-900 text-opacity-100">راه‌اندازی اپلیکیشن Real-time برای کاهش سردرگمی.</p>
+                         </div>
+                     </div>
+                      <!-- Item 4 -->
+                      <div class="mb-8 flex justify-between flex-row-reverse items-center w-full">
+                         <div class="order-1 w-5/12"></div>
+                         <div class="z-20 flex items-center order-1 bg-green-500 shadow-xl w-12 h-12 rounded-full"><h1 class="mx-auto text-white font-bold text-lg">۴</h1></div>
+                         <div class="order-1 bg-green-50 rounded-lg shadow-xl w-5/12 px-6 py-4">
+                             <h3 class="font-bold text-green-800 text-xl">۱۴۰۸: هدف با مانور (۷۵٪)</h3>
+                             <p class="text-sm leading-snug tracking-wide text-gray-900 text-opacity-100">افزایش اعتماد عمومی از طریق مانورهای شش‌ماهه.</p>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+        </section>
+
+        <section id="benchmark" class="content-section">
+             <h1 class="section-title text-4xl">مقایسه با استانداردهای جهانی</h1>
+             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Kyiv -->
+                <div class="card text-center">
+                    <img src="https://flagcdn.com/w80/ua.png" class="w-16 h-auto rounded-full shadow-lg mx-auto mb-3">
+                    <h3 class="font-bold text-xl">کی‌یف</h3>
+                    <p class="text-sm text-gray-500 mb-3">تاب‌آوری دیجیتال</p>
+                    <ul class="text-sm text-right space-y-2">
+                        <li><i class="fas fa-ruler-vertical text-blue-500 w-4"></i> <strong>عمیق‌ترین:</strong> ۱۰۵ متر (Arsenalna)</li>
+                        <li><i class="fas fa-mobile-alt text-blue-500 w-4"></i> <strong>گلوگاه:</strong> مدیریت با اپلیکیشن</li>
+                        <li><i class="fas fa-check-circle text-blue-500 w-4"></i> <strong>درس کلیدی:</strong> کاهش ۴۰٪ پانیک با فناوری</li>
+                    </ul>
+                </div>
+                <!-- Moscow -->
+                 <div class="card text-center">
+                    <img src="https://flagcdn.com/w80/ru.png" class="w-16 h-auto rounded-full shadow-lg mx-auto mb-3">
+                    <h3 class="font-bold text-xl">مسکو</h3>
+                    <p class="text-sm text-gray-500 mb-3">حفاظت حداکثری</p>
+                    <ul class="text-sm text-right space-y-2">
+                        <li><i class="fas fa-users text-blue-500 w-4"></i> <strong>ظرفیت:</strong> ۵,۰۰۰ نفر/ایستگاه</li>
+                        <li><i class="fas fa-door-closed text-blue-500 w-4"></i> <strong>گلوگاه:</strong> درب‌های Hermetic</li>
+                        <li><i class="fas fa-check-circle text-blue-500 w-4"></i> <strong>درس کلیدی:</strong> خروج ایمن ۵۰۰ نفر در ۵ دقیقه</li>
+                    </ul>
+                </div>
+                 <!-- London -->
+                 <div class="card text-center">
+                    <img src="https://flagcdn.com/w80/gb.png" class="w-16 h-auto rounded-full shadow-lg mx-auto mb-3">
+                    <h3 class="font-bold text-xl">لندن (WWII)</h3>
+                    <p class="text-sm text-gray-500 mb-3">درس‌های تاریخی</p>
+                    <ul class="text-sm text-right space-y-2">
+                        <li><i class="fas fa-users text-blue-500 w-4"></i> <strong>ظرفیت:</strong> ۱۷۷,۰۰۰ نفر</li>
+                        <li><i class="fas fa-exclamation-triangle text-red-500 w-4"></i> <strong>گلوگاه:</strong> فاجعه Bethnal Green</li>
+                        <li><i class="fas fa-check-circle text-blue-500 w-4"></i> <strong>درس کلیدی:</strong> اهمیت حیاتی مدیریت ورودی‌ها</li>
+                    </ul>
+                </div>
+                <!-- Tokyo -->
+                 <div class="card text-center">
+                    <img src="https://flagcdn.com/w80/jp.png" class="w-16 h-auto rounded-full shadow-lg mx-auto mb-3">
+                    <h3 class="font-bold text-xl">توکیو</h3>
+                    <p class="text-sm text-gray-500 mb-3">آمادگی در برابر زلزله</p>
+                    <ul class="text-sm text-right space-y-2">
+                        <li><i class="fas fa-bullhorn text-blue-500 w-4"></i> <strong>فناوری:</strong> سیستم هشدار پیشرفته</li>
+                        <li><i class="fas fa-running text-blue-500 w-4"></i> <strong>مدیریت:</strong> مانورهای منظم شهری</li>
+                        <li><i class="fas fa-check-circle text-blue-500 w-4"></i> <strong>درس کلیدی:</strong> آمادگی ۹۰٪ مردم قبل از بحران</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mt-4">
+                 <h3 class="font-bold text-xl text-center mb-4">جدول مقایسه جامع با استانداردهای جهانی</h3>
+                 <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-center">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="p-2">شاخص</th>
+                                <th class="p-2">تهران (فعلی)</th>
+                                <th class="p-2 font-bold text-green-600">تهران (پروژه)</th>
+                                <th class="p-2">کی‌یف</th>
+                                <th class="p-2">لندن (WWII)</th>
+                                <th class="p-2">مسکو</th>
+                                <th class="p-2">استاندارد FEMA</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b"><td class="p-2 font-semibold">متوسط عمق</td><td>۳۰.۶ متر</td><td class="font-bold">۳۰.۶ متر ✅</td><td>۳۵ متر</td><td>۲۵ متر</td><td>۵۰ متر</td><td>&gt;۲۰ متر</td></tr>
+                            <tr class="border-b"><td class="p-2 font-semibold">ظرفیت/ایستگاه</td><td>۱,۰۱۹ نفر</td><td class="font-bold">۲,۳۸۱ نفر</td><td>۲۸۸ نفر</td><td>۲,۲۴۰ نفر</td><td>۵,۰۰۰ نفر</td><td>متغیر</td></tr>
+                            <tr class="border-b"><td class="p-2 font-semibold">تجهیزات NBC</td><td class="text-red-600">۳۰٪ ❌</td><td class="font-bold text-green-600">۱۰۰٪ ✅</td><td>۸۰٪</td><td>۰٪</td><td>۱۰۰٪</td><td>۱۰۰٪</td></tr>
+                            <tr class="border-b"><td class="p-2 font-semibold">مدیریت گلوگاه</td><td class="text-red-600">ضعیف</td><td class="font-bold text-green-600">عالی ✅</td><td>عالی</td><td class="text-red-600">فاجعه</td><td>عالی</td><td>عالی</td></tr>
+                            <tr class="bg-gray-50"><td class="p-2 font-semibold">تمایل عمومی</td><td>۴0-۵۰٪</td><td class="font-bold text-green-600">۷۰٪</td><td>۸۰٪</td><td>۹۵٪</td><td>۹۰٪</td><td>-</td></tr>
+                        </tbody>
+                    </table>
+                 </div>
+            </div>
+        </section>
+
+        <section id="challenges" class="content-section">
+            <h1 class="section-title text-4xl">اینفوگرافیک چالش‌ها و راهکارهای فنی</h1>
+             <div class="space-y-8">
+                 <!-- Challenge 1 -->
+                 <div class="grid grid-cols-5 gap-4 items-center">
+                     <div class="col-span-2 bg-red-100 p-4 rounded-lg text-center">
+                         <i class="fas fa-traffic-light text-5xl text-red-600 mb-2"></i>
+                         <h3 class="font-bold text-lg">چالش: گلوگاه ورودی</h3>
+                         <p class="text-sm">افت ۸۵٪ ظرفیت عملی به دلیل ورودی‌های باریک ۱.۵ متری</p>
+                     </div>
+                     <div class="text-center"><i class="fas fa-long-arrow-alt-left text-4xl text-gray-400"></i></div>
+                     <div class="col-span-2 bg-green-100 p-4 rounded-lg text-center">
+                          <i class="fas fa-door-open text-5xl text-green-600 mb-2"></i>
+                         <h3 class="font-bold text-lg">راهکار: درب‌های عریض</h3>
+                         <p class="text-sm">نصب درب‌های ۳.۵ متری برای افزایش ۵۰٪ ظرفیت موثر</p>
+                     </div>
+                 </div>
+                 <!-- Challenge 2 -->
+                  <div class="grid grid-cols-5 gap-4 items-center">
+                     <div class="col-span-2 bg-yellow-100 p-4 rounded-lg text-center">
+                         <i class="fas fa-biohazard text-5xl text-yellow-600 mb-2"></i>
+                         <h3 class="font-bold text-lg">چالش: کمبود تجهیزات NBC</h3>
+                         <p class="text-sm">تنها ۳۰٪ ایستگاه‌های برتر مجهز به سیستم‌های حفاظتی هستند</p>
+                     </div>
+                     <div class="text-center"><i class="fas fa-long-arrow-alt-left text-4xl text-gray-400"></i></div>
+                     <div class="col-span-2 bg-green-100 p-4 rounded-lg text-center">
+                          <i class="fas fa-filter text-5xl text-green-600 mb-2"></i>
+                         <h3 class="font-bold text-lg">راهکار: فیلتر HEPA</h3>
+                         <p class="text-sm">تجهیز ۱۰۰٪ ایستگاه‌ها برای تصفیه ۹۹.۹۷٪ آلودگی‌ها</p>
+                     </div>
+                 </div>
+                 <!-- Challenge 3 -->
+                  <div class="grid grid-cols-5 gap-4 items-center">
+                     <div class="col-span-2 bg-blue-100 p-4 rounded-lg text-center">
+                         <i class="fas fa-running text-5xl text-blue-600 mb-2"></i>
+                         <h3 class="font-bold text-lg">چالش: پانیک و مدیریت جمعیت</h3>
+                         <p class="text-sm">فرار ۷۰٪ جمعیت به دلیل ترس و اطلاعات نادرست در بحران</p>
+                     </div>
+                     <div class="text-center"><i class="fas fa-long-arrow-alt-left text-4xl text-gray-400"></i></div>
+                     <div class="col-span-2 bg-green-100 p-4 rounded-lg text-center">
+                          <i class="fas fa-mobile-alt text-5xl text-green-600 mb-2"></i>
+                         <h3 class="font-bold text-lg">راهکار: اپلیکیشن Real-time</h3>
+                         <p class="text-sm">هدایت هوشمند جمعیت برای کاهش ۴۰٪ ریسک پانیک</p>
+                     </div>
+                 </div>
+             </div>
+        </section>
+        
+        <section id="conclusion" class="content-section">
+            <h1 class="section-title text-4xl">نتیجه‌گیری و شاخص‌های کلیدی موفقیت (KPI)</h1>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 text-center">
+                <div class="p-6 rounded-lg border-4 border-yellow-400 bg-yellow-50 relative">
+                    <div class="absolute -top-5 -right-5 bg-yellow-400 text-white rounded-full w-12 h-12 flex items-center justify-center text-2xl font-bold shadow-lg">🥇</div>
+                    <h3 class="text-2xl font-black text-gray-800 mb-2">۱. توحید</h3>
+                    <p class="text-sm">ترکیب بهینه بزرگترین مساحت (۲۵,۰۰۰م²)، ظرفیت بالا (۲,۰۰۰ نفر) و عمق عالی (۴۶ متر) آن را به بهترین گزینه برای سرمایه‌گذاری اولیه تبدیل کرده است.</p>
+                </div>
+                <div class="p-6 rounded-lg border-4 border-gray-300 bg-gray-50 relative">
+                    <div class="absolute -top-5 -right-5 bg-gray-300 text-white rounded-full w-12 h-12 flex items-center justify-center text-2xl font-bold shadow-lg">🥈</div>
+                    <h3 class="text-2xl font-black text-gray-800 mb-2">۲. بوستان گفتگو</h3>
+                    <p class="text-sm">طراحی مدرن، مساحت بالا (۲۰,۵۰۰ متر مربع) و وضعیت عالی گلوگاه‌های ورودی (امتیاز ۱۰۰)، این ایستگاه را در رتبه دوم قرار می‌دهد.</p>
+                </div>
+                <div class="p-6 rounded-lg border-4 border-amber-600 bg-amber-50 relative">
+                    <div class="absolute -top-5 -right-5 bg-amber-600 text-white rounded-full w-12 h-12 flex items-center justify-center text-2xl font-bold shadow-lg">🥉</div>
+                    <h3 class="text-2xl font-black text-gray-800 mb-2">۳. امام خمینی</h3>
+                    <p class="text-sm">با وجود عمق کم (۱۹ متر)، موقعیت استراتژیک مرکزی، بیشترین دسترسی (۴ ورودی) و بالاترین تراکم جمعیتی، آن را در اولویت بالا قرار می‌دهد.</p>
+                </div>
+            </div>
+             <div class="card">
+                <h2 class="text-2xl font-bold text-center mb-6">۱۰ ایستگاه برتر جهت سرمایه‌گذاری</h2>
+                 <div class="space-y-4">
+                    <div class="grid grid-cols-12 gap-4 items-center p-3 bg-gradient-to-r from-yellow-200 to-yellow-50 rounded-lg shadow">
+                        <div class="col-span-1 font-black text-2xl text-yellow-600 text-center">🥇 ۱</div>
+                        <div class="col-span-3 font-semibold">توحید</div>
+                        <div class="col-span-2 text-sm text-center">عمق: ۴۶م</div>
+                        <div class="col-span-2 text-sm text-center">مساحت: ۲۵,۰۰۰م²</div>
+                        <div class="col-span-2 text-sm text-center">ورودی: ۲</div>
+                        <div class="col-span-2 text-sm text-center">پله‌برقی: ۱۶</div>
+                    </div>
+                     <div class="grid grid-cols-12 gap-4 items-center p-3 bg-gradient-to-r from-gray-200 to-gray-50 rounded-lg shadow">
+                        <div class="col-span-1 font-black text-2xl text-gray-600 text-center">🥈 ۲</div>
+                        <div class="col-span-3 font-semibold">بوستان گفتگو</div>
+                        <div class="col-span-2 text-sm text-center">عمق: ۳۵.۵م</div>
+                        <div class="col-span-2 text-sm text-center">مساحت: ۲۰,۵۰۰م²</div>
+                        <div class="col-span-2 text-sm text-center">ورودی: ۲</div>
+                        <div class="col-span-2 text-sm text-center">پله‌برقی: ۱۰</div>
+                    </div>
+                     <div class="grid grid-cols-12 gap-4 items-center p-3 bg-gradient-to-r from-amber-200 to-amber-50 rounded-lg shadow">
+                        <div class="col-span-1 font-black text-2xl text-amber-700 text-center">🥉 ۳</div>
+                        <div class="col-span-3 font-semibold">امام خمینی</div>
+                        <div class="col-span-2 text-sm text-center">عمق: ۱۹.۲م</div>
+                        <div class="col-span-2 text-sm text-center">مساحت: ۲۰,۰۰۰م²</div>
+                        <div class="col-span-2 text-sm text-center">ورودی: ۴</div>
+                        <div class="col-span-2 text-sm text-center">پله‌برقی: ۲۵</div>
+                    </div>
+                    <!-- Other stations -->
+                    <div class="grid grid-cols-12 gap-4 items-center p-3 bg-gray-50 rounded-lg">
+                        <div class="col-span-1 font-bold text-lg text-gray-500 text-center">۴</div>
+                        <div class="col-span-3 font-semibold">مولوی</div>
+                         <div class="col-span-2 text-sm text-center">عمق: ۲۶م</div>
+                        <div class="col-span-2 text-sm text-center">مساحت: ۲۱,۰۰۰م²</div>
+                        <div class="col-span-2 text-sm text-center">ورودی: ۳</div>
+                        <div class="col-span-2 text-sm text-center">پله‌برقی: ۱۵</div>
+                    </div>
+                    <div class="grid grid-cols-12 gap-4 items-center p-3 bg-gray-50 rounded-lg">
+                        <div class="col-span-1 font-bold text-lg text-gray-500 text-center">۵</div>
+                        <div class="col-span-3 font-semibold">هلال احمر</div>
+                         <div class="col-span-2 text-sm text-center">عمق: ۲۶م</div>
+                        <div class="col-span-2 text-sm text-center">مساحت: ۱۵,۰۰۰م²</div>
+                        <div class="col-span-2 text-sm text-center">ورودی: ۳</div>
+                        <div class="col-span-2 text-sm text-center">پله‌برقی: ۲۰</div>
+                    </div>
+                     <div class="grid grid-cols-12 gap-4 items-center p-3 bg-gray-50 rounded-lg">
+                        <div class="col-span-1 font-bold text-lg text-gray-500 text-center">۶</div>
+                        <div class="col-span-3 font-semibold">برج میلاد</div>
+                         <div class="col-span-2 text-sm text-center">عمق: ۵۵م</div>
+                        <div class="col-span-2 text-sm text-center">مساحت: ۱۲,۰۰۰م²</div>
+                        <div class="col-span-2 text-sm text-center">ورودی: ۳</div>
+                        <div class="col-span-2 text-sm text-center">پله‌برقی: ۱۰</div>
+                    </div>
+                    <div class="grid grid-cols-12 gap-4 items-center p-3 bg-gray-50 rounded-lg">
+                        <div class="col-span-1 font-bold text-lg text-gray-500 text-center">۷</div>
+                        <div class="col-span-3 font-semibold">تجریش</div>
+                         <div class="col-span-2 text-sm text-center">عمق: ۵۱م</div>
+                        <div class="col-span-2 text-sm text-center">مساحت: ۱۵,۰۰۰م²</div>
+                        <div class="col-span-2 text-sm text-center">ورودی: ۳</div>
+                        <div class="col-span-2 text-sm text-center">پله‌برقی: ۳۰</div>
+                    </div>
+                    <div class="grid grid-cols-12 gap-4 items-center p-3 bg-gray-50 rounded-lg">
+                        <div class="col-span-1 font-bold text-lg text-gray-500 text-center">۸</div>
+                        <div class="col-span-3 font-semibold">قیطریه</div>
+                         <div class="col-span-2 text-sm text-center">عمق: ۳۰م</div>
+                        <div class="col-span-2 text-sm text-center">مساحت: ۱۰,۰۰۰م²</div>
+                        <div class="col-span-2 text-sm text-center">ورودی: ۲</div>
+                        <div class="col-span-2 text-sm text-center">پله‌برقی: ۲۰</div>
+                    </div>
+                     <div class="grid grid-cols-12 gap-4 items-center p-3 bg-gray-50 rounded-lg">
+                        <div class="col-span-1 font-bold text-lg text-gray-500 text-center">۹</div>
+                        <div class="col-span-3 font-semibold">مدافعان سلامت</div>
+                         <div class="col-span-2 text-sm text-center">عمق: ۴۹م</div>
+                        <div class="col-span-2 text-sm text-center">مساحت: ۱۱,۴۰۰م²</div>
+                        <div class="col-span-2 text-sm text-center">ورودی: ۳</div>
+                        <div class="col-span-2 text-sm text-center">پله‌برقی: ۲۸</div>
+                    </div>
+                    <div class="grid grid-cols-12 gap-4 items-center p-3 bg-gray-50 rounded-lg">
+                        <div class="col-span-1 font-bold text-lg text-gray-500 text-center">۱۰</div>
+                        <div class="col-span-3 font-semibold">شهرک آزمایش</div>
+                         <div class="col-span-2 text-sm text-center">عمق: ۳۶م</div>
+                        <div class="col-span-2 text-sm text-center">مساحت: ۱۳,۰۰۰م²</div>
+                        <div class="col-span-2 text-sm text-center">ورودی: ۲</div>
+                        <div class="col-span-2 text-sm text-center">پله‌برقی: ۱۰</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <h2 class="text-2xl font-bold text-center mb-6">شاخص‌های کلیدی موفقیت (KPIs) - نقشه راه تا ۱۴۰۸</h2>
+                <div class="space-y-6">
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-base font-medium text-blue-700">👤 ظرفیت عملی کل</span>
+                            <span class="text-sm font-medium text-blue-700">هدف: ۱۰۰,۰۰۰ نفر</span>
+                        </div>
+                        <div class="kpi-bar-bg">
+                            <div class="kpi-bar-target bg-blue-600" style="width: 100%;"></div>
+                            <div class="kpi-bar-current bg-blue-300" style="width: 21%;"><span class="kpi-bar-label">فعلی: ۲۱٪</span></div>
+                        </div>
+                    </div>
+                     <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-base font-medium text-green-700">🛡️ تجهیز NBC</span>
+                            <span class="text-sm font-medium text-green-700">هدف: ۱۰۰٪ ایستگاه‌ها</span>
+                        </div>
+                        <div class="kpi-bar-bg">
+                            <div class="kpi-bar-target bg-green-600" style="width: 100%;"></div>
+                            <div class="kpi-bar-current bg-green-300" style="width: 30%;"><span class="kpi-bar-label">فعلی: ۳۰٪</span></div>
+                        </div>
+                    </div>
+                     <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-base font-medium text-yellow-700">❤️ تمایل عمومی</span>
+                            <span class="text-sm font-medium text-yellow-700">هدف: ۸۰٪</span>
+                        </div>
+                         <div class="kpi-bar-bg">
+                            <div class="kpi-bar-target bg-yellow-500" style="width: 80%;"></div>
+                            <div class="kpi-bar-current bg-yellow-300" style="width: 40%;"><span class="kpi-bar-label">فعلی: ۴۰٪</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="equipment" class="content-section">
+            <h1 class="section-title text-4xl">لیست جامع تجهیزات پناهگاه</h1>
+            <div class="card bg-blue-50 border-l-4 border-blue-500">
+                <div class="flex items-center gap-4">
+                    <i class="fas fa-tasks text-4xl text-blue-600"></i>
+                    <div>
+                        <h2 class="text-xl font-bold">چک‌لیست جامع بر اساس استانداردهای جهانی</h2>
+                        <p class="text-sm">این لیست بر اساس پروتکل‌های FEMA، تجارب پناهگاه‌های سوئیس و فنلاند، و نیازهای بومی ایران برای یک پناهگاه ۱۰۰۰ نفری با قابلیت اقامت ۷۲ ساعته تهیه شده است.</p>
+                    </div>
+                </div>
+            </div>
+             <div class="space-y-2">
+                <div class="accordion-item"><details><summary><i class="fas fa-shield-alt w-6 text-xl text-gray-600"></i>۱. سیستم‌های حفاظتی و ایمنی ساختاری</summary><div class="accordion-content space-y-4">
+                    <h4 class="font-bold text-base border-b pb-1 mb-2">الف) محافظت در برابر انفجار</h4>
+                    <ul class="list-disc pr-5 text-sm space-y-1">
+                        <li>درب‌های ضد انفجار فولادی (Blast Doors) - حداقل 4 عدد برای ورودی‌ها</li>
+                        <li>پنل‌های تقویت کننده دیوار بتنی (ضخامت 60-80 سانتی‌متر)</li>
+                        <li>سیستم جذب شوک و لرزش</li>
+                        <li>پوشش ضد شظیه دیوارها و سقف</li>
+                        <li>مهار و تقویت ستون‌ها و سازه‌های باربر</li>
+                    </ul>
+                     <h4 class="font-bold text-base border-b pb-1 mb-2 mt-4">ب) محافظت شیمیایی و بیولوژیکی (NBC)</h4>
+                    <ul class="list-disc pr-5 text-sm space-y-1">
+                        <li>سیستم تصفیه هوای NBC با فیلتر HEPA و کربن فعال (ظرفیت 1500 متر مکعب در ساعت)</li>
+                        <li>دستگاه تشخیص مواد شیمیایی و بیولوژیک - 5-10 دستگاه</li>
+                        <li>اتاق ضدعفونی و شستشو در ورودی (Decontamination Chamber)</li>
+                        <li>لباس‌های محافظ NBC - 1200 ست</li>
+                        <li>ماسک‌های تمام صورت با فیلتر - 1200 عدد + 2400 فیلتر یدکی</li>
+                        <li>چادر و پوشش پلاستیکی ضد نفوذ گاز</li>
+                    </ul>
+                     <h4 class="font-bold text-base border-b pb-1 mb-2 mt-4">ج) محافظت در برابر تشعشع هسته‌ای</h4>
+                    <ul class="list-disc pr-5 text-sm space-y-1">
+                        <li>دیوارهای سربی یا بتن باریت‌دار (حداقل 30 سانتی‌متر معادل سرب)</li>
+                        <li>دزیمتر و دستگاه گایگر-مولر - 20 دستگاه</li>
+                        <li>قرص‌های پتاسیم یدید - 60000 عدد</li>
+                        <li>لباس‌های ضد تشعشع - 100 ست</li>
+                    </ul>
+                </div></details></div>
+                 <div class="accordion-item"><details><summary><i class="fas fa-wind w-6 text-xl text-blue-500"></i>۲. سیستم‌های تهویه و کیفیت هوا</summary><div class="accordion-content space-y-4">
+                    <h4 class="font-bold text-base border-b pb-1 mb-2">الف) تهویه اصلی</h4>
+                    <ul class="list-disc pr-5 text-sm space-y-1">
+                        <li>بلوئرهای صنعتی (2-3 دستگاه رزرو با قدرت 750-1000 CFM)</li>
+                        <li>کانال‌های هوا با دریچه‌های قابل بسته شدن اضطراری</li>
+                        <li>دریچه‌های یک‌طرفه ضد بازگشت هوای آلوده</li>
+                        <li>فیلترهای چند مرحله‌ای (HEPA H13-H14) - 40 فیلتر یدکی</li>
+                    </ul>
+                    <h4 class="font-bold text-base border-b pb-1 mb-2 mt-4">ب) کنترل کیفیت هوا</h4>
+                     <ul class="list-disc pr-5 text-sm space-y-1">
+                        <li>سنسورهای CO2، CO، O2 - 15-20 عدد</li>
+                        <li>دستگاه تنظیم رطوبت (Dehumidifier) - 5-8 دستگاه</li>
+                        <li>سیستم هشدار کیفیت هوا</li>
+                    </ul>
+                     <h4 class="font-bold text-base border-b pb-1 mb-2 mt-4">ج) منابع اکسیژن</h4>
+                     <ul class="list-disc pr-5 text-sm space-y-1">
+                        <li>کپسول‌های اکسیژن فشرده - 100-150 کپسول</li>
+                        <li>دستگاه تولید اکسیژن (Oxygen Concentrator) - 3-5 دستگاه</li>
+                        <li>کپسول‌های هوای فشرده برای اورژانس</li>
+                    </ul>
+                </div></details></div>
+                 <div class="accordion-item"><details><summary><i class="fas fa-tint w-6 text-xl text-cyan-500"></i>۳. آب و بهداشت</summary><div class="accordion-content space-y-4">
+                    <h4 class="font-bold text-base border-b pb-1 mb-2">الف) ذخیره و تأمین آب</h4>
+                    <ul class="list-disc pr-5 text-sm space-y-1">
+                        <li>مخازن آب استیل یا پلی‌اتیلن - ظرفیت کل 150,000-300,000 لیتر</li>
+                        <li>سیستم پمپاژ و توزیع آب با فشار مناسب</li>
+                        <li>شیرهای اضطراری و دریچه‌های کنترل</li>
+                    </ul>
+                    <h4 class="font-bold text-base border-b pb-1 mb-2 mt-4">ب) تصفیه آب</h4>
+                    <ul class="list-disc pr-5 text-sm space-y-1">
+                        <li>دستگاه تصفیه آب چند مرحله‌ای (RO + UV) - 2-3 دستگاه</li>
+                        <li>قرص‌های ضدعفونی آب (کلر، آکوآتبس) - 10,000 عدد</li>
+                        <li>کیت‌های تست کیفیت آب - 50 عدد</li>
+                        <li>فیلترهای قابل حمل - 100 عدد</li>
+                    </ul>
+                    <h4 class="font-bold text-base border-b pb-1 mb-2 mt-4">ج) بهداشت و سرویس‌ها</h4>
+                    <ul class="list-disc pr-5 text-sm space-y-1">
+                        <li>توالت‌های شیمیایی پرتابل - 30-50 دستگاه</li>
+                        <li>سیستم جمع‌آوری فاضلاب با مخازن سپتیک موقت</li>
+                        <li>دستشویی‌های سیار - 20-30 عدد</li>
+                        <li>آب‌گرمکن‌های برقی یا گازی - 5-8 دستگاه</li>
+                        <li>کپسول‌های مایع دستشویی و ضدعفونی‌کننده - 500 لیتر</li>
+                        <li>دستکش، ماسک، الکل - مقادیر زیاد</li>
+                        <li>سطل‌های زباله با درب - 100 عدد</li>
+                        <li>کیسه‌های زباله ضخیم - 5000 عدد</li>
+                    </ul>
+                </div></details></div>
+                 <div class="accordion-item"><details><summary><i class="fas fa-utensils w-6 text-xl text-orange-500"></i>۴. غذا و تغذیه</summary><div class="accordion-content space-y-4">
+                     <h4 class="font-bold text-base border-b pb-1 mb-2">الف) ذخیره غذایی</h4>
+                    <ul class="list-disc pr-5 text-sm space-y-1">
+                        <li>غذاهای آماده نظامی (MRE) - 21,000-42,000 پک</li>
+                        <li>کنسروهای گوشت، ماهی، حبوبات - 15,000 قوطی</li>
+                        <li>غذاهای خشک و لیوفیلیزه - 5,000 بسته</li>
+                        <li>بیسکویت و کراکر پرانرژی - 10,000 بسته</li>
+                        <li>آب معدنی بطری - 30,000-50,000 بطری</li>
+                        <li>شیر خشک و غذای کودک - 2,000 بسته</li>
+                        <li>مکمل‌های ویتامینه و مولتی‌ویتامین - 30,000 قرص</li>
+                        <li>نمک، قند، روغن، برنج - مقادیر انبوه</li>
+                    </ul>
+                     <h4 class="font-bold text-base border-b pb-1 mb-2 mt-4">ب) تجهیزات آشپزخانه</h4>
+                    <ul class="list-disc pr-5 text-sm space-y-1">
+                        <li>اجاق‌های گاز صنعتی قابل حمل - 5-8 دستگاه</li>
+                        <li>کپسول‌های گاز - 100-150 عدد</li>
+                        <li>گرمکن‌های الکتریکی - 10 دستگاه</li>
+                        <li>ظروف یکبار مصرف (بشقاب، لیوان، قاشق) - 50,000 عدد</li>
+                        <li>قابلمه‌ها و ماهیتابه‌های صنعتی</li>
+                        <li>ترازوی دیجیتال غذا</li>
+                        <li>باز کن کنسرو - 50 عدد</li>
+                    </ul>
+                 </div></details></div>
+                 <div class="accordion-item"><details><summary><i class="fas fa-first-aid w-6 text-xl text-red-500"></i>۵. تجهیزات پزشکی و بهداشتی</summary><div class="accordion-content space-y-4">
+                    <h4 class="font-bold text-base border-b pb-1 mb-2">الف) تجهیزات درمانی اساسی</h4>
+                    <ul class="list-disc pr-5 text-sm space-y-1">
+                        <li>تخت بیمارستانی تاشو - 50-80 تخت</li>
+                        <li>کیت کمک‌های اولیه جامع - 50 کیت</li>
+                        <li>دارو‌های ضروری (آنتی‌بیوتیک، مسکن، و...) - موجودی 2 هفته‌ای</li>
+                        <li>سرم و محلول‌های وریدی - 500 بسته</li>
+                        <li>پانسمان، گاز، باند - مقادیر فراوان</li>
+                        <li>آتل و وسایل شکستگی - 30 ست</li>
+                        <li>برانکارد تاشو - 10-15 عدد</li>
+                    </ul>
+                     <h4 class="font-bold text-base border-b pb-1 mb-2 mt-4">ب) تجهیزات تشخیصی و مانیتورینگ</h4>
+                     <ul class="list-disc pr-5 text-sm space-y-1">
+                        <li>دستگاه فشارسنج - 20 عدد</li>
+                        <li>ترمومتر دیجیتال بدون تماس - 30 عدد</li>
+                        <li>گلوکومتر و نوار تست قند - 10 دستگاه + 500 نوار</li>
+                        <li>پالس اکسیمتر - 15 عدد</li>
+                        <li>استتوسکوپ - 10 عدد</li>
+                    </ul>
+                     <h4 class="font-bold text-base border-b pb-1 mb-2 mt-4">ج) تجهیزات اورژانس</h4>
+                     <ul class="list-disc pr-5 text-sm space-y-1">
+                        <li>دفیبریلاتور (AED) - 2-3 دستگاه</li>
+                        <li>کپسول اکسیژن پزشکی - 50 عدد</li>
+                        <li>ماسک اکسیژن و کانول بینی</li>
+                        <li>آمبوبگ (کیسه تنفس دستی) - 10 عدد</li>
+                        <li>ست جراحی اورژانس - 5 ست</li>
+                    </ul>
+                     <h4 class="font-bold text-base border-b pb-1 mb-2 mt-4">د) بهداشت خانم‌ها و کودکان</h4>
+                     <ul class="list-disc pr-5 text-sm space-y-1">
+                        <li>پوشک بزرگسال - 3000 عدد</li>
+                        <li>پوشک کودک - 5000 عدد</li>
+                        <li>نوار بهداشتی و تامپون - 10000 عدد</li>
+                        <li>شامپو بدون آب - 500 بطری</li>
+                        <li>کرم ضد سوختگی و پماد - 200 تیوپ</li>
+                    </ul>
+                 </div></details></div>
+                 <div class="accordion-item"><details><summary><i class="fas fa-bolt w-6 text-xl text-yellow-500"></i>۶. برق و انرژی</summary><div class="accordion-content space-y-4">
+                     <h4 class="font-bold text-base border-b pb-1 mb-2">الف) منابع تولید برق</h4>
+                     <ul class="list-disc pr-5 text-sm space-y-1">
+                        <li>ژنراتور دیزلی یا گازی (200-300 کیلووات) - 2 دستگاه اصلی + 1 پشتیبان</li>
+                        <li>پانل‌های خورشیدی (در صورت امکان) - 50-100 کیلووات</li>
+                        <li>باتری‌های صنعتی (UPS) - ظرفیت 500 کیلووات‌ساعت</li>
+                        <li>سوخت دیزل یا گاز - ذخیره 2 هفته‌ای</li>
+                    </ul>
+                      <h4 class="font-bold text-base border-b pb-1 mb-2 mt-4">ب) توزیع و مدیریت برق</h4>
+                     <ul class="list-disc pr-5 text-sm space-y-1">
+                        <li>تابلو برق اضطراری با سیستم سوئیچ اتوماتیک</li>
+                        <li>کابل‌های برق صنعتی و سیم‌کشی ایمن</li>
+                        <li>چراغ‌های LED کم‌مصرف - 200 عدد</li>
+                        <li>چراغ‌قوه و هدلایت - 500 عدد</li>
+                        <li>باتری قلمی و نیم قلمی - 5000 عدد</li>
+                        <li>پاوربانک‌ها و شارژرهای همگانی - 100 عدد</li>
+                    </ul>
+                 </div></details></div>
+                 <div class="accordion-item"><details><summary><i class="fas fa-satellite-dish w-6 text-xl text-blue-400"></i>۷. ارتباطات و اطلاع‌رسانی</summary><div class="accordion-content space-y-4">
+                     <h4 class="font-bold text-base border-b pb-1 mb-2">الف) ارتباطات داخلی</h4>
+                     <ul class="list-disc pr-5 text-sm space-y-1">
+                        <li>سیستم پیجینگ و بلندگو - 50 اسپیکر</li>
+                        <li>بیسیم واکی‌تاکی - 50 دستگاه</li>
+                        <li>تلفن‌های سیمی داخلی - 20 دستگاه</li>
+                        <li>تابلوهای اطلاع‌رسانی و وایت برد - 20 عدد</li>
+                    </ul>
+                     <h4 class="font-bold text-base border-b pb-1 mb-2 mt-4">ب) ارتباطات خارجی</h4>
+                     <ul class="list-disc pr-5 text-sm space-y-1">
+                        <li>رادیوی VHF/UHF - 5-10 دستگاه</li>
+                        <li>رادیوی اماتوری (HAM Radio) - 2-3 دستگاه</li>
+                        <li>آنتن‌های قابل نصب سریع</li>
+                        <li>موبایل ماهواره‌ای (Satellite Phone) - 2 دستگاه</li>
+                        <li>رادیوی دریافت خبر (AM/FM) - 20 دستگاه</li>
+                    </ul>
+                     <h4 class="font-bold text-base border-b pb-1 mb-2 mt-4">ج) اطلاع‌رسانی و آموزش</h4>
+                     <ul class="list-disc pr-5 text-sm space-y-1">
+                        <li>تلویزیون و پروژکتور برای اطلاع‌رسانی</li>
+                        <li>لپ‌تاپ و تبلت - 5 دستگاه</li>
+                        <li>دستورالعمل‌های چاپی و پوسترهای آموزشی</li>
+                        <li>نقشه‌های خروج اضطراری - 50 عدد</li>
+                    </ul>
+                 </div></details></div>
+                 <div class="accordion-item"><details><summary><i class="fas fa-bed w-6 text-xl text-purple-400"></i>۸. تجهیزات زندگی و رفاه</summary><div class="accordion-content space-y-4">
+                    <h4 class="font-bold text-base border-b pb-1 mb-2">الف) خواب و استراحت</h4>
+                    <ul class="list-disc pr-5 text-sm space-y-1">
+                        <li>تخت خواب تاشو (کمپینگ) - 1000 عدد</li>
+                        <li>کیسه خواب (گرم) - 1200 عدد</li>
+                        <li>پتو و بالش - 2000 عدد</li>
+                        <li>ملحفه و رو بالشی - 2000 ست</li>
+                        <li>تشک بادی یا فوم - 500 عدد</li>
+                    </ul>
+                    <h4 class="font-bold text-base border-b pb-1 mb-2 mt-4">ب) پوشاک و حفاظت فردی</h4>
+                     <ul class="list-disc pr-5 text-sm space-y-1">
+                        <li>لباس‌های گرم و ضد آب - 1500 ست</li>
+                        <li>جوراب و لباس زیر - 3000 ست</li>
+                        <li>کفش راحتی - 1000 جفت</li>
+                        <li>دستکش و کلاه - 1500 ست</li>
+                        <li>پانچو و بارانی - 1000 عدد</li>
+                    </ul>
+                    <h4 class="font-bold text-base border-b pb-1 mb-2 mt-4">ج) وسایل شخصی</h4>
+                     <ul class="list-disc pr-5 text-sm space-y-1">
+                        <li>حوله - 1500 عدد</li>
+                        <li>مسواک و خمیر دندان - 2000 ست</li>
+                        <li>صابون و شامپو - 1000 بسته</li>
+                        <li>دستمال کاغذی و کاغذ توالت - 5000 رول</li>
+                        <li>کیسه پلاستیکی شخصی برای وسایل</li>
+                    </ul>
+                 </div></details></div>
+                 <div class="accordion-item"><details><summary><i class="fas fa-tools w-6 text-xl text-gray-500"></i>۹. ابزار و تجهیزات تعمیر و نگهداری</summary><div class="accordion-content space-y-4">
+                     <h4 class="font-bold text-base border-b pb-1 mb-2">الف) ابزار عمومی</h4>
+                    <ul class="list-disc pr-5 text-sm space-y-1">
+                        <li>جعبه ابزار کامل - 10 ست</li>
+                        <li>دریل شارژی و مته - 5 دستگاه</li>
+                        <li>اره برقی و دستی - 10 عدد</li>
+                        <li>لوله‌کشی و اتصالات یدکی</li>
+                        <li>چسب‌ها و مواد درزگیر صنعتی</li>
+                        <li>سیم‌های برق و کابل یدکی - 500 متر</li>
+                    </ul>
+                      <h4 class="font-bold text-base border-b pb-1 mb-2 mt-4">ب) تجهیزات ایمنی و اطفای حریق</h4>
+                    <ul class="list-disc pr-5 text-sm space-y-1">
+                        <li>کپسول آتش‌نشانی - 50 عدد</li>
+                        <li>شلنگ آتش‌نشانی - 10 عدد × 20 متر</li>
+                        <li>پتوی آتش‌نشانی - 20 عدد</li>
+                        <li>ماسک و دستکش حرارتی - 30 ست</li>
+                        <li>چراغ اضطراری و فلر - 100 عدد</li>
+                        <li>علائم خروج اضطراری درخشان در تاریکی</li>
+                    </ul>
+                      <h4 class="font-bold text-base border-b pb-1 mb-2 mt-4">ج) تجهیزات امداد و نجات</h4>
+                    <ul class="list-disc pr-5 text-sm space-y-1">
+                        <li>اره زنجیری (برای حذف آوار) - 3 دستگاه</li>
+                        <li>چکش تخریب و لوم - 10 عدد</li>
+                        <li>طناب و طناب‌بازی - 500 متر</li>
+                        <li>کلنگ و بیل - 30 عدد</li>
+                        <li>نردبان تاشو - 5 عدد</li>
+                    </ul>
+                 </div></details></div>
+                 <div class="accordion-item"><details><summary><i class="fas fa-sitemap w-6 text-xl text-indigo-500"></i>۱۰. مدیریت و سازماندهی</summary><div class="accordion-content space-y-4">
+                     <h4 class="font-bold text-base border-b pb-1 mb-2">الف) اداری و مستندات</h4>
+                    <ul class="list-disc pr-5 text-sm space-y-1">
+                        <li>دفاتر ثبت ورود و خروج</li>
+                        <li>فرم‌های پزشکی و ثبت بیماران</li>
+                        <li>مجوزها و دستورالعمل‌های ایمنی چاپ شده</li>
+                        <li>لیست موجودی و چک‌لیست روزانه</li>
+                        <li>خودکار و ماژیک - 200 عدد</li>
+                    </ul>
+                     <h4 class="font-bold text-base border-b pb-1 mb-2 mt-4">ب) تجهیزات تایم‌کیپینگ</h4>
+                    <ul class="list-disc pr-5 text-sm space-y-1">
+                        <li>ساعت دیواری بزرگ - 10 عدد</li>
+                        <li>ساعت مچی یا زنگ‌دار - 50 عدد</li>
+                        <li>تقویم</li>
+                    </ul>
+                     <h4 class="font-bold text-base border-b pb-1 mb-2 mt-4">ج) امنیت و نظم</h4>
+                    <ul class="list-disc pr-5 text-sm space-y-1">
+                        <li>دوربین‌های مداربسته (CCTV) - 20-30 دوربین</li>
+                        <li>چراغ‌های حرکتی (Motion Sensor)</li>
+                        <li>سوت اضطراری - 100 عدد</li>
+                        <li>دستبند شناسایی (Wristband) - 1500 عدد</li>
+                        <li>قفل و زنجیر برای ایمن‌سازی</li>
+                    </ul>
+                 </div></details></div>
+                 <div class="accordion-item"><details><summary><i class="fas fa-brain w-6 text-xl text-pink-500"></i>۱۱. روان‌شناسی و رفاه روحی</summary><div class="accordion-content space-y-4">
+                    <h4 class="font-bold text-base border-b pb-1 mb-2">الف) سرگرمی</h4>
+                    <ul class="list-disc pr-5 text-sm space-y-1">
+                        <li>بازی‌های فکری و کارت - 100 ست</li>
+                        <li>کتاب و مجله - 500 عدد</li>
+                        <li>کاغذ و مداد برای بچه‌ها - 200 ست</li>
+                        <li>رادیو و موسیقی آرامش‌بخش</li>
+                    </ul>
+                     <h4 class="font-bold text-base border-b pb-1 mb-2 mt-4">ب) حریم خصوصی</h4>
+                    <ul class="list-disc pr-5 text-sm space-y-1">
+                        <li>پارتیشن و پرده‌های جدا کننده - 200 متر</li>
+                        <li>فضای مخصوص خانواده‌ها</li>
+                        <li>فضای مخصوص کودکان</li>
+                        <li>فضای نماز و عبادت</li>
+                    </ul>
+                     <h4 class="font-bold text-base border-b pb-1 mb-2 mt-4">ج) خدمات روانی</h4>
+                    <ul class="list-disc pr-5 text-sm space-y-1">
+                        <li>دستورالعمل مدیریت استرس</li>
+                        <li>مشاوران و روان‌شناسان (پرسنل)</li>
+                        <li>فضای مشاوره خصوصی</li>
+                    </ul>
+                 </div></details></div>
+                 <div class="accordion-item"><details><summary><i class="fas fa-mosque w-6 text-xl text-green-700"></i>۱۲. ملزومات ویژه شرایط ایران</summary><div class="accordion-content space-y-4">
+                    <h4 class="font-bold text-base border-b pb-1 mb-2">الف) فرهنگی و مذهبی</h4>
+                    <ul class="list-disc pr-5 text-sm space-y-1">
+                        <li>قرآن، مفاتیح، کتب دعا - 100 عدد</li>
+                        <li>سجاده - 300 عدد</li>
+                        <li>جانماز و مهر - 300 ست</li>
+                        <li>چادر و مقنعه یدکی - 500 عدد</li>
+                        <li>سیستم اذان‌گو</li>
+                    </ul>
+                     <h4 class="font-bold text-base border-b pb-1 mb-2 mt-4">ب) نیازهای غذایی محلی</h4>
+                    <ul class="list-disc pr-5 text-sm space-y-1">
+                        <li>نان خشک، لواش، سنگک خشک شده - 5000 قرص</li>
+                        <li>چای و قند - 1000 کیلو</li>
+                        <li>حلوا و انرژی‌بخش‌های محلی</li>
+                        <li>ترشی و کنسرو خورش‌های ایرانی</li>
+                    </ul>
+                     <h4 class="font-bold text-base border-b pb-1 mb-2 mt-4">ج) آب و هوا</h4>
+                    <ul class="list-disc pr-5 text-sm space-y-1">
+                        <li>بخاری برقی یا گازی - 20 دستگاه (برای فصل سرما)</li>
+                        <li>کولر یا فن صنعتی - 15 دستگاه (برای تابستان)</li>
+                    </ul>
+                 </div></details></div>
+             </div>
+        </section>
+
+        <section id="budget-plan" class="content-section">
+             <h1 class="section-title text-4xl">برنامه تجهیز و بودجه مرحله‌ای</h1>
+              <div class="card bg-yellow-50 border-l-4 border-yellow-500 mb-6">
+                <p class="text-sm">⚠️ <strong>توجه:</strong> مبالغ این بخش بر اساس تحلیل دقیق هزینه‌ها در تاریخ ۱۰ مهر ۱۴۰۴ و با نرخ دلار ۱۱۷ هزار تومان به‌روزرسانی شده است تا برآورد واقعی‌تری از سرمایه‌گذاری مورد نیاز ارائه دهد.</p>
+              </div>
+              <div class="card">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">نقشه راه ۳۶ ماهه با بودجه کل ۵,۲۵۰ میلیارد تومان</h2>
+                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                    <!-- Phase 1 -->
+                    <div class="p-6 rounded-lg border-2 border-red-500 bg-red-50">
+                        <h3 class="text-xl font-black text-red-700 mb-2">فاز ۱: فوری (۱۲ ماه)</h3>
+                         <p class="text-sm mb-4">تجهیز ۵ ایستگاه برتر</p>
+                        <p class="text-2xl font-bold text-gray-800 mb-2">۱,۲۵۰ میلیارد تومان</p>
+                        <p class="text-lg font-semibold text-gray-600">ظرفیت: +۴۰,۶۰۰ نفر</p>
+                    </div>
+                     <!-- Phase 2 -->
+                    <div class="p-6 rounded-lg border-2 border-yellow-500 bg-yellow-50">
+                        <h3 class="text-xl font-black text-yellow-700 mb-2">فاز ۲: توسعه (۲۴ ماه)</h3>
+                         <p class="text-sm mb-4">تجهیز ۱۰ ایستگاه میانی</p>
+                        <p class="text-2xl font-bold text-gray-800 mb-2">۲,۵۰۰ میلیارد تومان</p>
+                        <p class="text-lg font-semibold text-gray-600">ظرفیت اضافی: +۴۵,۱۰۰ نفر</p>
+                    </div>
+                     <!-- Phase 3 -->
+                    <div class="p-6 rounded-lg border-2 border-green-500 bg-green-50">
+                        <h3 class="text-xl font-black text-green-700 mb-2">فاز ۳: تکمیل (۳۶ ماه)</h3>
+                         <p class="text-sm mb-4">تجهیز ۶ ایستگاه پایانی</p>
+                        <p class="text-2xl font-bold text-gray-800 mb-2">۱,۵۰۰ میلیارد تومان</p>
+                        <p class="text-lg font-semibold text-gray-600">ظرفیت اضافی: +۲۱,۶۶۰ نفر</p>
+                    </div>
+                 </div>
+                 <div class="text-center mt-6">
+                     <p class="text-xl font-bold">مجموع نهایی: <span class="text-blue-600">ظرفیت ۲۱,۳۹۲ نفر</span> به <span class="text-green-700">۱۰۷,۳۶۰ نفر</span> ارتقا می‌یابد.</p>
+                 </div>
+            </div>
+             <div class="card">
+                 <h2 class="text-2xl font-bold text-center mb-6">جدول تطبیق هزینه‌ها با منابع جهانی</h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="p-3 text-right">بخش هزینه</th>
+                                <th class="p-3 text-center">تخمین پیشنهادی <br>(میلیارد تومان)</th>
+                                <th class="p-3 text-center">مقایسه با منابع جهانی <br>(میلیارد تومان)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b"><td class="p-3 text-right">۱. حفاظتی و ساختاری</td><td class="p-3 text-center font-bold">۸۲.۵</td><td class="p-3 text-center">۲۰ - ۱۷۵</td></tr>
+                            <tr class="border-b bg-gray-50"><td class="p-3 text-right">۲. تهویه و کیفیت هوا</td><td class="p-3 text-center font-bold">۱۶.۵</td><td class="p-3 text-center">۴ - ۲۵</td></tr>
+                            <tr class="border-b"><td class="p-3 text-right">۳. آب و بهداشت</td><td class="p-3 text-center font-bold">۸.۲۵</td><td class="p-3 text-center">۴ - ۲۰</td></tr>
+                            <tr class="border-b bg-gray-50"><td class="p-3 text-right">۴. غذا و تغذیه</td><td class="p-3 text-center font-bold">۳۳</td><td class="p-3 text-center">۸ - ۶۶</td></tr>
+                            <tr class="border-b"><td class="p-3 text-right">۵. پزشکی و درمان</td><td class="p-3 text-center font-bold">۸.۲۵</td><td class="p-3 text-center">۴ - ۲۵</td></tr>
+                            <tr class="border-b bg-gray-50"><td class="p-3 text-right">۶. برق و انرژی</td><td class="p-3 text-center font-bold">۶۷.۵</td><td class="p-3 text-center">۱۵ - ۹۰</td></tr>
+                            <tr class="border-b"><td class="p-3 text-right">۷. ارتباطات</td><td class="p-3 text-center font-bold">۵</td><td class="p-3 text-center">۲ - ۲۰</td></tr>
+                            <tr class="border-b bg-gray-50"><td class="p-3 text-right">۸. زندگی و رفاه</td><td class="p-3 text-center font-bold">۵</td><td class="p-3 text-center">۴ - ۲۵</td></tr>
+                            <tr class="border-b"><td class="p-3 text-right">۹. ابزار و تعمیرات</td><td class="p-3 text-center font-bold">۵</td><td class="p-3 text-center">۳ - ۱۵</td></tr>
+                            <tr class="border-b bg-gray-50"><td class="p-3 text-right">۱۰. مدیریت</td><td class="p-3 text-center font-bold">۵</td><td class="p-3 text-center">۲ - ۱۲</td></tr>
+                            <tr class="border-b"><td class="p-3 text-right">۱۱. روان‌شناسی</td><td class="p-3 text-center font-bold">۵</td><td class="p-3 text-center">۲ - ۱۰</td></tr>
+                            <tr class="border-b bg-gray-50"><td class="p-3 text-right">۱۲. ملزومات ویژه ایران</td><td class="p-3 text-center font-bold">۵</td><td class="p-3 text-center">۳ - ۱۰</td></tr>
+                        </tbody>
+                        <tfoot>
+                            <tr class="bg-blue-800 font-black text-white text-base">
+                                <td class="p-4 text-right rounded-r-lg">جمع کل</td>
+                                <td class="p-4 text-center">~۲۵۰</td>
+                                <td class="p-4 text-center rounded-l-lg">~۹۰ - ~۳۵۰</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                 <div class="mt-4 p-4 bg-gray-50 rounded-lg">
+                    <h4 class="font-bold text-lg">تحلیل عددی و منطقی</h4>
+                    <p class="text-sm">در مجموع، بودجه پیشنهادی برای هر بخش با توجه به شرایط ویژه ایران و نرخ بازار ارز، هم از نظر تطابق با معیارهای بین‌المللی و هم از نظر تناسب بخش‌بندی موفق عمل کرده است. مقدار مجموع حدود ۲۵۰ میلیارد تومان (حدود ۲.۱۴ میلیون دلار)، برای یک مجموعه بسیار مجهز، با هزینه‌های جهانی مقایسه‌پذیر است و نشان‌دهنده دقت عملی در تخمین و برنامه‌ریزی اجرایی دفاع شهری است. به‌طور خاص، در شرایط بی‌ثبات نرخ ارز و تورم، این سطح برآورد محافظه‌کارانه و واقع‌بینانه تلقی می‌شود که از هزینه‌های غیرضروری در بخش‌های فرعی نیز تا حد زیادی پرهیز کرده است.</p>
+                </div>
+             </div>
+        </section>
+
+    </main>
+
+    <nav id="nav-menu" class="nav-menu">
+        <div class="p-4 flex justify-between items-center border-b border-gray-500/30">
+            <h2 class="text-2xl font-black text-white">داشبورد مترو</h2>
+            <button id="menu-close" class="text-white text-2xl"><i class="fa-solid fa-times"></i></button>
+        </div>
+        <div class="flex-1 overflow-y-auto">
+            <button class="nav-button active" onclick="showSection('intro')"><i class="fa-solid fa-file-alt w-6"></i><span>مقدمه و روش‌شناسی</span></button>
+            <button class="nav-button" onclick="showSection('ranking')"><i class="fa-solid fa-sort-amount-down w-6"></i><span>رتبه‌بندی و تحلیل</span></button>
+            <button class="nav-button" onclick="showSection('public-willingness')"><i class="fa-solid fa-users w-6"></i><span>تمایل عمومی</span></button>
+            <button class="nav-button" onclick="showSection('benchmark')"><i class="fa-solid fa-globe w-6"></i><span>مقایسه جهانی</span></button>
+            <button class="nav-button" onclick="showSection('challenges')"><i class="fa-solid fa-exclamation-triangle w-6"></i><span>چالش‌ها و راهکارها</span></button>
+            <button class="nav-button" onclick="showSection('conclusion')"><i class="fa-solid fa-flag-checkered w-6"></i><span>نتیجه‌گیری و KPI</span></button>
+            <button class="nav-button" onclick="showSection('equipment')"><i class="fa-solid fa-clipboard-list w-6"></i><span>لیست جامع تجهیزات</span></button>
+            <button class="nav-button" onclick="showSection('budget-plan')"><i class="fa-solid fa-coins w-6"></i><span>برنامه و بودجه</span></button>
+        </div>
+    </nav>
+
+    <script>
+        const menuToggle = document.getElementById('menu-toggle');
+        const menuClose = document.getElementById('menu-close');
+        const navMenu = document.getElementById('nav-menu');
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(section => section.classList.remove('active'));
+            document.querySelectorAll('.nav-button').forEach(button => button.classList.remove('active'));
+            const activeSection = document.getElementById(sectionId);
+            if (activeSection) { activeSection.classList.add('active'); }
+            const targetButton = document.querySelector(`.nav-button[onclick="showSection('${sectionId}')"]`);
+            if (targetButton) { targetButton.classList.add('active'); }
+            navMenu.classList.remove('is-open');
+            window.scrollTo(0, 0);
+        }
+
+        menuToggle.addEventListener('click', () => navMenu.classList.add('is-open'));
+        menuClose.addEventListener('click', () => navMenu.classList.remove('is-open'));
+        
+        const stationData = [
+            { rank: 1, name: 'توحید', line: 7, depth: 46.0, area: 25000, capacity: 2000, entrances: 2, escalators: 16, elevators: 4, score: 74.5, bottleneck: 'good' },
+            { rank: 2, name: 'بوستان گفتگو', line: 7, depth: 35.5, area: 20500, capacity: 1640, entrances: 2, escalators: 10, elevators: 6, score: 64.3, bottleneck: 'good' },
+            { rank: 3, name: 'امام خمینی', line: '1&2', depth: 19.25, area: 20000, capacity: 1600, entrances: 4, escalators: 25, elevators: 3, score: 62.9, bottleneck: 'ok' },
+            { rank: 4, name: 'مولوی', line: 7, depth: 26.0, area: 21000, capacity: 1680, entrances: 3, escalators: 15, elevators: 3, score: 61.8, bottleneck: 'medium' },
+            { rank: 5, name: 'هلال احمر', line: 7, depth: 26.0, area: 15000, capacity: 1200, entrances: 3, escalators: 20, elevators: 2, score: 54.6, bottleneck: 'good' },
+            { rank: 6, name: 'برج میلاد', line: 7, depth: 55.0, area: 12000, capacity: 960, entrances: 3, escalators: 10, elevators: 6, score: 53.7, bottleneck: 'critical' },
+            { rank: 7, name: 'تجریش', line: 1, depth: 51.0, area: 15000, capacity: 1200, entrances: 3, escalators: 30, elevators: 4, score: 48.4, bottleneck: 'medium' },
+            { rank: 8, name: 'قیطریه', line: 1, depth: 30.0, area: 10000, capacity: 800, entrances: 2, escalators: 20, elevators: 2, score: 44.9, bottleneck: 'good' },
+            { rank: 9, name: 'مدافعان سلامت', line: 7, depth: 49.0, area: 11400, capacity: 912, entrances: 3, escalators: 28, elevators: 4, score: 43.2, bottleneck: 'medium' },
+            { rank: 10, name: 'شهرک آزمایش', line: 6, depth: 36.0, area: 13000, capacity: 1040, entrances: 2, escalators: 10, elevators: 4, score: 38.7, bottleneck: 'ok' },
+            { rank: 11, name: 'میدان صنعت', line: 7, depth: 23.0, area: 17000, capacity: 1360, entrances: 2, escalators: 12, elevators: 2, score: 35.5, bottleneck: 'medium' },
+            { rank: 12, name: 'یادگار امام', line: 6, depth: 30.0, area: 9900, capacity: 792, entrances: 3, escalators: 6, elevators: 4, score: 34.2, bottleneck: 'medium' },
+            { rank: 13, name: 'چیتگر', line: 5, depth: 22.0, area: 7500, capacity: 600, entrances: 2, escalators: 10, elevators: 2, score: 30.5, bottleneck: 'ok' },
+            { rank: 14, name: 'شهید رضایی', line: 6, depth: 24.0, area: 9500, capacity: 760, entrances: 2, escalators: 14, elevators: 8, score: 30.0, bottleneck: 'good' },
+            { rank: 15, name: 'شهید اشرفی اصفهانی', line: 6, depth: 25.0, area: 8900, capacity: 712, entrances: 2, escalators: 8, elevators: 6, score: 29.4, bottleneck: 'good' },
+            { rank: 16, name: 'بسیج', line: 7, depth: 28.0, area: 8500, capacity: 680, entrances: 2, escalators: 10, elevators: 2, score: 29.3, bottleneck: 'ok' },
+            { rank: 17, name: 'تربیت مدرس', line: 6, depth: 22.0, area: 10500, capacity: 840, entrances: 2, escalators: 10, elevators: 2, score: 29.2, bottleneck: 'ok' },
+            { rank: 18, name: 'آهنگ', line: 7, depth: 28.0, area: 9200, capacity: 736, entrances: 2, escalators: 10, elevators: 2, score: 27.3, bottleneck: 'medium' },
+            { rank: 19, name: 'اقدسیه', line: 3, depth: 23.0, area: 8000, capacity: 640, entrances: 2, escalators: 8, elevators: 1, score: 26.8, bottleneck: 'medium' },
+            { rank: 20, name: 'شهید ستاری', line: 6, depth: 21.0, area: 9000, capacity: 720, entrances: 2, escalators: 13, elevators: 2, score: 25.6, bottleneck: 'medium' },
+            { rank: 21, name: 'مرزداران', line: 6, depth: 23.0, area: 6500, capacity: 520, entrances: 2, escalators: 10, elevators: 4, score: 23.2, bottleneck: 'ok' },
+        ];
+        
+        function getLineColor(line) {
+            const lineStr = String(line);
+            if (lineStr.includes('1')) return 'var(--color-line-1)'; if (lineStr.includes('2')) return 'var(--color-line-2)';
+            if (lineStr.includes('3')) return 'var(--color-line-3)'; if (lineStr.includes('5')) return 'var(--color-line-5)';
+            if (lineStr.includes('6')) return 'var(--color-line-6)'; if (lineStr.includes('7')) return 'var(--color-line-7)';
+            return '#6b7280';
+        }
+
+        const bottleneckColors = {
+            good: 'rgba(34, 197, 94, 0.8)',
+            ok: 'rgba(234, 179, 8, 0.8)',
+            medium: 'rgba(249, 115, 22, 0.8)',
+            critical: 'rgba(239, 68, 68, 0.8)',
+            default: 'rgba(107, 114, 128, 0.7)'
+        };
+
+        function getBottleneckColor(status) {
+            return bottleneckColors[status] || bottleneckColors.default;
+        }
+
+        function populateFullStationTable() {
+            const tableBody = document.getElementById('full-station-table')?.querySelector('tbody');
+            if (!tableBody) return;
+            tableBody.innerHTML = '';
+            stationData.forEach(s => {
+                tableBody.innerHTML += `<tr class="border-b hover:bg-gray-50">
+                        <td class="p-3 font-bold text-lg">${s.rank}</td>
+                        <td class="p-3 text-right font-semibold">${s.name}</td>
+                        <td class="p-3"><span class="line-badge" style="background-color: ${getLineColor(s.line)}">${s.line}</span></td>
+                        <td class="p-3">${s.depth.toFixed(1)}</td>
+                        <td class="p-3">${s.area.toLocaleString('fa-IR')}</td>
+                        <td class="p-3">${s.entrances}</td>
+                        <td class="p-3">${s.escalators}</td>
+                        <td class="p-3">${s.elevators}</td>
+                        <td class="p-3 font-bold text-blue-600">${s.score.toFixed(1)}</td>
+                    </tr>`;
+            });
+        }
+        
+        function createRankingBubbleChart() {
+            const ctx = document.getElementById('rankingBubbleChart')?.getContext('2d');
+            if(!ctx) return;
+            const data = {
+                datasets: stationData.slice(0,10).map(s => ({
+                    label: s.name,
+                    data: [{ x: s.score, y: s.depth, r: 5 + (s.capacity / 80) }],
+                    backgroundColor: getBottleneckColor(s.bottleneck),
+                    borderColor: 'rgba(0,0,0,0.2)',
+                    borderWidth: 1
+                }))
+            };
+            new Chart(ctx, {
+                type: 'bubble',
+                data: data,
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { title: { display: true, text: 'عمق (متر)' } },
+                        x: { title: { display: true, text: 'امتیاز نهایی' } }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { callbacks: { label: c => {
+                            const s = stationData.find(s => s.name === c.dataset.label);
+                            return [`ایستگاه: ${s.name}`,`امتیاز: ${s.score}`,`عمق: ${s.depth} متر`,`ظرفیت: ${s.capacity} نفر`];
+                        }}}
+                    }
+                }
+            });
+        }
+        
+        function createWillingnessDoughnutChart() {
+            const ctx = document.getElementById('willingnessDoughnutChart')?.getContext('2d');
+            if(!ctx) return;
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['جمعیت تخلیه‌کرده شهر', 'ساکن در شهر (خارج از مترو)', 'استفاده‌کنندگان واقعی از مترو'],
+                    datasets: [{
+                        data: [51, 48, 1],
+                        backgroundColor: ['#911eb4', '#ef4444', '#22c55e'],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    cutout: '60%',
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            showSection('intro');
+            populateFullStationTable();
+            createRankingBubbleChart();
+            createWillingnessDoughnutChart();
+            Chart.defaults.font.family = 'Vazirmatn';
+        });
+    </script>
+</body>
+</html>
+
+
