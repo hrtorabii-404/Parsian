@@ -363,10 +363,21 @@
 
         <section id="sensitivity-analysis" class="content-section">
             <h1 class="section-title text-4xl">تحلیل حساسیت داینامیک</h1>
-            <p class="text-center text-gray-600 mb-10 -mt-6">با تغییر وزن هر معیار، مشاهده کنید که چگونه رتبه‌بندی گزینه‌ها تغییر می‌کند.</p>
+            <p class="text-center text-gray-600 mb-10 -mt-6">با تغییر وزن هر معیار، مشاهده کنید که چگونه رتبه‌بندی گزینه‌ها بر اساس اولویت‌های شما تغییر می‌کند.</p>
+
+            <div class="card">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">راهنمای معیارها</h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                    <div class="p-2 rounded-lg bg-gray-50"><i class="fas fa-handshake-angle text-blue-500 text-2xl mb-2"></i><h4 class="font-bold">هم‌افزایی</h4><p class="text-xs">تطابق با نیاز بحران</p></div>
+                    <div class="p-2 rounded-lg bg-gray-50"><i class="fas fa-truck text-blue-500 text-2xl mb-2"></i><h4 class="font-bold">لجستیک</h4><p class="text-xs">تامین منابع داخلی</p></div>
+                    <div class="p-2 rounded-lg bg-gray-50"><i class="fas fa-shield-halved text-blue-500 text-2xl mb-2"></i><h4 class="font-bold">امنیت</h4><p class="text-xs">مقابله با غارت و هجوم</p></div>
+                    <div class="p-2 rounded-lg bg-gray-50"><i class="fas fa-house-crack text-blue-500 text-2xl mb-2"></i><h4 class="font-bold">سازه</h4><p class="text-xs">مقاومت در برابر زلزله</p></div>
+                </div>
+            </div>
+
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div class="card">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-6">۱. تنظیم ضرایب اهمیت معیارها</h2>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">۱. تنظیم ضرایب اهمیت</h2>
                     <div id="sliders-container"></div>
                     <button id="reset-weights" class="mt-4 w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition-colors">بازنشانی به مقادیر پیش‌فرض</button>
                 </div>
@@ -375,8 +386,15 @@
                     <div id="results-container" class="space-y-4"></div>
                 </div>
             </div>
+
+            <div class="card mt-2 bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-300 border-r-4">
+                <div id="scenario-analysis-box" class="transition-all duration-500">
+                    <!-- Dynamic content will be injected here -->
+                </div>
+            </div>
+
              <div class="card mt-8">
-                <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">نمودار حساسیت نمرات به تغییر وزن معیارها</h2>
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">نمودار حساسیت نمرات</h2>
                 <canvas id="sensitivityChart"></canvas>
             </div>
         </section>
@@ -526,10 +544,15 @@
             const slidersContainer = document.getElementById('sliders-container');
             const resultsContainer = document.getElementById('results-container');
             const resetButton = document.getElementById('reset-weights');
-            if(!slidersContainer || !resultsContainer || !resetButton) return;
+            const analysisBox = document.getElementById('scenario-analysis-box');
+
+            if(!slidersContainer || !resultsContainer || !resetButton || !analysisBox) return;
+
             slidersContainer.innerHTML = '';
             criteria.forEach(c => { slidersContainer.innerHTML += `<div class="slider-container"><label for="${c.id}">${c.name}</label><input type="range" id="${c.id}" min="0" max="5" step="0.1" value="${c.defaultWeight}" data-id="${c.id}"><span class="slider-value" id="${c.id}-value">${c.defaultWeight.toFixed(1)}</span></div>`; });
+            
             const sliders = slidersContainer.querySelectorAll('input[type="range"]');
+
             function calculateScores() {
                 const currentWeights = {}; let totalWeight = 0;
                 sliders.forEach(slider => { const weight = parseFloat(slider.value); currentWeights[slider.dataset.id] = weight; totalWeight += weight; });
@@ -539,14 +562,49 @@
                     for (const criterionId in options[optionName].scores) { weightedSum += options[optionName].scores[criterionId] * currentWeights[criterionId]; }
                     finalScores.push({ name: optionName, score: totalWeight > 0 ? (weightedSum / totalWeight) : 0, color: options[optionName].color, icon: options[optionName].icon });
                 }
-                finalScores.sort((a, b) => b.score - a.score); displayResults(finalScores);
+                finalScores.sort((a, b) => b.score - a.score); 
+                displayResults(finalScores);
+                updateAnalysisBox(finalScores);
             }
+
             function displayResults(sortedScores) {
                 resultsContainer.innerHTML = ''; const medals = ['🥇', '🥈', '🥉', '4️⃣'];
                 sortedScores.forEach((item, index) => { resultsContainer.innerHTML += `<div class="flex items-center p-3 rounded-lg ${index === 0 ? 'bg-yellow-100' : 'bg-gray-50'}"><span class="text-2xl w-8">${medals[index]}</span><i class="fas ${item.icon} ${item.color} text-2xl w-10 text-center"></i><span class="font-bold flex-grow ${item.color}">${item.name}</span><span class="font-black text-2xl ${item.color}">${item.score.toFixed(2)}</span></div>`; });
             }
+
+            function updateAnalysisBox(sortedScores) {
+                const topOption = sortedScores[0];
+                let analysisHTML = '';
+
+                const securityWeight = parseFloat(document.getElementById('security-risk').value);
+                const logisticsWeight = parseFloat(document.getElementById('logistics').value);
+                const executionWeight = parseFloat(document.getElementById('execution').value);
+
+                switch (topOption.name) {
+                    case 'درمانی':
+                        analysisHTML = `<div class="flex items-center gap-4 mb-4"><i class="fas fa-clinic-medical text-red-500 text-4xl"></i><h3 class="text-2xl font-bold text-red-700">تحلیل سناریو: مرکز درمانی در صدر</h3></div><p>کاربری <strong>مرکز درمانی</strong> به دلیل امتیازات بالا در معیارهای حیاتی مانند <strong>'هم‌افزایی بحران'</strong> و <strong>'پذیرش اجتماعی'</strong> به رتبه اول رسیده است. این سناریو زمانی ایده‌آل است که اولویت اصلی، نجات جان انسان‌ها در ساعات اولیه یک بحران با تلفات بالا (مانند زلزله) باشد.`;
+                        if (securityWeight > 3.5) { analysisHTML += `<br><br>با افزایش وزن <strong>'ریسک امنیتی'</strong>، این گزینه به دلیل کنترل‌پذیری بالا نسبت به فروشگاه، جذابیت بیشتری پیدا می‌کند.`;}
+                        analysisHTML += `</p>`;
+                        break;
+                    case 'فروشگاه (هایپر)':
+                        analysisHTML = `<div class="flex items-center gap-4 mb-4"><i class="fas fa-store text-blue-500 text-4xl"></i><h3 class="text-2xl font-bold text-blue-700">تحلیل سناریو: فروشگاه (هایپر) در صدر</h3></div><p>کاربری <strong>فروشگاه</strong> به دلیل قدرت بی‌نظیر در <strong>'تاب‌آوری لجستیکی'</strong> و <strong>'توجیه اقتصادی'</strong> پیشتاز است. این انتخاب برای سناریوهای بحران طولانی‌مدت (مانند محاصره) که در آن تامین پایدار منابع حرف اول را می‌زند، بهترین گزینه است.`;
+                        if (logisticsWeight > 4.0) { analysisHTML += `<br><br>اهمیت بالایی که شما برای <strong>'لجستیک'</strong> قائل شدید، عامل اصلی برتری این گزینه است.`; }
+                        analysisHTML += `</p>`;
+                        break;
+                    case 'ورزشی':
+                        analysisHTML = `<div class="flex items-center gap-4 mb-4"><i class="fas fa-futbol text-green-500 text-4xl"></i><h3 class="text-2xl font-bold text-green-700">تحلیل سناریو: مجموعه ورزشی در صدر</h3></div><p>کاربری <strong>مجموعه ورزشی</strong> به لطف امتیازات عالی در <strong>'سادگی اجرا'</strong> و <strong>'ریسک امنیتی پایین'</strong> به رتبه اول صعود کرده است. این سناریو برای شهرهای کوچک یا پروژه‌هایی با بودجه محدود که سرعت و سادگی ساخت اولویت دارد، یک راه حل عملی و کم‌ریسک محسوب می‌شود.`;
+                        if (executionWeight > 3.5) { analysisHTML += `<br><br>تمرکز شما بر <strong>'سادگی اجرا'</strong>، این گزینه را به انتخاب منطقی تبدیل کرده است.`;}
+                        analysisHTML += `</p>`;
+                        break;
+                    default:
+                        analysisHTML = `<div class="flex items-center gap-4 mb-4"><i class="fas fa-gem text-gray-500 text-4xl"></i><h3 class="text-2xl font-bold text-gray-700">تحلیل سناریو: پاساژ در صدر</h3></div><p>قرار گرفتن <strong>پاساژ</strong> در رتبه اول نشان‌دهنده اولویت بسیار بالای <strong>'توجیه اقتصادی'</strong> در زمان صلح است، در حالی که سایر معیارهای حیاتی بحران وزن کمتری دارند. این سناریو در عمل با ریسک‌های مدیریتی و امنیتی بالایی همراه است.</p>`;
+                }
+                analysisBox.innerHTML = analysisHTML;
+            }
+
             sliders.forEach(slider => { slider.addEventListener('input', () => { document.getElementById(`${slider.dataset.id}-value`).textContent = parseFloat(slider.value).toFixed(1); calculateScores(); }); });
             resetButton.addEventListener('click', () => { criteria.forEach(c => { const slider = document.getElementById(c.id); slider.value = c.defaultWeight; document.getElementById(`${c.id}-value`).textContent = c.defaultWeight.toFixed(1); }); calculateScores(); });
+            
             calculateScores();
 
             // Sensitivity Chart Logic
@@ -572,5 +630,4 @@
     </script>
 </body>
 </html>
-
 
