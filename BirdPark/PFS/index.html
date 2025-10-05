@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد تحلیل مالی نئونی</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/3.0.1/chartjs-plugin-annotation.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #0A0A2A; /* Deep Space Blue */
+            color: #E6E6FA; /* Lavender White */
+            background-image: 
+                radial-gradient(circle at top left, rgba(0, 245, 255, 0.1), transparent 40%),
+                radial-gradient(circle at bottom right, rgba(255, 0, 255, 0.1), transparent 40%),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill='%230f172a' fill-opacity='0.4'%3E%3Crect x='0' y='0' width='50' height='50'/%3E%3Crect x='50' y='50' width='50' height='50'/%3E%3C/g%3E%3C/svg%3E");
+        }
+        .card {
+            background-color: rgba(22, 27, 61, 0.6); /* Translucent Dark Blue */
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 1.25rem;
+            border: 1px solid rgba(0, 245, 255, 0.2);
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 0 20px rgba(0, 245, 255, 0.1), inset 0 0 10px rgba(0, 245, 255, 0.05);
+        }
+        .card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(0, 245, 255, 0.7);
+            box-shadow: 0 0 45px rgba(0, 245, 255, 0.3);
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #00F5FF, #FF00FF, #00F5FF);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: text-glow 5s linear infinite;
+        }
+        @keyframes text-glow {
+            to { background-position: 200% center; }
+        }
+        /* Custom Slider Styles */
+        input[type="range"] {
+            -webkit-appearance: none; appearance: none;
+            width: 100%; height: 8px;
+            background: rgba(0, 245, 255, 0.2);
+            border-radius: 5px; outline: none;
+            --slider-thumb-color: hsl(185, 100%, 50%);
+            --slider-shadow-color: hsl(185, 100%, 60%);
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none;
+            width: 28px; height: 28px;
+            background: var(--slider-thumb-color); cursor: pointer;
+            border-radius: 50%; border: 4px solid #0A0A2A;
+            box-shadow: 0 0 15px var(--slider-shadow-color), 0 0 8px #fff;
+            transition: all 0.2s ease-in-out;
+        }
+        input[type="range"]::-webkit-slider-thumb:hover {
+             transform: scale(1.1);
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 28px; height: 28px;
+            background: var(--slider-thumb-color); cursor: pointer;
+            border-radius: 50%; border: 4px solid #0A0A2A;
+            box-shadow: 0 0 15px var(--slider-shadow-color), 0 0 8px #fff;
+            transition: all 0.2s ease-in-out;
+        }
+        /* Tooltip style */
+        .tooltip-container {
+            position: relative;
+            display: inline-block;
+        }
+        .tooltip-text {
+            visibility: hidden;
+            width: 240px;
+            background-color: rgba(17, 24, 39, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 10px;
+            position: absolute;
+            z-index: 10;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -120px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            border: 1px solid rgba(0, 245, 255, 0.6);
+            box-shadow: 0 0 20px rgba(0, 245, 255, 0.3);
+            font-family: 'Vazirmatn', sans-serif;
+        }
+        .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: rgba(0, 245, 255, 0.8) transparent transparent transparent;
+        }
+        .tooltip-container:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+        .neon-email {
+            color: #cffafe;
+            text-shadow: 0 0 4px #00F5FF, 0 0 8px #00F5FF;
+            font-weight: 500;
+        }
+        /* Responsive Chart Heights */
+        .chart-container { height: 300px; }
+        @media (min-width: 640px) { .chart-container { height: 350px; } }
+        .fcf-chart-container { height: 350px; }
+        @media (min-width: 640px) { .fcf-chart-container { height: 400px; } }
+        /* Footer Neon Separator */
+        footer {
+            position: relative;
+            padding-top: 1.5rem;
+        }
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.8), transparent);
+            box-shadow: 0 0 8px rgba(0, 245, 255, 0.5);
+        }
+    </style>
+</head>
+<body class="text-gray-200">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <header class="text-center mb-10">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold gradient-text">تحلیل مالی داینامیک باغ پرندگان</h1>
+            <p class="text-base sm:text-lg text-gray-400 mt-2">با حرکت اسلایدر، تاثیر نرخ تنزیل را بر شاخص‌ها مشاهده کنید</p>
+        </header>
+
+        <!-- Slider Section -->
+        <section class="mb-10 card p-6">
+            <label for="discountRateSlider" class="block text-xl sm:text-2xl font-bold text-center text-cyan-300 mb-4">
+                نرخ تنزیل: <span id="sliderValue" class="gradient-text font-mono text-2xl sm:text-3xl">30.0%</span>
+            </label>
+            <input id="discountRateSlider" type="range" min="0" max="100" value="30" step="0.5" class="w-full">
+        </section>
+
+        <!-- Dynamic Metrics -->
+        <section class="mb-12 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
+            <div class="card p-4 text-center"><h3 class="text-sm font-semibold text-gray-400 mb-2">سرمایه‌گذاری (میلیارد ریال)</h3><p id="dynamicCapex" class="text-xl sm:text-2xl font-bold text-cyan-300">-</p></div>
+            <div class="card p-4 text-center"><h3 class="text-sm font-semibold text-gray-400 mb-2">خالص ارزش فعلی (NPV)</h3><p id="dynamicNpv" class="text-xl sm:text-2xl font-bold text-cyan-300">-</p></div>
+            <div class="card p-4 text-center"><h3 class="text-sm font-semibold text-gray-400 mb-2">نرخ بازده داخلی (IRR)</h3><p id="dynamicIrr" class="text-xl sm:text-2xl font-bold text-cyan-300">-</p></div>
+            <div class="card p-4 text-center"><h3 class="text-sm font-semibold text-gray-400 mb-2">نسبت درآمد به هزینه</h3><p id="dynamicBC" class="text-xl sm:text-2xl font-bold text-cyan-300">-</p></div>
+            <div class="card p-4 text-center"><h3 class="text-sm font-semibold text-gray-400 mb-2">بازگشت سرمایه (سال)</h3><p id="dynamicPP" class="text-xl sm:text-2xl font-bold text-cyan-300">-</p></div>
+            <div class="card p-4 text-center"><h3 class="text-sm font-semibold text-gray-400 mb-2">بازگشت سود و سرمایه</h3><p id="dynamicDPBP" class="text-xl sm:text-2xl font-bold text-cyan-300">-</p></div>
+        </section>
+
+        <!-- Charts Grid -->
+        <section class="mb-12 grid grid-cols-1 lg:grid-cols-2 gap-8">
+             <div class="card p-4"><h3 class="text-base sm:text-lg font-semibold text-center mb-4 text-gray-300">نقشه راه زمانی پروژه</h3><div class="chart-container"><canvas id="newRoadmapChart"></canvas></div></div>
+             <!-- NEW NPV CHART using ApexCharts -->
+             <div class="card p-4"><h3 class="text-base sm:text-lg font-semibold text-center mb-4 text-gray-300">NPV در نرخ‌های تنزیل مختلف</h3><div class="chart-container"><div id="npvVsRateChart"></div></div></div>
+             
+             <!-- REDESIGNED FCF Chart -->
+             <div class="card p-6 lg:col-span-2">
+                <h3 class="text-lg sm:text-xl font-bold text-center mb-4 gradient-text">تحلیل جریان نقدی آزاد و تجمعی</h3>
+                <div class="fcf-chart-container">
+                    <canvas id="fcfChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sensitivity Analysis Section -->
+        <section class="mb-12">
+            <h2 class="text-xl sm:text-2xl font-bold text-cyan-300 mb-6 text-center">ماتریس تحلیل حساسیت (IRR) - هیت‌مپ</h2>
+            <div class="card overflow-x-auto p-4">
+                <table id="sensitivityMatrix" class="w-full text-center border-collapse">
+                    <!-- JS will generate this table -->
+                </table>
+            </div>
+        </section>
+
+        <!-- REDESIGNED Graphical Table -->
+        <section>
+            <h2 class="text-xl sm:text-2xl font-bold text-cyan-300 mb-6 text-center">مقایسه گرافیکی سناریوهای کلیدی</h2>
+            <div id="graphicalTableContainer" class="card p-4 sm:p-6 space-y-4">
+                <!-- JS will generate this content -->
+            </div>
+            <p class="text-center text-gray-400 text-sm mt-4">توجه: کلیه مقادیر عددی (به جز درصد و سال) بر حسب میلیارد ریال است.</p>
+        </section>
+
+        <footer class="text-center mt-12 text-gray-500 text-sm">
+            <div class="tooltip-container">
+                تهیه شده در مهندسین مشاور ایده پرداز محیط
+                <span class="tooltip-text">
+                    تحلیل و طراحی: حمیدرضا ترابی
+                    <br>
+                    <span class="neon-email">hr.torabii@gmail.com</span>
+                </span>
+            </div>
+            <p class="mt-2">پاییز 1404</p>
+        </footer>
+
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- DATA SETUP ---
+        const baseRates = [20, 30, 40, 60];
+        const dataPoints = {
+            capex: [10500, 5100, 2050, 900], 
+            npv: [1196.8, 368.0, 50.1, 5], 
+            irr: [21.2, 30.9, 40.4, 59.8],
+            bc: [1.11, 1.07, 1.02, 1.005], 
+            pp: [8.1, 5.9, 5.1, 4.0], 
+            dpbp: [18.4, 18.5, 19.4, 19.9],
+            fcf: [
+                [526.4, 650.1, 802.9, 991.6, 1224.6, 1512.3, 1867.7, 2306.6, 2848.9, 3519.7, 4346.8, 5368.3, 6629.9, 8197.9, 10124.4, 12503.6, 15441.9, 19070.8, 23552.4, 29087.2], // 20%
+                [396, 508.9, 653.9, 840.1, 1079.5, 1387.2, 1782.5, 2290.5, 2943.3, 3783, 4861.1, 6246.5, 8026.7, 10314.4, 13254, 17031.4, 21885.4, 28112.1, 36121.5, 46416.1], // 30%
+                [310, 341, 375.1, 412.6, 532, 736.7, 1020.4, 1412, 1955.6, 2708.5, 3751.2, 5190.4, 7194.7, 9968.5, 13806.4, 19125, 26488.1, 36685.9, 50808.9, 70360.3],  // 40%
+                [250, 280, 310, 350, 400, 500, 700, 1000, 1400, 2000, 2800, 3800, 5000, 7000, 9500, 13000, 18000, 25000, 35000, 50000] // Extrapolated for 60%
+            ]
+        };
+
+        // --- ELEMENTS ---
+        const slider = document.getElementById('discountRateSlider');
+        const sliderValueEl = document.getElementById('sliderValue');
+        const dynamicElements = {
+            capex: document.getElementById('dynamicCapex'), npv: document.getElementById('dynamicNpv'), irr: document.getElementById('dynamicIrr'),
+            bc: document.getElementById('dynamicBC'), pp: document.getElementById('dynamicPP'), dpbp: document.getElementById('dynamicDPBP'),
+        };
+
+        // --- CALCULATION HELPERS ---
+        function interpolate(x, x_points, y_points) {
+            if (x <= x_points[0]) return y_points[0]; if (x >= x_points[x_points.length - 1]) return y_points[y_points.length - 1];
+            let i = 1; while (x > x_points[i]) i++;
+            const [x1, y1, x2, y2] = [x_points[i - 1], y_points[i - 1], x_points[i], y_points[i]];
+            return y1 + (y2 - y1) * (x - x1) / (x2 - x1);
+        }
+        function getInterpolatedFcf(rate) {
+            const fcfStream = [];
+            for (let year = 0; year < 20; year++) {
+                const y_points = [dataPoints.fcf[0][year], dataPoints.fcf[1][year], dataPoints.fcf[2][year], dataPoints.fcf[3][year]];
+                fcfStream.push(interpolate(rate, baseRates, y_points));
+            }
+            return fcfStream;
+        }
+        function calculateNpv(rate, fcf, capex) { let npv = -capex; const dr = rate / 100; fcf.forEach((cf, i) => { npv += cf / Math.pow(1 + dr, i + 1); }); return npv; }
+        function calculatePaybackPeriod(fcf, capex) {
+            let cumulativeCf = -capex;
+            for (let i = 0; i < fcf.length; i++) { if (fcf[i] <= 0) continue; cumulativeCf += fcf[i]; if (cumulativeCf >= 0) { return (i + 1) - (cumulativeCf / fcf[i]); } }
+            return "N/A";
+        }
+        function calculateCumulativeFcf(fcf, capex) {
+            const cumulative = []; let sum = -capex;
+            for (const val of fcf) { sum += val; cumulative.push(sum); }
+            return cumulative;
+        }
+        function calculateIRR(fcf, capex, maxIterations = 100, tolerance = 0.001) {
+            let low = 0.0, high = 1.0, mid = 0.0;
+            for (let i = 0; i < maxIterations; i++) {
+                mid = (low + high) / 2;
+                let npv = -capex;
+                fcf.forEach((cf, j) => { npv += cf / Math.pow(1 + mid, j + 1); });
+                if (Math.abs(npv) < tolerance) return mid * 100;
+                if (npv > 0) low = mid; else high = mid;
+            }
+            return mid * 100; // Return best guess
+        }
+
+        // --- CHART SETUP ---
+        const tickColor = '#a3a3a3', gridColor = 'rgba(0, 245, 255, 0.1)', legendColor = '#E6E6FA', vazirFont = 'Vazirmatn';
+        const defaultChartOptions = {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { 
+                legend: { labels: { color: legendColor, font: { family: vazirFont, size: 14 } } },
+                tooltip: { 
+                    enabled: true,
+                    bodyFont: { family: vazirFont }, titleFont: { family: vazirFont }, 
+                    backgroundColor: 'rgba(10, 10, 42, 0.85)', 
+                    borderColor: 'rgba(0, 245, 255, 0.5)', borderWidth: 1, padding: 12,
+                    displayColors: true,
+                    boxPadding: 4,
+                }
+            },
+        };
+
+        // --- FCF CHART ---
+        const fcfCanvas = document.getElementById('fcfChart');
+        const fcfChartCtx = fcfCanvas.getContext('2d');
+        const fcfGradient = fcfChartCtx.createLinearGradient(0, 0, 0, fcfCanvas.offsetHeight);
+        fcfGradient.addColorStop(0, 'rgba(0, 245, 255, 0.6)');
+        fcfGradient.addColorStop(1, 'rgba(0, 245, 255, 0.1)');
+        
+        const fcfChart = new Chart(fcfChartCtx, {
+            type: 'line',
+            data: {
+                labels: Array.from({length: 20}, (_, i) => `سال ${i + 1}`),
+                datasets: [
+                    { label: 'جریان نقدی آزاد (FCF)', data: [], borderColor: '#00F5FF', backgroundColor: fcfGradient, fill: true, tension: 0.4, borderWidth: 2 },
+                    { label: 'جریان نقدی تجمعی', data: [], borderColor: '#FF00FF', backgroundColor: 'transparent', tension: 0.4, fill: false, pointRadius: 3, pointBackgroundColor: '#FF00FF', pointHoverRadius: 6, borderWidth: 3 }
+                ]
+            },
+            options: { ...defaultChartOptions,
+                interaction: { mode: 'index', intersect: false },
+                scales: {
+                    x: { ticks: { color: tickColor, font: { family: vazirFont } }, grid: { display: false } },
+                    y: { type: 'linear', display: true, position: 'left', ticks: { color: tickColor, font: { family: vazirFont } }, grid: { color: gridColor } }
+                },
+                plugins: {
+                    ...defaultChartOptions.plugins,
+                    tooltip: { ...defaultChartOptions.plugins.tooltip, mode: 'index', intersect: false },
+                    annotation: {
+                        annotations: {
+                            zeroLine: {
+                                type: 'line', yMin: 0, yMax: 0, borderColor: 'rgba(255, 204, 0, 0.8)', borderWidth: 2, borderDash: [5, 5],
+                                label: { content: 'نقطه سر به سر', enabled: true, position: 'start', font: { family: vazirFont, size: 12, weight: 'bold' }, backgroundColor: 'rgba(255, 204, 0, 0.2)', color: 'rgba(255, 204, 0, 1)' }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // --- NPV VS RATE CHART (APEXCHART IMPLEMENTATION) ---
+        const npvChartOptions = {
+            series: [{ name: 'NPV', data: [] }],
+            chart: { type: 'line', height: '100%', background: 'transparent', fontFamily: 'Vazirmatn, sans-serif', toolbar: { show: false } },
+            theme: { mode: 'dark' },
+            colors: ['#FF00FF'],
+            stroke: { curve: 'smooth', width: 3 },
+            grid: { borderColor: gridColor, xaxis: { lines: { show: false } } },
+            xaxis: {
+                type: 'numeric',
+                title: { text: 'نرخ تنزیل', style: { color: legendColor } },
+                labels: { formatter: val => `${val.toFixed(0)}%`, style: { colors: tickColor } }
+            },
+            yaxis: {
+                title: { text: 'خالص ارزش فعلی (NPV)', style: { color: legendColor } },
+                labels: { formatter: val => val.toLocaleString('fa-IR'), style: { colors: tickColor } }
+            },
+            tooltip: {
+                theme: 'dark',
+                x: { formatter: val => `نرخ: ${val.toFixed(1)}%` },
+                y: { formatter: val => val.toLocaleString('fa-IR', {maximumFractionDigits: 0}) }
+            },
+            annotations: { xaxis: [], yaxis: [] }
+        };
+
+        const npvVsRateChart = new ApexCharts(document.querySelector("#npvVsRateChart"), npvChartOptions);
+        npvVsRateChart.render();
+        
+        // --- ROADMAP CHART ---
+        const newRoadmapChart = new Chart(document.getElementById('newRoadmapChart').getContext('2d'), {
+            type: 'bar', data: { labels: ['دوران بهره\u200cبرداری', 'بازگشت سود و سرمایه', 'بازگشت سرمایه'], datasets: [{ data: [], backgroundColor: ['rgba(0, 220, 150, 0.7)', 'rgba(255, 0, 128, 0.7)', 'rgba(255, 165, 0, 0.7)'], borderWidth: 1, borderColor: '#0A0A2A', barPercentage: 0.5, borderRadius: 5 }] },
+            options: { ...defaultChartOptions, indexAxis: 'y', plugins: {...defaultChartOptions.plugins, legend: {display: false}, tooltip: {callbacks: { label: (ctx) => ` ${ctx.raw[1].toFixed(1)} سال`}}}, scales: { x: { min: 0, max: 20, ticks: { color: tickColor, stepSize: 2 }, grid: { color: gridColor }, title: { display: true, text: 'سال\u200cهای بهره\u200cبرداری', color: legendColor, font: { family: vazirFont } } }, y: { ticks: {color: tickColor, font:{family: vazirFont}}, grid: { display: false } } } }
+        });
+
+        // --- DYNAMIC UPDATE FUNCTIONS ---
+        function updateSensitivityMatrix(baseIrr) {
+            const sensitivityMatrixEl = document.getElementById('sensitivityMatrix');
+            const revenueChanges = [-0.2, -0.1, 0, 0.1, 0.2], costChanges = [-0.2, -0.1, 0, 0.1, 0.2];
+            const irrValues = revenueChanges.map(r => costChanges.map(c => baseIrr + (r * 15) + (c * -8))); // Simplified sensitivity logic
+            const minIrr = Math.min(...irrValues.flat()), maxIrr = Math.max(...irrValues.flat());
+            
+            function getHeatmapColor(value) {
+                if (maxIrr === minIrr) return 'hsl(120, 80%, 35%)';
+                const percentage = (value - minIrr) / (maxIrr - minIrr);
+                const hue = percentage * 120; // 0 (red) to 120 (green)
+                return `hsl(${hue}, 80%, ${25 + percentage * 20}%)`;
+            }
+
+            let tableHTML = `<thead class="border-b border-cyan-500/30"><tr><th class="p-3 font-bold">درآمد / هزینه</th>${costChanges.map(c => `<th class="p-3 font-bold font-mono text-gray-300 text-xs sm:text-base">${c >= 0 ? '+' : ''}${c * 100}%</th>`).join('')}</tr></thead><tbody>`;
+            revenueChanges.forEach((r, rIndex) => {
+                tableHTML += `<tr class="border-b border-cyan-500/20 last:border-b-0"><td class="p-3 font-bold font-mono text-gray-300 text-xs sm:text-base">${r >= 0 ? '+' : ''}${r * 100}%</td>`;
+                costChanges.forEach((c, cIndex) => { const irrValue = irrValues[rIndex][cIndex]; tableHTML += `<td class="p-3 font-mono text-white rounded-md transition-colors duration-300 text-xs sm:text-base" style="background-color: ${getHeatmapColor(irrValue)}">${irrValue.toFixed(1)}%</td>`; });
+                tableHTML += `</tr>`;
+            });
+            sensitivityMatrixEl.innerHTML = tableHTML + `</tbody>`;
+        }
+        
+        function updateRoadmapChart(pp, dpbp) {
+            const operationPeriod = 20;
+            const data = [
+                [0, operationPeriod],
+                typeof dpbp === 'number' && dpbp <= operationPeriod ? [0, dpbp] : [0, 0],
+                typeof pp === 'number' && pp <= operationPeriod ? [0, pp] : [0, 0],
+            ];
+            newRoadmapChart.data.datasets[0].data = data;
+            newRoadmapChart.update();
+        }
+
+        function updateGraphicalTable() {
+            const container = document.getElementById('graphicalTableContainer');
+            const iconClass = "w-5 h-5 sm:w-6 sm:h-6 text-cyan-300";
+            const data = [
+                { label: 'کل سرمایه‌گذاری', values: [2050, 5100, 10500], suffix: '', icon: `<svg xmlns="http://www.w3.org/2000/svg" class="${iconClass}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg>` },
+                { label: 'خالص ارزش فعلی (NPV)', values: [50.1, 368.0, 1196.8], suffix: '', icon: `<svg xmlns="http://www.w3.org/2000/svg" class="${iconClass}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>` },
+                { label: 'نرخ بازده داخلی (IRR)', values: [40.4, 30.9, 21.2], suffix: '%', icon: `<svg xmlns="http://www.w3.org/2000/svg" class="${iconClass}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v.01" /></svg>` },
+                { label: 'نسبت درآمد به هزینه (B/C)', values: [1.02, 1.07, 1.11], suffix: '', icon: `<svg xmlns="http://www.w3.org/2000/svg" class="${iconClass}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" /></svg>` },
+                { label: 'دوره بازگشت سرمایه (PP)', values: [5.1, 5.9, 8.1], suffix: ' سال', icon: `<svg xmlns="http://www.w3.org/2000/svg" class="${iconClass}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>` },
+                { label: 'دوره بازگشت سود و سرمایه', values: [19.4, 18.5, 18.4], suffix: ' سال', icon: `<svg xmlns="http://www.w3.org/2000/svg" class="${iconClass}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>` },
+            ];
+            const scenarios = [
+                { name: 'سناریوی ۴۰٪', color: 'orange' },
+                { name: 'سناریوی ۳۰٪', color: 'cyan' },
+                { name: 'سناریوی ۲۰٪', color: 'fuchsia' }
+            ];
+
+            let html = `<div class="grid grid-cols-4 gap-x-2 sm:gap-x-6 gap-y-2 px-1 sm:px-2 text-xs sm:text-sm text-center font-bold border-b border-cyan-500/30 pb-3">
+                <div>شاخص</div>
+                <div class="text-orange-400">${scenarios[0].name}</div>
+                <div class="text-cyan-300">${scenarios[1].name}</div>
+                <div class="text-fuchsia-400">${scenarios[2].name}</div>
+            </div>`;
+
+            data.forEach(item => {
+                html += `<div class="grid grid-cols-4 items-center gap-x-2 sm:gap-x-6 gap-y-2 py-2 px-1 sm:py-3 sm:px-2 border-b border-cyan-500/10 last:border-b-0 hover:bg-cyan-500/10 rounded-lg transition-colors">`;
+                html += `<div class="font-semibold text-gray-200 text-xs sm:text-sm flex items-center gap-x-2">
+                            ${item.icon}
+                            <span>${item.label}</span>
+                         </div>`;
+                item.values.forEach((value, index) => {
+                    const color = scenarios[index].color;
+                    html += `<div class="text-center"><span style="font-family: Vazirmatn, sans-serif;" class="text-${color}-300 text-base sm:text-lg font-medium">${value.toLocaleString('fa-IR')}${item.suffix}</span></div>`;
+                });
+                html += `</div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function updateDashboard(rate) {
+            sliderValueEl.textContent = `${rate.toFixed(1)}%`;
+            const iCapex = interpolate(rate, baseRates, dataPoints.capex);
+            const iBC = interpolate(rate, baseRates, dataPoints.bc);
+            const iFcf = getInterpolatedFcf(rate); 
+            const iNpv = calculateNpv(rate, iFcf, iCapex); 
+            const iPp = calculatePaybackPeriod(iFcf, iCapex);
+            const iDpbp = typeof iPp === 'number' ? interpolate(rate, baseRates, dataPoints.dpbp) : "N/A";
+            const iCumulativeFcf = calculateCumulativeFcf(iFcf, iCapex);
+            const dynamicIRR = calculateIRR(iFcf, iCapex);
+
+            dynamicElements.capex.textContent = iCapex.toLocaleString('fa-IR', { maximumFractionDigits: 0 });
+            dynamicElements.npv.textContent = iNpv.toLocaleString('fa-IR', { maximumFractionDigits: 1 });
+            dynamicElements.irr.textContent = `${dynamicIRR.toFixed(2)}%`; // Using calculated IRR
+            dynamicElements.bc.textContent = iBC.toFixed(3);
+            dynamicElements.pp.textContent = typeof iPp === 'number' ? `${iPp.toFixed(1)} سال` : "> 20 سال"; 
+            dynamicElements.dpbp.textContent = typeof iDpbp === 'number' ? `${iDpbp.toFixed(1)} سال` : "> 20 سال";
+            
+            fcfChart.data.datasets[0].data = iFcf;
+            fcfChart.data.datasets[1].data = iCumulativeFcf;
+            fcfChart.update();
+            
+            // Update ApexChart NPV
+            npvVsRateChart.updateOptions({
+                annotations: {
+                    xaxis: [
+                        { x: dynamicIRR, borderColor: '#00E396', label: { borderColor: '#00E396', style: { color: '#000', background: '#00E396' }, text: `IRR: ${dynamicIRR.toFixed(1)}%` }},
+                        { x: rate, borderColor: '#00F5FF', label: { borderColor: '#00F5FF', style: { color: '#000', background: '#00F5FF' }, text: 'نرخ فعلی' }}
+                    ],
+                    yaxis: [{ y: 0, borderColor: '#FF4560', label: { borderColor: '#FF4560', style: { color: '#fff', background: '#FF4560' }, text: 'نقطه سر به سر' } }]
+                }
+            });
+
+            updateRoadmapChart(iPp, iDpbp);
+            updateSensitivityMatrix(dynamicIRR); // Use calculated IRR for sensitivity
+
+            // Update Slider Color
+            const percentage = rate / 100;
+            const newColor = `hsl(${185 + (percentage * 120)}, 100%, 50%)`;
+            const newShadowColor = `hsl(${185 + (percentage * 120)}, 100%, 65%)`;
+            slider.style.setProperty('--slider-thumb-color', newColor);
+            slider.style.setProperty('--slider-shadow-color', newShadowColor);
+        }
+
+        // --- INITIALIZATION ---
+        const npvDataForApex = [];
+        for (let r = 0; r <= 100; r += 2) {
+            const fcf = getInterpolatedFcf(r);
+            const capex = interpolate(r, baseRates, dataPoints.capex);
+            npvDataForApex.push({ x: r, y: parseFloat(calculateNpv(r, fcf, capex).toFixed(2)) });
+        }
+        npvVsRateChart.updateSeries([{ data: npvDataForApex }]);
+        
+        slider.addEventListener('input', (e) => updateDashboard(parseFloat(e.target.value)));
+        updateDashboard(parseFloat(slider.value));
+        updateGraphicalTable();
+    });
+    </script>
+</body>
+</html>
+
+
