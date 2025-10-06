@@ -138,6 +138,16 @@
             background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.8), transparent);
             box-shadow: 0 0 8px rgba(0, 245, 255, 0.5);
         }
+        /* Accordion Styles */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
+            padding: 0 1rem;
+        }
+        .accordion-button.open .accordion-chevron {
+            transform: rotate(180deg);
+        }
     </style>
 </head>
 <body class="text-gray-200">
@@ -165,6 +175,114 @@
             <div class="card p-4 text-center"><h3 class="text-sm font-semibold text-gray-400 mb-2">نسبت درآمد به هزینه</h3><p id="dynamicBC" class="text-xl sm:text-2xl font-bold text-cyan-300">-</p></div>
             <div class="card p-4 text-center"><h3 class="text-sm font-semibold text-gray-400 mb-2">بازگشت سرمایه (سال)</h3><p id="dynamicPP" class="text-xl sm:text-2xl font-bold text-cyan-300">-</p></div>
             <div class="card p-4 text-center"><h3 class="text-sm font-semibold text-gray-400 mb-2">بازگشت سود و سرمایه</h3><p id="dynamicDPBP" class="text-xl sm:text-2xl font-bold text-cyan-300">-</p></div>
+        </section>
+
+        <!-- NEW STRATEGIC ANALYSIS SECTION -->
+        <section class="mb-12 card p-6">
+            <h2 class="text-xl sm:text-2xl font-bold text-cyan-300 mb-6 text-center">تحلیل استراتژیک روابط شاخص‌ها</h2>
+            <div id="accordion-container" class="space-y-4">
+                <!-- Item 1 -->
+                <div>
+                    <button class="accordion-button w-full flex justify-between items-center text-right p-4 bg-gray-900/30 hover:bg-cyan-400/10 rounded-lg transition-colors duration-300">
+                        <span class="flex items-center gap-x-3 font-semibold text-gray-200 text-base sm:text-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                            <span>۱. حاشیه امنیت پروژه: رابطه IRR و نرخ تنزیل</span>
+                        </span>
+                        <svg class="accordion-chevron h-5 w-5 text-gray-400 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="pt-4 pb-4 text-gray-300 leading-relaxed text-sm sm:text-base">
+                            <p class="mb-2"><strong class="font-semibold text-cyan-300">تفسیر مدیریتی:</strong> این الگو که در آن IRR همواره اندکی بالاتر از نرخ تنزیل است، نشان می‌دهد مدل مالی با دقت مهندسی شده تا حداقل بازدهی قابل قبول (Hurdle Rate) را برآورده سازد. این یعنی حاشیه امنیت پروژه در برابر افزایش غیرمنتظره نرخ تنزیل یا کاهش درآمدها، بسیار <strong class="text-orange-400">محدود</strong> است.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Item 2 -->
+                <div>
+                    <button class="accordion-button w-full flex justify-between items-center text-right p-4 bg-gray-900/30 hover:bg-cyan-400/10 rounded-lg transition-colors duration-300">
+                        <span class="flex items-center gap-x-3 font-semibold text-gray-200 text-base sm:text-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+                            <span>۲. خلق ارزش: چرا NPV به شدت متغیر است؟</span>
+                        </span>
+                        <svg class="accordion-chevron h-5 w-5 text-gray-400 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="pt-4 pb-4 text-gray-300 leading-relaxed text-sm sm:text-base">
+                            <p class="mb-2">تفاوت چشمگیر NPV در سناریوها، از تأثیر اهرمی نرخ تنزیل بر جریانات نقدی بلندمدت ناشی می‌شود. در سناریوی پرریسک (۴۰٪)، ارزش درآمدهای آتی به شدت کاهش یافته و NPV نهایی تنها ۵۰.۱ است. در سناریوی کم‌ریسک (۲۰٪)، با کاهش هزینه سرمایه، NPV به ۱,۱۹۶.۸ جهش می‌کند.</p>
+                             <p><strong class="font-semibold text-cyan-300">نکته استراتژیک:</strong> تصمیم کلیدی مدیریت، ارزیابی این موضوع است که کدام یک از این سه سناریوی ریسک، به واقعیت بازار نزدیک‌تر است. این انتخاب، مستقیماً <strong class="text-fuchsia-400">ارزش استراتژیک پروژه</strong> را تعیین می‌کند.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Item 3 -->
+                <div>
+                    <button class="accordion-button w-full flex justify-between items-center text-right p-4 bg-gray-900/30 hover:bg-cyan-400/10 rounded-lg transition-colors duration-300">
+                        <span class="flex items-center gap-x-3 font-semibold text-gray-200 text-base sm:text-lg">
+                           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            <span>۳. ساختار ریسک: دوره بازگشت طولانی (DPBP)</span>
+                        </span>
+                        <svg class="accordion-chevron h-5 w-5 text-gray-400 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="pt-4 pb-4 text-gray-300 leading-relaxed text-sm sm:text-base">
+                             <p class="mb-2"><strong class="font-semibold text-cyan-300">علت ساختاری:</strong> دوره بازگشت سرمایه تنزیل شده (DPBP) در تمام سناریوها طولانی (۱۸ تا ۱۹ سال) است. این یعنی مدل جریان نقدی به صورت "سنگین در انتها" (Back-loaded) طراحی شده تا بتواند با نرخ‌های تنزیل بالا، NPV مثبت ایجاد کند.</p>
+                            <p><strong class="font-semibold text-cyan-300">پیامد مدیریتی:</strong> این ساختار یک ریسک استراتژیک مهم را معرفی می‌کند: <strong class="text-orange-400">وابستگی شدید به عملکرد بلندمدت</strong>. موفقیت پروژه به ثبات بازار و تحقق درآمدهای بزرگ در ۱۵ تا ۲۰ سال آینده گره خورده است.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Item 4 -->
+                <div>
+                    <button class="accordion-button w-full flex justify-between items-center text-right p-4 bg-gray-900/30 hover:bg-cyan-400/10 rounded-lg transition-colors duration-300">
+                        <span class="flex items-center gap-x-3 font-semibold text-gray-200 text-base sm:text-lg">
+                           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" /></svg>
+                            <span>۴. مقیاس‌پذیری و سرمایه‌گذاری (CAPEX)</span>
+                        </span>
+                        <svg class="accordion-chevron h-5 w-5 text-gray-400 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="pt-4 pb-4 text-gray-300 leading-relaxed text-sm sm:text-base">
+                             <p class="mb-2">با کاهش ریسک (نرخ تنزیل)، پروژه قادر به جذب سرمایه‌گذاری اولیه (CAPEX) بسیار بزرگ‌تری است. این سه سناریو را نباید یک پروژه واحد با سه نرخ تنزیل دید؛ بلکه باید آن‌ها را به عنوان <strong class="text-fuchsia-400">سه طرح کسب‌وکار با مقیاس‌های متفاوت</strong> در نظر گرفت.</p>
+                            <p><strong class="font-semibold text-cyan-300">سوال استراتژیک:</strong> «با توجه به ارزیابی ما از ریسک آینده، کدام مقیاس از سرمایه‌گذاری، بهینه ترین بازده تعدیل‌شده بر اساس ریسک (Risk-Adjusted Return) را ارائه می‌دهد؟»</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Item 5 -->
+                <div>
+                    <button class="accordion-button w-full flex justify-between items-center text-right p-4 bg-gray-900/30 hover:bg-cyan-400/10 rounded-lg transition-colors duration-300">
+                        <span class="flex items-center gap-x-3 font-semibold text-gray-200 text-base sm:text-lg">
+                           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v.01" /></svg>
+                            <span>۵. اگر سرمایه‌گذاری اولیه تغییر کند چه اتفاقی می‌افتد؟</span>
+                        </span>
+                        <svg class="accordion-chevron h-5 w-5 text-gray-400 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="pt-4 pb-4 text-gray-300 leading-relaxed text-sm sm:text-base">
+                             <p class="mb-4">این رابطه کاملاً معکوس است. هرچقدر هزینه اولیه سرمایه‌گذاری برای باغ پرندگان کمتر باشد، بازدهی بالاتر و ریسک پروژه نیز کمتر خواهد بود.</p>
+                             <div class="overflow-x-auto">
+                                <table class="w-full text-center border border-cyan-500/30 rounded-lg">
+                                    <thead class="bg-gray-900/30">
+                                        <tr>
+                                            <th class="p-3 border-b border-l border-cyan-500/30 font-semibold">اگر سرمایه‌گذاری اولیه...</th>
+                                            <th class="p-3 border-b border-l border-cyan-500/30 font-semibold">نرخ بازده داخلی (IRR)...</th>
+                                            <th class="p-3 border-b border-cyan-500/30 font-semibold">دوره بازگشت سود و سرمایه (DPP)...</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="hover:bg-cyan-500/10">
+                                            <td class="p-3 border-b border-l border-cyan-500/30 text-orange-400">کم شود (ارزان‌تر بخرید)</td>
+                                            <td class="p-3 border-b border-l border-cyan-500/30 text-green-400">بالا می‌رود (سودآوری بیشتر می‌شود)</td>
+                                            <td class="p-3 border-b border-cyan-500/30 text-green-400">کوتاه‌تر می‌شود (سریع‌تر پولتان برمی‌گردد)</td>
+                                        </tr>
+                                        <tr class="hover:bg-cyan-500/10">
+                                            <td class="p-3 border-l border-cyan-500/30 text-orange-400">زیاد شود (گران‌تر بخرید)</td>
+                                            <td class="p-3 border-l border-cyan-500/30 text-red-400">پایین می‌آید (سودآوری کمتر می‌شود)</td>
+                                            <td class="p-3 border-cyan-500/30 text-red-400">طولانی‌تر می‌شود (دیرتر پولتان برمی‌گردد)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <!-- Charts Grid -->
@@ -241,6 +359,25 @@
             capex: document.getElementById('dynamicCapex'), npv: document.getElementById('dynamicNpv'), irr: document.getElementById('dynamicIrr'),
             bc: document.getElementById('dynamicBC'), pp: document.getElementById('dynamicPP'), dpbp: document.getElementById('dynamicDPBP'),
         };
+
+        // --- ACCORDION SCRIPT ---
+        const accordionContainer = document.getElementById('accordion-container');
+        accordionContainer.addEventListener('click', function(event) {
+            const button = event.target.closest('.accordion-button');
+            if (!button) return;
+
+            const content = button.nextElementSibling;
+            button.classList.toggle('open');
+            
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+                content.style.padding = "0 1rem";
+            } else {
+                content.style.maxHeight = content.scrollHeight + "px";
+                content.style.padding = "1rem 1rem 0.5rem 1rem";
+            } 
+        });
+
 
         // --- CALCULATION HELPERS ---
         function interpolate(x, x_points, y_points) {
@@ -501,5 +638,4 @@
     </script>
 </body>
 </html>
-
 
