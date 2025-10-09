@@ -15,6 +15,7 @@
     <style>
         body {
             font-family: 'Vazirmatn', sans-serif;
+            background-color: #f1f5f9;
         }
         .card {
             background-color: white;
@@ -43,7 +44,7 @@
         .apexcharts-tooltip {
             direction: ltr;
         }
-        .apexcharts-legend-text {
+        .apexcharts-legend-text, .apexcharts-xaxis-label, .apexcharts-yaxis-label, .apexcharts-title-text, .apexcharts-datalabel, .apexcharts-tooltip-text, .apexcharts-annotation-label {
              font-family: 'Vazirmatn', sans-serif !important;
         }
          .chart-container-heatmap {
@@ -103,6 +104,15 @@
         html.dark .bg-green-100 { background-color: rgba(74, 222, 128, 0.2); }
         html.dark .text-red-800 { color: #fca5a5; }
         html.dark .bg-red-100 { background-color: rgba(248, 113, 113, 0.2); }
+
+        .capex-color-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-left: 8px;
+            flex-shrink: 0;
+        }
     </style>
 </head>
 <body class="p-4 md:p-8 bg-slate-100 transition-colors duration-300">
@@ -159,7 +169,7 @@
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-8">
             <div class="card text-center">
                 <p class="text-slate-500 text-sm">خالص ارزش فعلی (NPV)</p>
-                <p class="text-2xl font-bold text-green-600 mt-2">۰.۱۰+</p>
+                <p class="text-2xl font-bold text-green-600 mt-2">۰.۱+</p>
                 <p class="text-xs text-slate-400 mt-1">میلیارد ریال</p>
             </div>
              <div class="card text-center">
@@ -169,12 +179,12 @@
             </div>
             <div class="card text-center">
                 <p class="text-slate-500 text-sm">بازگشت سرمایه (PP)</p>
-                <p class="text-2xl font-bold text-orange-600 mt-2">۳.۶۳</p>
+                <p class="text-2xl font-bold text-orange-600 mt-2">۴.۰</p>
                  <p class="text-xs text-slate-400 mt-1">سال</p>
             </div>
             <div class="card text-center">
                 <p class="text-slate-500 text-sm">بازگشت سود (DPBP)</p>
-                <p class="text-2xl font-bold text-amber-600 mt-2">۱۸.۹۸</p>
+                <p class="text-2xl font-bold text-amber-600 mt-2">۱۸.۹</p>
                  <p class="text-xs text-slate-400 mt-1">سال</p>
             </div>
              <div class="card text-center">
@@ -184,7 +194,7 @@
             </div>
             <div class="card text-center">
                 <p class="text-slate-500 text-sm">سرمایه‌گذاری ثابت</p>
-                <p class="text-2xl font-bold text-indigo-600 mt-2">۵۷۵</p>
+                <p class="text-2xl font-bold text-indigo-600 mt-2">۷۴۰</p>
                  <p class="text-xs text-slate-400 mt-1">میلیارد ریال</p>
             </div>
         </div>
@@ -223,50 +233,50 @@
                             </thead>
                             <tbody class="divide-y divide-slate-200">
                                 <tr data-index="0" class="cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50">
-                                    <td class="px-2 py-2">هزینه ابنیه و ساخت‌وساز</td>
-                                    <td class="px-2 py-2">۲۸۵.۰</td>
-                                    <td class="px-2 py-2 hidden md:table-cell">شامل ساخت بخش‌های جدید (مانند باغ خزندگان) و بازسازی اماکن موجود.</td>
+                                    <td class="px-2 py-2 flex items-center"><span class="capex-color-indicator"></span>هزینه ابنیه و ساخت‌وساز</td>
+                                    <td class="px-2 py-2">۳۶۵.۰</td>
+                                    <td class="px-2 py-2 hidden md:table-cell">شامل ساخت بخش‌های جدید و بازسازی اماکن موجود.</td>
                                 </tr>
                                 <tr data-index="1" class="cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50">
-                                    <td class="px-2 py-2">محوطه‌سازی و آماده‌سازی زمین</td>
-                                    <td class="px-2 py-2">۸۰.۰</td>
+                                    <td class="px-2 py-2 flex items-center"><span class="capex-color-indicator"></span>محوطه‌سازی و آماده‌سازی زمین</td>
+                                    <td class="px-2 py-2">۱۰۰.۰</td>
                                     <td class="px-2 py-2 hidden md:table-cell">شامل تسطیح، مسیرسازی، فضای سبز و حصارکشی.</td>
                                 </tr>
                                 <tr data-index="2" class="cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50">
-                                    <td class="px-2 py-2">تأسیسات (آب، برق، گاز، فاضلاب)</td>
-                                    <td class="px-2 py-2">۵۵.۰</td>
+                                    <td class="px-2 py-2 flex items-center"><span class="capex-color-indicator"></span>تأسیسات (آب، برق، گاز، فاضلاب)</td>
+                                    <td class="px-2 py-2">۷۵.۰</td>
                                     <td class="px-2 py-2 hidden md:table-cell">زیرساخت‌های حیاتی برای بهره‌برداری از مجموعه.</td>
                                 </tr>
                                 <tr data-index="3" class="cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50">
-                                    <td class="px-2 py-2">تجهیزات باغ خزندگان</td>
-                                    <td class="px-2 py-2">۴۵.۰</td>
+                                    <td class="px-2 py-2 flex items-center"><span class="capex-color-indicator"></span>تجهیزات باغ خزندگان</td>
+                                    <td class="px-2 py-2">۶۵.۰</td>
                                     <td class="px-2 py-2 hidden md:table-cell">شامل تجهیزات ایمنی، نگهداری و سیستم‌های کنترلی.</td>
                                 </tr>
                                 <tr data-index="4" class="cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50">
-                                    <td class="px-2 py-2">تجهیزات پذیرایی و اماکن درآمدزا</td>
-                                    <td class="px-2 py-2">۳۰.۰</td>
+                                    <td class="px-2 py-2 flex items-center"><span class="capex-color-indicator"></span>تجهیزات پذیرایی و اماکن درآمدزا</td>
+                                    <td class="px-2 py-2">۵۰.۰</td>
                                     <td class="px-2 py-2 hidden md:table-cell">تجهیز کامل آشپزخانه صنعتی، مبلمان رستوران و غرفه‌ها.</td>
                                 </tr>
                                 <tr data-index="5" class="cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50">
-                                    <td class="px-2 py-2">تجهیزات کلینیک دامپزشکی</td>
-                                    <td class="px-2 py-2">۱۰.۰</td>
+                                    <td class="px-2 py-2 flex items-center"><span class="capex-color-indicator"></span>تجهیزات کلینیک دامپزشکی</td>
+                                    <td class="px-2 py-2">۳۰.۰</td>
                                     <td class="px-2 py-2 hidden md:table-cell">تأمین تجهیزات پایه برای کلینیک.</td>
                                 </tr>
                                 <tr data-index="6" class="cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50">
-                                    <td class="px-2 py-2">هزینه‌های قبل از بهره‌برداری</td>
+                                    <td class="px-2 py-2 flex items-center"><span class="capex-color-indicator"></span>هزینه‌های قبل از بهره‌برداری</td>
                                     <td class="px-2 py-2">۲۳.۵</td>
                                     <td class="px-2 py-2 hidden md:table-cell">شامل هزینه‌های اخذ مجوز، مطالعات، بازاریابی و آموزش اولیه.</td>
                                 </tr>
                                 <tr data-index="7" class="cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50">
-                                    <td class="px-2 py-2">هزینه‌های پیش‌بینی نشده (Contingency)</td>
-                                    <td class="px-2 py-2">۴۶.۵</td>
-                                    <td class="px-2 py-2 hidden md:table-cell">معادل ۸.۸٪ از مجموع هزینه‌های بالا برای پوشش ریسک‌ها.</td>
+                                    <td class="px-2 py-2 flex items-center"><span class="capex-color-indicator"></span>هزینه‌های پیش‌بینی نشده (Contingency)</td>
+                                    <td class="px-2 py-2">۳۱.۵</td>
+                                    <td class="px-2 py-2 hidden md:table-cell">معادل ۴.۲٪ از مجموع هزینه‌های بالا برای پوشش ریسک‌ها.</td>
                                 </tr>
                             </tbody>
                             <tfoot class="bg-slate-100 font-bold">
                                 <tr data-index="total" class="cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-600">
                                     <td class="px-2 py-2">جمع کل سرمایه‌گذاری ثابت</td>
-                                    <td class="px-2 py-2">۵۷۵.۰</td>
+                                    <td class="px-2 py-2">۷۴۰.۰</td>
                                     <td class="px-2 py-2 hidden md:table-cell"></td>
                                 </tr>
                             </tfoot>
@@ -326,33 +336,33 @@
                         <tbody>
                             <tr>
                                 <td rowspan="3" class="border p-2 align-middle bg-slate-50 font-semibold">درآمدها</td>
-                                <td class="border p-2">۱۰٪-</td><td class="border p-2 heatmap-negative">-۴۹.۸</td><td class="border p-2 heatmap-negative">۳۸.۲٪</td>
+                                <td class="border p-2">۱۰٪-</td><td class="border p-2 heatmap-negative">-۷۳.۹</td><td class="border p-2 heatmap-negative">۳۷.۶۰٪</td>
                             </tr>
                             <tr>
-                                <td class="border p-2 font-semibold">پایه</td><td class="border p-2 heatmap-base">۰.۱+</td><td class="border p-2 heatmap-base">۴۰.۰٪</td>
+                                <td class="border p-2 font-semibold">پایه</td><td class="border p-2 heatmap-base">۰.۱+</td><td class="border p-2 heatmap-base">۴۰.۰۰٪</td>
                             </tr>
                             <tr>
-                                <td class="border p-2">۱۰٪+</td><td class="border p-2 heatmap-positive">۵۰.۰+</td><td class="border p-2 heatmap-positive">۴۱.۷٪</td>
+                                <td class="border p-2">۱۰٪+</td><td class="border p-2 heatmap-positive">۷۴.۱+</td><td class="border p-2 heatmap-positive">۴۲.۴۵٪</td>
                             </tr>
                             <tr class="bg-slate-50">
                                 <td rowspan="3" class="border p-2 align-middle font-semibold">هزینه (OPEX)</td>
-                                <td class="border p-2">۱۰٪+</td><td class="border p-2 heatmap-negative">-۳۶.۶</td><td class="border p-2 heatmap-negative">۳۸.۶٪</td>
+                                <td class="border p-2">۱۰٪+</td><td class="border p-2 heatmap-negative">-۷۳.۹</td><td class="border p-2 heatmap-negative">۳۷.۶۰٪</td>
                             </tr>
                             <tr class="bg-slate-50">
-                                <td class="border p-2 font-semibold">پایه</td><td class="border p-2 heatmap-base">۰.۱+</td><td class="border p-2 heatmap-base">۴۰.۰٪</td>
+                                <td class="border p-2 font-semibold">پایه</td><td class="border p-2 heatmap-base">۰.۱+</td><td class="border p-2 heatmap-base">۴۰.۰۰٪</td>
                             </tr>
                             <tr class="bg-slate-50">
-                                <td class="border p-2">۱۰٪-</td><td class="border p-2 heatmap-positive">۳۶.۸+</td><td class="border p-2 heatmap-positive">۴۱.۳٪</td>
+                                <td class="border p-2">۱۰٪-</td><td class="border p-2 heatmap-positive">۷۴.۱+</td><td class="border p-2 heatmap-positive">۴۲.۴۵٪</td>
                             </tr>
                              <tr>
                                 <td rowspan="3" class="border p-2 align-middle bg-slate-50 font-semibold">سرمایه‌گذاری (CAPEX)</td>
-                                <td class="border p-2">۱۰٪+</td><td class="border p-2 heatmap-negative">-۵۷.۴</td><td class="border p-2 heatmap-negative">۳۶.۸٪</td>
+                                <td class="border p-2">۱۰٪+</td><td class="border p-2 heatmap-negative">-۷۳.۹</td><td class="border p-2 heatmap-negative">۳۷.۶۰٪</td>
                             </tr>
                             <tr>
-                                <td class="border p-2 font-semibold">پایه</td><td class="border p-2 heatmap-base">۰.۱+</td><td class="border p-2 heatmap-base">۴۰.۰٪</td>
+                                <td class="border p-2 font-semibold">پایه</td><td class="border p-2 heatmap-base">۰.۱+</td><td class="border p-2 heatmap-base">۴۰.۰۰٪</td>
                             </tr>
                             <tr>
-                                <td class="border p-2">۱۰٪-</td><td class="border p-2 heatmap-positive">۵۷.۶+</td><td class="border p-2 heatmap-positive">۴۳.۸٪</td>
+                                <td class="border p-2">۱۰٪-</td><td class="border p-2 heatmap-positive">۷۴.۱+</td><td class="border p-2 heatmap-positive">۴۲.۴۵٪</td>
                             </tr>
                         </tbody>
                     </table>
@@ -404,318 +414,393 @@
     </div>
 
 <script>
-    lucide.createIcons();
+    document.addEventListener('DOMContentLoaded', () => {
+        // Chart Global Options
+        const chartOptions = {
+            chart: {
+                fontFamily: 'Vazirmatn, sans-serif',
+                toolbar: { show: true, tools: { download: '<i class="w-4 h-4" data-lucide="download"></i>' }},
+            },
+            dataLabels: { enabled: false },
+            stroke: { curve: 'smooth', width: 3 },
+            markers: { size: 0 },
+            tooltip: { theme: 'light', style: { fontSize: '12px', fontFamily: 'Vazirmatn, sans-serif' }},
+        };
+        const chartDefaultOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { labels: { color: '#cbd5e1', font: { family: 'Vazirmatn'}}},
+                tooltip: { bodyFont: { family: 'Vazirmatn' }, titleFont: { family: 'Vazirmatn' }}
+            }
+        };
+        
+        // Cash Flow Chart
+        const cashFlowData = {
+            years: ['سال ۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹', '۱۰', '۱۱', '۱۲', '۱۳', '۱۴', '۱۵', '۱۶', '۱۷', '۱۸', '۱۹'],
+            fcf: [-740.0, 156.4, 187.7, 225.2, 270.2, 324.3, 389.1, 466.9, 560.3, 672.4, 806.9, 968.3, 1161.9, 1394.3, 1673.2, 2007.8, 2409.3, 2891.2, 3469.5, 4163.3]
+        };
+        const cashFlowChart = new ApexCharts(document.querySelector("#cashFlowChart"), {
+            ...chartOptions,
+            series: [{ name: 'جریان نقدی آزاد (FCF)', type: 'column', data: cashFlowData.fcf }],
+            chart: { ...chartOptions.chart, height: 350, type: 'line' },
+            xaxis: { categories: cashFlowData.years, labels: { style: { fontFamily: 'Vazirmatn' }}},
+            yaxis: [{ title: { text: 'جریان نقدی آزاد (FCF)', style: { fontFamily: 'Vazirmatn', fontWeight: 400 }}}],
+            colors: ['#2563eb'],
+            plotOptions: { bar: { colors: { ranges: [{ from: -1000, to: 0, color: '#ef4444' }, { from: 1, to: 5000, color: '#2563eb' }] }, columnWidth: '80%' }},
+            legend: { position: 'top', horizontalAlign: 'left' }
+        });
+        cashFlowChart.render();
+        
+         // Revenue vs OPEX Chart
+        const revenueOpexData = {
+            years: ['۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹', '۱۰', '۱۱', '۱۲', '۱۳', '۱۴', '۱۵', '۱۶', '۱۷', '۱۸', '۱۹'],
+            revenue: [387.8, 453.8, 531.3, 622.1, 729.0, 854.4, 1002.0, 1175.6, 1380.2, 1620.8, 1904.3, 2238.2, 2631.9, 3096.4, 3644.4, 4291.5, 5054.6, 5955.9, 6947.0],
+            opex: [231.4, 266.1, 306.1, 351.9, 404.7, 465.3, 535.1, 615.3, 707.8, 813.9, 936.0, 1076.3, 1237.6, 1423.2, 1636.6, 1882.2, 2163.4, 2486.4, 2859.0]
+        };
+        const revenueOpexChart = new ApexCharts(document.querySelector("#revenueOpexChart"), {
+            ...chartOptions,
+            series: [{ name: 'درآمد کل', data: revenueOpexData.revenue }, { name: 'هزینه عملیاتی (OPEX)', data: revenueOpexData.opex }],
+            chart: { ...chartOptions.chart, height: 350, type: 'line' },
+            xaxis: { title: { text: 'سال بهره‌برداری', style: { fontFamily: 'Vazirmatn', fontWeight: 400 }}, categories: revenueOpexData.years, labels: { style: { fontFamily: 'Vazirmatn' }}},
+            yaxis: { title: { text: 'میلیارد ریال', style: { fontFamily: 'Vazirmatn', fontWeight: 400 }}},
+            colors: ['#16a34a', '#dc2626'],
+            legend: { position: 'top', horizontalAlign: 'left' }
+        });
+        revenueOpexChart.render();
 
-    // Chart Global Options
-    const chartOptions = {
-        chart: {
-            fontFamily: 'Vazirmatn, sans-serif',
-            toolbar: { show: true, tools: { download: '<i class="w-4 h-4" data-lucide="download"></i>' }},
-        },
-        dataLabels: { enabled: false },
-        stroke: { curve: 'smooth', width: 3 },
-        markers: { size: 0 },
-        tooltip: { theme: 'light', style: { fontSize: '12px', fontFamily: 'Vazirmatn, sans-serif' }},
-    };
-    const chartDefaultOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: { labels: { color: '#cbd5e1', font: { family: 'Vazirmatn'}}},
-            tooltip: { bodyFont: { family: 'Vazirmatn' }, titleFont: { family: 'Vazirmatn' }}
-        }
-    };
-    
-    // Cash Flow Chart
-    const cashFlowData = {
-        years: ['سال ۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹', '۱۰', '۱۱', '۱۲', '۱۳', '۱۴', '۱۵', '۱۶', '۱۷', '۱۸', '۱۹'],
-        fcf: [-575.0, 121.5, 145.8, 175.0, 210.0, 252.0, 302.4, 362.8, 435.4, 522.5, 627.0, 752.4, 902.9, 1083.5, 1300.2, 1560.2, 1872.2, 2246.7, 2696.0, 3302.3]
-    };
-    const cashFlowChart = new ApexCharts(document.querySelector("#cashFlowChart"), {
-        ...chartOptions,
-        series: [{ name: 'جریان نقدی آزاد (FCF)', type: 'column', data: cashFlowData.fcf }],
-        chart: { ...chartOptions.chart, height: 350, type: 'line' },
-        xaxis: { categories: cashFlowData.years, labels: { style: { fontFamily: 'Vazirmatn' }}},
-        yaxis: [{ title: { text: 'جریان نقدی آزاد (FCF)', style: { fontFamily: 'Vazirmatn', fontWeight: 400 }}}],
-        colors: ['#2563eb'],
-        plotOptions: { bar: { colors: { ranges: [{ from: -1000, to: 0, color: '#ef4444' }, { from: 1, to: 10000, color: '#2563eb' }] }, columnWidth: '80%' }},
-        legend: { position: 'top', horizontalAlign: 'left' }
-    });
-    cashFlowChart.render();
-    
-     // Revenue vs OPEX Chart
-    const revenueOpexData = {
-        years: ['۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹', '۱۰', '۱۱', '۱۲', '۱۳', '۱۴', '۱۵', '۱۶', '۱۷', '۱۸', '۱۹'],
-        revenue: [349.3, 419.3, 482.7, 555.1, 638.4, 734.2, 844.3, 970.9, 1117.2, 1285.0, 1477.7, 1700.2, 1956.4, 2249.6, 2588.1, 2976.4, 3422.7, 3936.0, 4526.5],
-        opex: [227.8, 262.1, 301.4, 346.6, 398.6, 458.3, 527.1, 606.2, 697.1, 801.7, 922.0, 1060.3, 1219.5, 1402.9, 1614.3, 1856.0, 2134.9, 2455.6, 2823.4]
-    };
-    const revenueOpexChart = new ApexCharts(document.querySelector("#revenueOpexChart"), {
-        ...chartOptions,
-        series: [{ name: 'درآمد کل', data: revenueOpexData.revenue }, { name: 'هزینه عملیاتی (OPEX)', data: revenueOpexData.opex }],
-        chart: { ...chartOptions.chart, height: 350, type: 'line' },
-        xaxis: { title: { text: 'سال بهره‌برداری', style: { fontFamily: 'Vazirmatn', fontWeight: 400 }}, categories: revenueOpexData.years, labels: { style: { fontFamily: 'Vazirmatn' }}},
-        yaxis: { title: { text: 'میلیارد ریال', style: { fontFamily: 'Vazirmatn', fontWeight: 400 }}},
-        colors: ['#16a34a', '#dc2626'],
-        legend: { position: 'top', horizontalAlign: 'left' }
-    });
-    revenueOpexChart.render();
-
-    // Breakeven Line Chart
-    const breakevenData = {
-        years: ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹', '۱۰', '۱۱', '۱۲', '۱۳', '۱۴', '۱۵', '۱۶', '۱۷', '۱۸', '۱۹'],
-        cumulative_fcf: [-575.0, -453.5, -307.7, -132.7, 77.3, 329.3, 631.7, 994.5, 1429.9, 1952.4, 2579.4, 3331.8, 4234.7, 5318.2, 6618.4, 8178.6, 10050.8, 12297.5, 14993.5, 18295.8],
-        cumulative_npv: [-575.0, -488.2, -413.8, -350.1, -295.4, -248.5, -208.4, -173.9, -144.5, -119.2, -97.5, -78.9, -63.0, -49.3, -37.6, -27.6, -19.0, -11.6, -5.3, 0.1]
-    };
-    const breakevenLineChart = new ApexCharts(document.querySelector("#breakevenLineChart"), {
-        ...chartOptions,
-        series: [{ name: 'جریان نقدی تجمعی (برای PP)', data: breakevenData.cumulative_fcf }, { name: 'خالص ارزش فعلی تجمعی (برای DPBP)', data: breakevenData.cumulative_npv }],
-        chart: { ...chartOptions.chart, height: 350, type: 'line' },
-        xaxis: { title: { text: 'سال پروژه', style: { fontFamily: 'Vazirmatn', fontWeight: 400 }}, categories: breakevenData.years },
-        yaxis: { title: { text: 'میلیارد ریال', style: { fontFamily: 'Vazirmatn', fontWeight: 400 }}},
-        colors: ['#f97316', '#0891b2'],
-        legend: { position: 'top', horizontalAlign: 'left' },
-        annotations: {
-            xaxis: [{ x: breakevenData.years[4], x2: breakevenData.years[5], offsetX:-25, borderColor: '#f97316', label: { borderColor: '#f97316', style: { color: '#fff', background: '#f97316', fontFamily: 'Vazirmatn' }, text: 'PP: 3.63 سال' }},
-                    { x: breakevenData.years[19], offsetX:20, borderColor: '#0891b2', label: { borderColor: '#0891b2', style: { color: '#fff', background: '#0891b2', fontFamily: 'Vazirmatn' }, text: 'DPBP: 18.98 سال' }}],
-            yaxis: [{ y: 0, borderColor: '#1e293b', label: { borderColor: '#1e293b', style: { color: '#fff', background: '#1e293b', fontFamily: 'Vazirmatn' }, text: 'نقطه سر به سر' }}]
-        }
-    });
-    breakevenLineChart.render();
-    
-    // CAPEX Chart
-    const capexData = {
-        series: [285.0, 80.0, 55.0, 45.0, 30.0, 10.0, 23.5, 46.5],
-        labels: ['هزینه ابنیه و ساخت‌وساز', 'محوطه‌سازی و آماده‌سازی زمین', 'تأسیسات', 'تجهیزات باغ خزندگان', 'تجهیزات پذیرایی', 'تجهیزات کلینیک', 'هزینه‌های قبل از بهره‌برداری', 'هزینه‌های پیش‌بینی نشده']
-    };
-    const totalCapex = capexData.series.reduce((a, b) => a + b, 0);
-
-    const capexChartOptions = {
-        series: capexData.series,
-        chart: { 
-            type: 'donut', 
-            height: 300 
-        },
-        labels: capexData.labels,
-        legend: { 
-            show: false
-        },
-        tooltip: { 
-            y: { formatter: (val) => val + " میلیارد ریال" }, 
-            style: { fontFamily: 'Vazirmatn, sans-serif' }
-        },
-        plotOptions: {
-            pie: {
-                donut: {
-                    labels: {
-                        show: true,
-                        total: {
-                            show: true,
-                            label: 'جمع کل',
-                            fontSize: '18px',
-                            fontWeight: 'bold',
-                            formatter: () => `${totalCapex.toFixed(1)}`
+        // Breakeven Line Chart
+        const breakevenData = {
+            years: ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹', '۱۰', '۱۱', '۱۲', '۱۳', '۱۴', '۱۵', '۱۶', '۱۷', '۱۸', '۱۹'],
+            cumulative_fcf: [-740.0, -583.6, -395.9, -170.7, 99.5, 423.8, 812.9, 1279.8, 1840.1, 2512.5, 3319.4, 4287.7, 5449.6, 6843.9, 8517.1, 10524.9, 12934.2, 15825.4, 19294.9, 23458.2],
+            cumulative_npv: [-740.0, -628.3, -532.6, -450.5, -380.2, -319.9, -268.2, -223.9, -185.9, -153.4, -125.5, -101.6, -81.1, -63.5, -48.4, -35.5, -24.5, -15.0, -6.9, 0.1]
+        };
+        
+        function getBreakevenAnnotations(isDark) {
+             const labelStyle = {
+                color: '#fff',
+                background: '#f97316',
+                fontFamily: 'Vazirmatn'
+            };
+            return {
+                xaxis: [
+                    {
+                        x: 4, // Numerical index for Year 4
+                        borderColor: '#f97316',
+                        label: {
+                            style: labelStyle,
+                            text: 'PP: 4.0 سال'
+                        }
+                    },
+                    {
+                        x: 19, // Numerical index for Year 19
+                        borderColor: '#0891b2',
+                        label: {
+                            style: { ...labelStyle, background: '#0891b2'},
+                            text: 'DPBP: 18.9 سال'
                         }
                     }
-                }
-            }
-        },
-        dataLabels: {
-            enabled: false
+                ],
+                yaxis: [{
+                    y: 0,
+                    borderColor: '#F44336',
+                    label: {
+                        borderColor: '#F44336',
+                        style: {
+                            color: '#fff',
+                            background: '#F44336',
+                            fontFamily: 'Vazirmatn'
+                        },
+                        text: 'نقطه سر به سر'
+                    }
+                }]
+            };
         }
-    };
 
-    const capexChart = new ApexCharts(document.querySelector("#capexChart"), capexChartOptions);
-    capexChart.render();
+        const breakevenLineChart = new ApexCharts(document.querySelector("#breakevenLineChart"), {
+            ...chartOptions,
+            series: [{ name: 'جریان نقدی تجمعی (برای PP)', data: breakevenData.cumulative_fcf }, { name: 'خالص ارزش فعلی تجمعی (برای DPBP)', data: breakevenData.cumulative_npv }],
+            chart: { ...chartOptions.chart, height: 350, type: 'line', },
+            annotations: getBreakevenAnnotations(false), // Initial render for light mode
+            xaxis: { 
+                type: 'category',
+                title: { text: 'سال پروژه', style: { fontFamily: 'Vazirmatn', fontWeight: 400 }}, 
+                categories: breakevenData.years 
+            },
+            yaxis: { title: { text: 'میلیارد ریال', style: { fontFamily: 'Vazirmatn', fontWeight: 400 }}},
+            colors: ['#f97316', '#0891b2'],
+            legend: { position: 'top', horizontalAlign: 'left' }
+        });
+        
+        breakevenLineChart.render();
+        
+        // CAPEX Chart
+        const capexData = {
+            series: [365.0, 100.0, 75.0, 65.0, 50.0, 30.0, 23.5, 31.5],
+            labels: ['هزینه ابنیه و ساخت‌وساز', 'محوطه‌سازی و آماده‌سازی زمین', 'تأسیسات', 'تجهیزات باغ خزندگان', 'تجهیزات پذیرایی', 'تجهیزات کلینیک', 'هزینه‌های قبل از بهره‌برداری', 'هزینه‌های پیش‌بینی نشده']
+        };
+        const capexColors = ['#008FFB', '#00E396', '#FEB019', '#FF4560', '#775DD0', '#546E7A', '#26a69a', '#D10CE8'];
+        const totalCapex = capexData.series.reduce((a, b) => a + b, 0);
 
-    // Interactivity for CAPEX Table
-    const capexTableRows = document.querySelectorAll('#capex-table tbody tr, #capex-table tfoot tr');
-    capexTableRows.forEach(row => {
-        row.addEventListener('click', () => {
-            const index = row.getAttribute('data-index');
-            capexTableRows.forEach(r => r.classList.remove('bg-sky-100', 'dark:bg-sky-900/50'));
-            row.classList.add('bg-sky-100', 'dark:bg-sky-900/50');
-            
-            let newTotalOptions;
-
-            if (index === 'total' || index === null) {
-                newTotalOptions = {
-                    label: 'جمع کل',
-                    formatter: () => `${totalCapex.toFixed(1)}`
-                };
-            } else {
-                const seriesIndex = parseInt(index);
-                const value = capexData.series[seriesIndex];
-                const percentage = (value / totalCapex * 100).toFixed(1);
-                newTotalOptions = {
-                    label: capexData.labels[seriesIndex],
-                    formatter: () => `${percentage}%`
-                };
-            }
-
-            capexChart.updateOptions({
-                plotOptions: {
-                    pie: {
-                        donut: {
-                            labels: {
-                                total: newTotalOptions
+        const capexChartOptions = {
+            series: capexData.series,
+            chart: { 
+                type: 'donut', 
+                height: 300 
+            },
+            labels: capexData.labels,
+            colors: capexColors,
+            legend: { 
+                show: false
+            },
+            tooltip: { 
+                y: { formatter: (val) => val.toFixed(1) + " میلیارد ریال" }, 
+                style: { fontFamily: 'Vazirmatn, sans-serif' }
+            },
+            plotOptions: {
+                pie: {
+                    donut: {
+                        labels: {
+                            show: true,
+                            total: {
+                                show: true,
+                                label: 'جمع کل',
+                                fontFamily: 'Vazirmatn',
+                                fontSize: '18px',
+                                fontWeight: 'bold',
+                                formatter: () => `${totalCapex.toFixed(1)}`
+                            },
+                            value: {
+                               fontFamily: 'Vazirmatn' 
                             }
                         }
                     }
                 }
+            },
+            dataLabels: {
+                enabled: false
+            }
+        };
+
+        const capexChart = new ApexCharts(document.querySelector("#capexChart"), capexChartOptions);
+        capexChart.render();
+
+        // Interactivity for CAPEX Table
+        const capexTableRows = document.querySelectorAll('#capex-table tbody tr, #capex-table tfoot tr');
+        capexTableRows.forEach((row, i) => {
+            const colorIndicator = row.querySelector('.capex-color-indicator');
+            if (colorIndicator) {
+                colorIndicator.style.backgroundColor = capexColors[i];
+            }
+            row.addEventListener('click', () => {
+                const index = row.getAttribute('data-index');
+                capexTableRows.forEach(r => r.classList.remove('bg-sky-100', 'dark:bg-sky-900/50'));
+                row.classList.add('bg-sky-100', 'dark:bg-sky-900/50');
+                
+                let newTotalOptions;
+
+                if (index === 'total' || index === null) {
+                    newTotalOptions = {
+                        label: 'جمع کل',
+                        formatter: () => `${totalCapex.toFixed(1)}`
+                    };
+                } else {
+                    const seriesIndex = parseInt(index);
+                    const value = capexData.series[seriesIndex];
+                    const percentage = (value / totalCapex * 100).toFixed(1);
+                    newTotalOptions = {
+                        label: capexData.labels[seriesIndex].split(' ')[0],
+                        formatter: () => `${percentage}%`
+                    };
+                }
+
+                capexChart.updateOptions({
+                    plotOptions: {
+                        pie: {
+                            donut: {
+                                labels: {
+                                    total: newTotalOptions
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+
+            row.addEventListener('mouseover', () => {
+                const index = row.getAttribute('data-index');
+                if (index !== 'total' && index !== null) {
+                    capexChart.toggleDataPointSelection(parseInt(index));
+                }
+            });
+            row.addEventListener('mouseout', () => {
+                const index = row.getAttribute('data-index');
+                if (index !== 'total' && index !== null) {
+                    capexChart.toggleDataPointSelection(parseInt(index));
+                }
             });
         });
 
-        row.addEventListener('mouseover', () => {
-            const index = row.getAttribute('data-index');
-            if (index !== 'total' && index !== null) {
-                capexChart.toggleDataPointSelection(parseInt(index));
-            }
-        });
-        row.addEventListener('mouseout', () => {
-            const index = row.getAttribute('data-index');
-            if (index !== 'total' && index !== null) {
-                capexChart.toggleDataPointSelection(parseInt(index));
-            }
-        });
-    });
 
-
-    // New Roadmap Chart (Chart.js)
-    const newRoadmapChart = new Chart(document.getElementById('newRoadmapChart').getContext('2d'), {
-        type: 'bar', 
-        data: { 
+        // New Roadmap Chart (Chart.js)
+        const roadmapChartData = { 
             labels: ['دوران بهره\u200cبرداری', 'بازگشت سود و سرمایه', 'بازگشت سرمایه'], 
             datasets: [{ 
-                data: [[0, 19], [0, 18.98], [0, 3.63]], 
+                data: [[0, 19], [0, 18.9], [0, 4.0]], 
                 backgroundColor: ['#2dd4bf', '#f97316', '#fbbf24'], 
                 borderWidth: 1, 
                 borderColor: '#fff', 
                 barPercentage: 0.6 
             }] 
-        },
-        options: { 
-            ...chartDefaultOptions, 
-            indexAxis: 'y', 
-            plugins: {
-                legend: {display: false}, 
-                tooltip: {
-                    callbacks: { 
-                        label: (ctx) => ` ${ctx.raw[1].toFixed(2)} سال`
-                    }
-                }
-            }, 
-            scales: { 
-                x: { 
-                    min: 0, 
-                    max: 20, 
-                    ticks: { color: '#64748b', stepSize: 2, font:{family: 'Vazirmatn'} }, 
-                    grid: { color: '#e2e8f0' }, 
-                    title: { display: true, text: 'سال\u200cهای بهره\u200cبرداری', color: '#334155', font: { family: 'Vazirmatn' } } 
-                }, 
-                y: { 
-                    ticks: {color: '#334155', font:{family: 'Vazirmatn'}}, 
-                    grid: { display: false } 
-                } 
-            } 
-        }
-    });
-
-    // Sensitivity Heatmap (Chart.js)
-    const ctxHeatmap = document.getElementById('sensitivityHeatmap').getContext('2d');
-    const heatmapData = {
-        labels: ['-20%', '-10%', '0%', '+10%', '+20%'], // Cost Changes
-        datasets: [
-            { label: '+20%', data: [45.3, 44.1, 42.9, 41.7, 40.5] },
-            { label: '+10%', data: [44.0, 42.9, 41.7, 40.6, 39.4] },
-            { label: '0%',   data: [42.6, 41.3, 40.0, 38.8, 37.5] },
-            { label: '-10%', data: [41.1, 39.8, 38.5, 37.1, 35.8] },
-            { label: '-20%', data: [39.5, 38.2, 36.8, 35.5, 34.2] }
-        ]
-    };
-    const matrixData = heatmapData.datasets.flatMap((dataset) => 
-        dataset.data.map((value, j) => ({ x: heatmapData.labels[j], y: dataset.label, v: value }))
-    );
-
-    const datalabelsPlugin = {
-        id: 'datalabels',
-        afterDatasetsDraw(chart) {
-            const { ctx } = chart;
-            const isDark = document.documentElement.classList.contains('dark');
-            ctx.save();
-            chart.getDatasetMeta(0).data.forEach((datapoint, index) => {
-                const { x, y, width, height } = datapoint.getProps(['x', 'y', 'width', 'height']);
-                const value = chart.data.datasets[0].data[index].v;
-                ctx.font = 'bold 14px Vazirmatn';
-                if(isDark) {
+        };
+        const roadmapDatalabelsPlugin = {
+            id: 'roadmapDatalabels',
+            afterDatasetsDraw(chart, args, options) {
+                const { ctx } = chart;
+                ctx.save();
+                chart.getDatasetMeta(0).data.forEach((datapoint, index) => {
+                    const barData = chart.data.datasets[0].data[index];
+                    const label = `${barData[1].toFixed(1)} سال`;
+                    
+                    const { x, y, width, height } = datapoint;
+                    
+                    ctx.font = 'bold 12px Vazirmatn';
                     ctx.fillStyle = 'white';
-                } else {
-                    ctx.fillStyle = value >= 41 ? 'white' : 'black';
-                }
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(`${value}%`, x + width / 2, y + height / 2);
-            });
-            ctx.restore();
-        }
-    };
-
-    const sensitivityHeatmap = new Chart(ctxHeatmap, {
-        type: 'matrix',
-        data: {
-            datasets: [{
-                label: 'IRR',
-                data: matrixData,
-                backgroundColor: (ctx) => {
-                    const value = ctx.dataset.data[ctx.dataIndex].v;
-                    if (value >= 42) return 'rgba(16, 185, 129, 0.9)'; // Dark Green
-                    if (value >= 40) return 'rgba(59, 130, 246, 0.85)'; // Blue
-                    if (value >= 37) return 'rgba(245, 158, 11, 0.85)'; // Amber
-                    return 'rgba(239, 68, 68, 0.85)'; // Red
-                },
-                borderColor: 'white',
-                borderWidth: 2,
-                width: ({ chart }) => (chart.chartArea || {}).width / heatmapData.labels.length,
-                height: ({ chart }) => (chart.chartArea || {}).height / heatmapData.datasets.length,
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                x: {
-                    type: 'category',
-                    labels: heatmapData.labels,
-                    title: { display: true, text: 'تغییر در هزینه ها', font: { size: 14, weight: 'bold', family: 'Vazirmatn' } },
-                    grid: { display: false },
-                },
-                y: {
-                    type: 'category',
-                    labels: heatmapData.datasets.map(d => d.label).reverse(),
-                    title: { display: true, text: 'تغییر در درآمدها', font: { size: 14, weight: 'bold', family: 'Vazirmatn' } },
-                    grid: { display: false },
-                    offset: true,
-                }
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    
+                    // Position text in the middle of the bar
+                    ctx.fillText(label, x - (width/2) - 30, y);
+                });
+                ctx.restore();
+            }
+        };
+        const newRoadmapChart = new Chart(document.getElementById('newRoadmapChart').getContext('2d'), {
+            type: 'bar', 
+            data: roadmapChartData,
+            options: { 
+                ...chartDefaultOptions, 
+                indexAxis: 'y', 
+                plugins: {
+                    legend: {display: false}, 
+                    tooltip: {
+                        callbacks: { 
+                            label: (ctx) => ` ${ctx.raw[1].toFixed(2)} سال`
+                        }
+                    }
+                }, 
+                scales: { 
+                    x: { 
+                        min: 0, 
+                        max: 20, 
+                        ticks: { color: '#64748b', stepSize: 2, font:{family: 'Vazirmatn'} }, 
+                        grid: { color: '#e2e8f0' }, 
+                        title: { display: true, text: 'سال\u200cهای بهره\u200cبرداری', color: '#334155', font: { family: 'Vazirmatn' } } 
+                    }, 
+                    y: { 
+                        ticks: {color: '#334155', font:{family: 'Vazirmatn'}}, 
+                        grid: { display: false } 
+                    } 
+                } 
             },
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    bodyFont: { family: 'Vazirmatn' },
-                    titleFont: { family: 'Vazirmatn' },
-                    callbacks: {
-                        title: () => '',
-                        label: (context) => {
-                            const item = context.dataset.data[context.dataIndex];
-                            return [`نرخ بازده داخلی: ${item.v}%`, `تغییر درآمد: ${item.y}`, `تغییر هزینه: ${item.x}`];
+            plugins: [roadmapDatalabelsPlugin]
+        });
+
+        // Sensitivity Heatmap (Chart.js)
+        const ctxHeatmap = document.getElementById('sensitivityHeatmap').getContext('2d');
+        const heatmapData = {
+            labels: ['-20%', '-10%', '0%', '+10%', '+20%'], // Cost Changes
+            datasets: [
+                { label: '+20%', data: [45.3, 44.1, 42.9, 41.7, 40.5] },
+                { label: '+10%', data: [44.0, 42.9, 41.7, 40.6, 39.4] },
+                { label: '0%',   data: [42.6, 41.3, 40.0, 38.8, 37.5] },
+                { label: '-10%', data: [41.1, 39.8, 38.5, 37.1, 35.8] },
+                { label: '-20%', data: [39.5, 38.2, 36.8, 35.5, 34.2] }
+            ]
+        };
+        const matrixData = heatmapData.datasets.flatMap((dataset) => 
+            dataset.data.map((value, j) => ({ x: heatmapData.labels[j], y: dataset.label, v: value }))
+        );
+
+        const datalabelsPlugin = {
+            id: 'datalabels',
+            afterDatasetsDraw(chart) {
+                const { ctx } = chart;
+                const isDark = document.documentElement.classList.contains('dark');
+                ctx.save();
+                chart.getDatasetMeta(0).data.forEach((datapoint, index) => {
+                    const { x, y, width, height } = datapoint.getProps(['x', 'y', 'width', 'height']);
+                    const value = chart.data.datasets[0].data[index].v;
+                    ctx.font = 'bold 14px Vazirmatn';
+                    if(isDark) {
+                        ctx.fillStyle = 'white';
+                    } else {
+                        ctx.fillStyle = value >= 41 ? 'white' : 'black';
+                    }
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(`${value}%`, x + width / 2, y + height / 2);
+                });
+                ctx.restore();
+            }
+        };
+
+        const sensitivityHeatmap = new Chart(ctxHeatmap, {
+            type: 'matrix',
+            data: {
+                datasets: [{
+                    label: 'IRR',
+                    data: matrixData,
+                    backgroundColor: (ctx) => {
+                        const value = ctx.dataset.data[ctx.dataIndex].v;
+                        if (value >= 42) return 'rgba(16, 185, 129, 0.9)'; // Dark Green
+                        if (value >= 40) return 'rgba(59, 130, 246, 0.85)'; // Blue
+                        if (value >= 37) return 'rgba(245, 158, 11, 0.85)'; // Amber
+                        return 'rgba(239, 68, 68, 0.85)'; // Red
+                    },
+                    borderColor: 'white',
+                    borderWidth: 2,
+                    width: ({ chart }) => (chart.chartArea || {}).width / heatmapData.labels.length,
+                    height: ({ chart }) => (chart.chartArea || {}).height / heatmapData.datasets.length,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        type: 'category',
+                        labels: heatmapData.labels,
+                        title: { display: true, text: 'تغییر در هزینه ها', font: { size: 14, weight: 'bold', family: 'Vazirmatn' } },
+                        grid: { display: false },
+                    },
+                    y: {
+                        type: 'category',
+                        labels: heatmapData.datasets.map(d => d.label).reverse(),
+                        title: { display: true, text: 'تغییر در درآمدها', font: { size: 14, weight: 'bold', family: 'Vazirmatn' } },
+                        grid: { display: false },
+                        offset: true,
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        bodyFont: { family: 'Vazirmatn' },
+                        titleFont: { family: 'Vazirmatn' },
+                        callbacks: {
+                            title: () => '',
+                            label: (context) => {
+                                const item = context.dataset.data[context.dataIndex];
+                                return [`نرخ بازده داخلی: ${item.v}%`, `تغییر درآمد: ${item.y}`, `تغییر هزینه: ${item.x}`];
+                            }
                         }
                     }
                 }
-            }
-        },
-        plugins: [datalabelsPlugin]
-    });
+            },
+            plugins: [datalabelsPlugin]
+        });
 
-    // --- THEME TOGGLER SCRIPT ---
-    document.addEventListener('DOMContentLoaded', () => {
+        // --- THEME TOGGLER SCRIPT ---
         lucide.createIcons();
 
         // Define constants and functions that depend on the DOM after it's ready
@@ -728,7 +813,7 @@
             apex: [cashFlowChart, revenueOpexChart, breakevenLineChart, capexChart],
             chartjs: [newRoadmapChart, sensitivityHeatmap]
         };
-
+        
         function getApexThemeOptions(isDark) {
             const textColor = isDark ? '#e2e8f0' : '#334155';
             return {
@@ -737,8 +822,10 @@
                     foreColor: textColor,
                     background: 'transparent'
                 },
-                xaxis: { title: { style: { color: textColor } } },
-                yaxis: [{ title: { style: { color: textColor } } }],
+                xaxis: { title: { style: { color: textColor, fontFamily: 'Vazirmatn' } }, labels: { style: { fontFamily: 'Vazirmatn' } } },
+                yaxis: [{ title: { style: { color: textColor, fontFamily: 'Vazirmatn' } }, labels: { style: { fontFamily: 'Vazirmatn' } } }],
+                legend: { labels: { colors: [textColor] }},
+                plotOptions: { pie: { donut: { labels: { total: { color: textColor }, value: { color: textColor } } } } }
             };
         }
 
@@ -748,12 +835,12 @@
             return {
                 scales: {
                     x: {
-                        ticks: { color: textColor },
+                        ticks: { color: textColor, font: {family: 'Vazirmatn'} },
                         grid: { color: gridColor },
                         title: { color: textColor, font: { family: 'Vazirmatn' } }
                     },
                     y: {
-                        ticks: { color: textColor },
+                        ticks: { color: textColor, font: {family: 'Vazirmatn'} },
                         grid: { color: gridColor },
                         title: { color: textColor, font: { family: 'Vazirmatn' } }
                     }
@@ -762,9 +849,18 @@
         }
 
         function updateChartsTheme(isDark) {
-            // Update ApexCharts
+            // Update general theme for all ApexCharts
             const apexOptions = getApexThemeOptions(isDark);
-            allCharts.apex.forEach(chart => chart.updateOptions(apexOptions));
+            allCharts.apex.forEach(chart => {
+                chart.updateOptions(apexOptions);
+            });
+            
+            // Separately update only the annotations for the breakeven chart
+            if (breakevenLineChart) {
+                 breakevenLineChart.updateOptions({
+                    annotations: getBreakevenAnnotations(isDark)
+                });
+            }
 
             // Update Chart.js charts
             const chartJsOptions = getChartJsThemeOptions(isDark);
