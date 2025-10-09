@@ -11,12 +11,14 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix@2.0.1/dist/chartjs-chart-matrix.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;900&display=swap"
+          rel="stylesheet">
     <style>
         body {
             font-family: 'Vazirmatn', sans-serif;
             background-color: #f1f5f9;
         }
+
         .card {
             background-color: white;
             border-radius: 0.75rem;
@@ -25,33 +27,41 @@
             transition: all 0.3s ease-in-out;
             border: 1px solid transparent;
         }
+
         .card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
         }
+
         .heatmap-positive {
             background-color: #dcfce7; /* green-100 */
             color: #166534; /* green-800 */
         }
+
         .heatmap-negative {
             background-color: #fee2e2; /* red-100 */
             color: #991b1b; /* red-800 */
         }
-         .heatmap-base {
+
+        .heatmap-base {
             background-color: #e0e7ff; /* indigo-100 */
             color: #3730a3; /* indigo-800 */
         }
+
         .apexcharts-tooltip {
             direction: ltr;
         }
-        .apexcharts-legend-text, .apexcharts-xaxis-label, .apexcharts-yaxis-label, .apexcharts-title-text, .apexcharts-datalabel, .apexcharts-tooltip-text, .apexcharts-annotation-label {
-             font-family: 'Vazirmatn', sans-serif !important;
+
+        .apexcharts-legend-text, .apexcharts-xaxis-label, .apexcharts-yaxis-label, .apexcharts-title-text, .apexcharts-datalabel, .apexcharts-tooltip-text, .apexcharts-annotation-label, .apexcharts-pie-label {
+            font-family: 'Vazirmatn', sans-serif !important;
         }
-         .chart-container-heatmap {
+
+        .chart-container-heatmap {
             position: relative;
             width: 100%;
             height: 500px;
         }
+
         .intro-card {
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
         }
@@ -61,49 +71,139 @@
             background-color: #0f172a; /* slate-900 */
             color: #cbd5e1; /* slate-300 */
         }
+
         html.dark .card {
             background-color: #1e293b; /* slate-800 */
             border-color: #334155; /* slate-700 */
         }
+
         html.dark .card:hover {
             box-shadow: 0 0 20px rgba(56, 189, 248, 0.3); /* Neon glow on hover */
         }
+
         html.dark .intro-card {
             border-color: #38bdf8; /* sky-400 */
             box-shadow: 0 0 25px rgba(56, 189, 248, 0.25);
         }
+
         html.dark h1, html.dark h2, html.dark h3, html.dark .font-bold, html.dark .font-semibold {
             color: #f1f5f9; /* slate-100 */
         }
-        html.dark .text-slate-500 { color: #94a3b8; } /* slate-400 */
-        html.dark .text-slate-800 { color: #f1f5f9; } /* slate-100 */
-        html.dark .text-slate-700 { color: #e2e8f0; } /* slate-200 */
-        html.dark .text-slate-600 { color: #cbd5e1; } /* slate-300 */
-        html.dark .text-slate-400 { color: #94a3b8; }
-        
+
+        html.dark .text-slate-500 {
+            color: #94a3b8;
+        }
+
+        /* slate-400 */
+        html.dark .text-slate-800 {
+            color: #f1f5f9;
+        }
+
+        /* slate-100 */
+        html.dark .text-slate-700 {
+            color: #e2e8f0;
+        }
+
+        /* slate-200 */
+        html.dark .text-slate-600 {
+            color: #cbd5e1;
+        }
+
+        /* slate-300 */
+        html.dark .text-slate-400 {
+            color: #94a3b8;
+        }
+
         /* KPI Colors & Neon Effect */
-        html.dark .text-green-600 { color: #4ade80; text-shadow: 0 0 6px rgba(74, 222, 128, 0.8); }
-        html.dark .text-blue-600 { color: #60a5fa; text-shadow: 0 0 6px rgba(96, 165, 250, 0.8); }
-        html.dark .text-orange-600 { color: #fb923c; text-shadow: 0 0 6px rgba(251, 146, 60, 0.8); }
-        html.dark .text-amber-600 { color: #facc15; text-shadow: 0 0 6px rgba(250, 204, 21, 0.8); }
-        html.dark .text-teal-600 { color: #2dd4bf; text-shadow: 0 0 6px rgba(45, 212, 191, 0.8); }
-        html.dark .text-indigo-600 { color: #818cf8; text-shadow: 0 0 6px rgba(129, 140, 248, 0.8); }
+        html.dark .text-green-600 {
+            color: #4ade80;
+            text-shadow: 0 0 6px rgba(74, 222, 128, 0.8);
+        }
+
+        html.dark .text-blue-600 {
+            color: #60a5fa;
+            text-shadow: 0 0 6px rgba(96, 165, 250, 0.8);
+        }
+
+        html.dark .text-orange-600 {
+            color: #fb923c;
+            text-shadow: 0 0 6px rgba(251, 146, 60, 0.8);
+        }
+
+        html.dark .text-amber-600 {
+            color: #facc15;
+            text-shadow: 0 0 6px rgba(250, 204, 21, 0.8);
+        }
+
+        html.dark .text-teal-600 {
+            color: #2dd4bf;
+            text-shadow: 0 0 6px rgba(45, 212, 191, 0.8);
+        }
+
+        html.dark .text-indigo-600 {
+            color: #818cf8;
+            text-shadow: 0 0 6px rgba(129, 140, 248, 0.8);
+        }
 
         /* Table & Heatmap */
-        html.dark .bg-slate-100 { background-color: #334155; }
-        html.dark tfoot .bg-slate-100 { background-color: #334155 !important; }
-        html.dark .divide-slate-200 > :not([hidden]) ~ :not([hidden]) { border-color: #475569; }
-        html.dark .heatmap-positive { background-color: rgba(74, 222, 128, 0.2); color: #86efac; }
-        html.dark .heatmap-negative { background-color: rgba(248, 113, 113, 0.2); color: #fca5a5; }
-        html.dark .heatmap-base { background-color: rgba(99, 102, 241, 0.2); color: #a5b4fc; }
-        html.dark .border { border-color: #475569; }
-        html.dark .bg-slate-50 { background-color: #1e293b; }
-        html.dark .text-yellow-800 { color: #fde047; }
-        html.dark .bg-yellow-100 { background-color: rgba(250, 204, 21, 0.2); }
-        html.dark .text-green-800 { color: #86efac; }
-        html.dark .bg-green-100 { background-color: rgba(74, 222, 128, 0.2); }
-        html.dark .text-red-800 { color: #fca5a5; }
-        html.dark .bg-red-100 { background-color: rgba(248, 113, 113, 0.2); }
+        html.dark .bg-slate-100 {
+            background-color: #334155;
+        }
+
+        html.dark tfoot .bg-slate-100 {
+            background-color: #334155 !important;
+        }
+
+        html.dark .divide-slate-200 > :not([hidden]) ~ :not([hidden]) {
+            border-color: #475569;
+        }
+
+        html.dark .heatmap-positive {
+            background-color: rgba(74, 222, 128, 0.2);
+            color: #86efac;
+        }
+
+        html.dark .heatmap-negative {
+            background-color: rgba(248, 113, 113, 0.2);
+            color: #fca5a5;
+        }
+
+        html.dark .heatmap-base {
+            background-color: rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+        }
+
+        html.dark .border {
+            border-color: #475569;
+        }
+
+        html.dark .bg-slate-50 {
+            background-color: #1e293b;
+        }
+
+        html.dark .text-yellow-800 {
+            color: #fde047;
+        }
+
+        html.dark .bg-yellow-100 {
+            background-color: rgba(250, 204, 21, 0.2);
+        }
+
+        html.dark .text-green-800 {
+            color: #86efac;
+        }
+
+        html.dark .bg-green-100 {
+            background-color: rgba(74, 222, 128, 0.2);
+        }
+
+        html.dark .text-red-800 {
+            color: #fca5a5;
+        }
+
+        html.dark .bg-red-100 {
+            background-color: rgba(248, 113, 113, 0.2);
+        }
 
         .capex-color-indicator {
             width: 10px;
@@ -116,321 +216,400 @@
     </style>
 </head>
 <body class="p-4 md:p-8 bg-slate-100 transition-colors duration-300">
-    <div class="max-w-7xl mx-auto relative">
-        <!-- Theme Toggler Button -->
-        <div class="absolute top-0 left-0 p-2 z-10">
-            <button id="theme-toggle" class="bg-slate-800 text-yellow-300 hover:bg-slate-700 dark:bg-slate-100 dark:text-orange-500 dark:hover:bg-slate-200 p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 dark:focus:ring-offset-slate-900 transition-all">
-                <i id="theme-icon-sun" class="w-5 h-5 hidden" data-lucide="sun"></i>
-                <i id="theme-icon-moon" class="w-5 h-5" data-lucide="moon"></i>
-            </button>
-        </div>
-
-        <!-- Header -->
-        <header class="mb-8 text-center pt-12 md:pt-0">
-            <h1 class="text-3xl md:text-4xl font-bold text-slate-800">داشبورد امکان‌سنجی فنی-اقتصادی</h1>
-            <p class="text-slate-500 mt-2 text-lg">پروژه باغ پرندگان شرق تهران</p>
-        </header>
-
-        <!-- New Infographic Intro Section -->
-        <section class="card intro-card text-white mb-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                <div class="space-y-4">
-                     <h2 class="text-3xl font-bold text-sky-400">معرفی پروژه: توسعه و بهره‌برداری باغ پرندگان</h2>
-                     <p class="text-slate-300">
-                        این پروژه با هدف توسعه، تجهیز و بهره‌برداری ۱۹ ساله از مجموعه باغ پرندگان شرق تهران در قالب قرارداد BOT با شهرداری تعریف شده است. هدف اصلی، تبدیل شدن به یک مقصد گردشگری پیشرو از طریق فعال‌سازی بخش‌های غیرفعال و افزایش جذابیت‌های موجود است.
-                     </p>
+<div class="max-w-7xl mx-auto relative">
+    <!-- Theme Toggler Button -->
+    <div class="absolute top-0 left-0 p-2 z-10">
+        <button id="theme-toggle"
+                class="bg-slate-800 text-yellow-300 hover:bg-slate-700 dark:bg-slate-100 dark:text-orange-500 dark:hover:bg-slate-200 p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 dark:focus:ring-offset-slate-900 transition-all">
+            <i id="theme-icon-sun" class="w-5 h-5 hidden" data-lucide="sun"></i>
+            <i id="theme-icon-moon" class="w-5 h-5" data-lucide="moon"></i>
+        </button>
+    </div>
+    <!-- Header -->
+    <header class="mb-8 text-center pt-12 md:pt-0">
+        <h1 class="text-3xl md:text-4xl font-bold text-slate-800">داشبورد امکان‌سنجی فنی-اقتصادی</h1>
+        <p class="text-slate-500 mt-2 text-lg">پروژه باغ پرندگان شرق تهران</p>
+    </header>
+    <!-- New Infographic Intro Section -->
+    <section class="card intro-card text-white mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div class="space-y-4">
+                <h2 class="text-3xl font-bold text-sky-400">معرفی پروژه: توسعه و بهره‌برداری باغ پرندگان</h2>
+                <p class="text-slate-300"> این پروژه با هدف توسعه، تجهیز و بهره‌برداری ۱۹ ساله از مجموعه باغ پرندگان
+                    شرق تهران در قالب قرارداد BOT با شهرداری تعریف شده است. هدف اصلی، تبدیل شدن به یک مقصد گردشگری
+                    پیشرو از طریق فعال‌سازی بخش‌های غیرفعال و افزایش جذابیت‌های موجود است. </p>
+            </div>
+            <div class="grid grid-cols-2 gap-6 text-center">
+                <div class="bg-slate-700/50 p-4 rounded-lg">
+                    <i data-lucide="map" class="w-10 h-10 mx-auto text-green-400 mb-2"></i>
+                    <p class="font-bold text-xl">۲۳ هکتار</p>
+                    <p class="text-xs text-slate-400">مساحت کل پروژه</p>
                 </div>
-                 <div class="grid grid-cols-2 gap-6 text-center">
-                    <div class="bg-slate-700/50 p-4 rounded-lg">
-                        <i data-lucide="map" class="w-10 h-10 mx-auto text-green-400 mb-2"></i>
-                        <p class="font-bold text-xl">۲۳ هکتار</p>
-                        <p class="text-xs text-slate-400">مساحت کل پروژه</p>
+                <div class="bg-slate-700/50 p-4 rounded-lg">
+                    <i data-lucide="file-text" class="w-10 h-10 mx-auto text-green-400 mb-2"></i>
+                    <p class="font-bold text-xl">BOT</p>
+                    <p class="text-xs text-slate-400">مدل قرارداد</p>
+                </div>
+                <div class="bg-slate-700/50 p-4 rounded-lg">
+                    <i data-lucide="map-pin" class="w-10 h-10 mx-auto text-green-400 mb-2"></i>
+                    <p class="font-bold text-lg leading-tight">اتوبان بابایی</p>
+                    <p class="text-xs text-slate-400 mt-1">موقعیت مکانی</p>
+                </div>
+                <div class="bg-slate-700/50 p-4 rounded-lg">
+                    <i data-lucide="alert-triangle" class="w-10 h-10 mx-auto text-yellow-400 mb-2"></i>
+                    <p class="font-bold text-lg leading-tight">ریسک بالا</p>
+                    <p class="text-xs text-slate-400 mt-1">حساسیت به درآمد</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Main KPIs -->
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-8">
+        <div class="card text-center">
+            <p class="text-slate-500 text-sm">خالص ارزش فعلی (NPV)</p>
+            <p class="text-2xl font-bold text-green-600 mt-2">۰.۱+</p>
+            <p class="text-xs text-slate-400 mt-1">میلیارد ریال</p>
+        </div>
+        <div class="card text-center">
+            <p class="text-slate-500 text-sm">نرخ بازده داخلی (IRR)</p>
+            <p class="text-2xl font-bold text-blue-600 mt-2">۴۰.۰۰٪</p>
+            <p class="text-xs text-slate-400 mt-1">برابر هزینه سرمایه</p>
+        </div>
+        <div class="card text-center">
+            <p class="text-slate-500 text-sm">بازگشت سرمایه (PP)</p>
+            <p class="text-2xl font-bold text-orange-600 mt-2">۴.۰</p>
+            <p class="text-xs text-slate-400 mt-1">سال</p>
+        </div>
+        <div class="card text-center">
+            <p class="text-slate-500 text-sm">بازگشت سود (DPBP)</p>
+            <p class="text-2xl font-bold text-amber-600 mt-2">۱۸.۹</p>
+            <p class="text-xs text-slate-400 mt-1">سال</p>
+        </div>
+        <div class="card text-center">
+            <p class="text-slate-500 text-sm">دوره بهره‌برداری</p>
+            <p class="text-2xl font-bold text-teal-600 mt-2">۱۹</p>
+            <p class="text-xs text-slate-400 mt-1">سال</p>
+        </div>
+        <div class="card text-center">
+            <p class="text-slate-500 text-sm">سرمایه‌گذاری ثابت</p>
+            <p class="text-2xl font-bold text-indigo-600 mt-2">۷۴۰</p>
+            <p class="text-xs text-slate-400 mt-1">میلیارد ریال</p>
+        </div>
+    </div>
+    <!-- Main Dashboard Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2 space-y-8">
+            <div class="card">
+                <h2 class="text-xl font-semibold text-slate-700 mb-4">نمودار جریان نقدی (میلیارد ریال)</h2>
+                <div id="cashFlowChart"></div>
+            </div>
+            <div class="card">
+                <h2 class="text-xl font-semibold text-slate-700 mb-4">روند درآمدها در مقابل هزینه‌های عملیاتی (میلیارد
+                    ریال)</h2>
+                <div id="revenueOpexChart"></div>
+            </div>
+            <div class="card">
+                <h2 class="text-xl font-semibold text-slate-700 mb-4">تحلیل نقطه سر به سر (دوره بازگشت)</h2>
+                <div id="breakevenLineChart" style="height: 350px;"></div>
+            </div>
+        </div>
+        <div class="lg:col-span-1 space-y-8">
+            <div class="card">
+                <h2 class="text-xl font-semibold text-slate-700 mb-4">ترکیب سرمایه‌گذاری ثابت (CAPEX)</h2>
+                <div id="capex-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                    <div class="w-full order-2 md:order-1">
+                        <h3 class="text-lg font-semibold text-slate-700 mb-3">تفکیک هزینه‌ها</h3>
+                        <div class="overflow-x-auto">
+                            <table id="capex-table" class="w-full text-sm text-right text-slate-600">
+                                <thead class="text-xs text-slate-700 uppercase bg-slate-100">
+                                <tr>
+                                    <th class="px-2 py-2 font-semibold">شرح هزینه</th>
+                                    <th class="px-2 py-2 font-semibold">مبلغ</th>
+                                    <th class="px-2 py-2 font-semibold">درصد</th>
+                                </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-200">
+                                <!-- Rows will be populated by script -->
+                                </tbody>
+                                <tfoot class="bg-slate-100 font-bold">
+                                <tr data-index="total">
+                                    <td class="px-2 py-2">جمع کل</td>
+                                    <td class="px-2 py-2">۷۴۰.۰</td>
+                                    <td class="px-2 py-2">۱۰۰٪</td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
                     </div>
-                     <div class="bg-slate-700/50 p-4 rounded-lg">
-                        <i data-lucide="file-text" class="w-10 h-10 mx-auto text-green-400 mb-2"></i>
-                        <p class="font-bold text-xl">BOT</p>
-                        <p class="text-xs text-slate-400">مدل قرارداد</p>
+                    <div class="w-full order-1 md:order-2">
+                        <div id="capexChartContainer" class="relative min-h-[300px]">
+                            <div id="capexChart"></div>
+                        </div>
                     </div>
-                    <div class="bg-slate-700/50 p-4 rounded-lg">
-                        <i data-lucide="map-pin" class="w-10 h-10 mx-auto text-green-400 mb-2"></i>
-                        <p class="font-bold text-lg leading-tight">اتوبان بابایی</p>
-                        <p class="text-xs text-slate-400 mt-1">موقعیت مکانی</p>
-                    </div>
-                     <div class="bg-slate-700/50 p-4 rounded-lg">
-                        <i data-lucide="alert-triangle" class="w-10 h-10 mx-auto text-yellow-400 mb-2"></i>
-                        <p class="font-bold text-lg leading-tight">ریسک بالا</p>
-                        <p class="text-xs text-slate-400 mt-1">حساسیت به درآمد</p>
-                    </div>
-                 </div>
+                </div>
+            </div>
+            <div class="card">
+                <h2 class="text-xl font-semibold text-slate-700 mb-4">نقشه راه زمانی پروژه</h2>
+                <div style="height:300px;"><canvas id="newRoadmapChart"></canvas></div>
+            </div>
+        </div>
+    </div>
+    <!-- Physical Plan Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 mt-8">
+        <div class="lg:col-span-3 card">
+            <h2 class="text-xl font-semibold text-slate-700 mb-4">برنامه فیزیکی و مساحت‌ها</h2>
+            <p class="text-sm text-slate-500 mb-4">مساحت کل: <strong>۲۳ هکتار</strong> (فاز ۱: ۱۶.۵ هکتار، فاز ۲: ۶.۵
+                هکتار)</p>
+            <div class="max-h-80 overflow-y-auto pr-2">
+                <table class="w-full text-sm text-right text-slate-600">
+                    <thead class="text-xs text-slate-700 uppercase bg-slate-100 sticky top-0">
+                    <tr>
+                        <th scope="col" class="px-4 py-2">فاز</th>
+                        <th scope="col" class="px-4 py-2">شرح</th>
+                        <th scope="col" class="px-4 py-2">مساحت (m²)</th>
+                        <th scope="col" class="px-4 py-2">وضعیت</th>
+                    </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200">
+                    <tr>
+                        <td class="px-4 py-2">۱</td>
+                        <td class="px-4 py-2">فضای حیات وحش</td>
+                        <td class="px-4 py-2">۹۵,۰۰۰</td>
+                        <td class="px-4 py-2"><span
+                                class="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">نیمه‌فعال</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="px-4 py-2">۱</td>
+                        <td class="px-4 py-2">رستوران سلفین</td>
+                        <td class="px-4 py-2">۷۵</td>
+                        <td class="px-4 py-2"><span
+                                class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">فعال</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="px-4 py-2">۱</td>
+                        <td class="px-4 py-2">رستوران فاز یک</td>
+                        <td class="px-4 py-2">۵۰۰</td>
+                        <td class="px-4 py-2"><span
+                                class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">غیرفعال</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="px-4 py-2">۱</td>
+                        <td class="px-4 py-2">سالن گرمسیری</td>
+                        <td class="px-4 py-2">۱,۰۰۰</td>
+                        <td class="px-4 py-2"><span
+                                class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">فعال</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="px-4 py-2">۱</td>
+                        <td class="px-4 py-2">کافی شاپ</td>
+                        <td class="px-4 py-2">۲۴</td>
+                        <td class="px-4 py-2"><span
+                                class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">فعال</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="px-4 py-2">۱</td>
+                        <td class="px-4 py-2">غرفه‌های خروجی</td>
+                        <td class="px-4 py-2">۳۰۰</td>
+                        <td class="px-4 py-2"><span
+                                class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">غیرفعال</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="px-4 py-2">۱</td>
+                        <td class="px-4 py-2">فضای سبز و پیاده‌راه</td>
+                        <td class="px-4 py-2">۶۷,۶۷۷</td>
+                        <td class="px-4 py-2"><span
+                                class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">فعال</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="px-4 py-2">۲</td>
+                        <td class="px-4 py-2">سازه کابل و تور</td>
+                        <td class="px-4 py-2">۷,۲۰۰</td>
+                        <td class="px-4 py-2"><span
+                                class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">فعال</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="px-4 py-2">۲</td>
+                        <td class="px-4 py-2">رستوران فاز دو</td>
+                        <td class="px-4 py-2">۴۰۰</td>
+                        <td class="px-4 py-2"><span
+                                class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">غیرفعال</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="px-4 py-2">۲</td>
+                        <td class="px-4 py-2">بوفه‌ها</td>
+                        <td class="px-4 py-2">۶۰</td>
+                        <td class="px-4 py-2"><span
+                                class="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">نیمه‌فعال</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="px-4 py-2">۲</td>
+                        <td class="px-4 py-2">دریاچه و فضای سبز</td>
+                        <td class="px-4 py-2">۵۶,۶۹۰</td>
+                        <td class="px-4 py-2"><span
+                                class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">فعال</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="lg:col-span-2 card">
+            <h2 class="text-xl font-semibold text-slate-700 mb-4">ماتریس تحلیل حساسیت (NPV & IRR)</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-center font-medium">
+                    <thead class="text-xs text-slate-700 uppercase bg-slate-100">
+                    <tr>
+                        <th class="px-4 py-3">متغیر</th>
+                        <th class="px-4 py-3">تغییر</th>
+                        <th class="px-4 py-3">NPV (میلیارد ریال)</th>
+                        <th class="px-4 py-3">IRR</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td rowspan="3" class="border p-2 align-middle bg-slate-50 font-semibold">درآمدها</td>
+                        <td class="border p-2">۱۰٪-</td>
+                        <td class="border p-2 heatmap-negative">-۷۳.۹</td>
+                        <td class="border p-2 heatmap-negative">۳۷.۶۰٪</td>
+                    </tr>
+                    <tr>
+                        <td class="border p-2 font-semibold">پایه</td>
+                        <td class="border p-2 heatmap-base">۰.۱+</td>
+                        <td class="border p-2 heatmap-base">۴۰.۰۰٪</td>
+                    </tr>
+                    <tr>
+                        <td class="border p-2">۱۰٪+</td>
+                        <td class="border p-2 heatmap-positive">۷۴.۱+</td>
+                        <td class="border p-2 heatmap-positive">۴۲.۴۵٪</td>
+                    </tr>
+                    <tr class="bg-slate-50">
+                        <td rowspan="3" class="border p-2 align-middle font-semibold">هزینه (OPEX)</td>
+                        <td class="border p-2">۱۰٪+</td>
+                        <td class="border p-2 heatmap-negative">-۷۳.۹</td>
+                        <td class="border p-2 heatmap-negative">۳۷.۶۰٪</td>
+                    </tr>
+                    <tr class="bg-slate-50">
+                        <td class="border p-2 font-semibold">پایه</td>
+                        <td class="border p-2 heatmap-base">۰.۱+</td>
+                        <td class="border p-2 heatmap-base">۴۰.۰۰٪</td>
+                    </tr>
+                    <tr class="bg-slate-50">
+                        <td class="border p-2">۱۰٪-</td>
+                        <td class="border p-2 heatmap-positive">۷۴.۱+</td>
+                        <td class="border p-2 heatmap-positive">۴۲.۴۵٪</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="3" class="border p-2 align-middle bg-slate-50 font-semibold">سرمایه‌گذاری (CAPEX)
+                        </td>
+                        <td class="border p-2">۱۰٪+</td>
+                        <td class="border p-2 heatmap-negative">-۷۳.۹</td>
+                        <td class="border p-2 heatmap-negative">۳۷.۶۰٪</td>
+                    </tr>
+                    <tr>
+                        <td class="border p-2 font-semibold">پایه</td>
+                        <td class="border p-2 heatmap-base">۰.۱+</td>
+                        <td class="border p-2 heatmap-base">۴۰.۰۰٪</td>
+                    </tr>
+                    <tr>
+                        <td class="border p-2">۱۰٪-</td>
+                        <td class="border p-2 heatmap-positive">۷۴.۱+</td>
+                        <td class="border p-2 heatmap-positive">۴۲.۴۵٪</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- New Sensitivity Analysis Heatmap -->
+    <div class="mt-12">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-black text-slate-900">تحلیل حساسیت: نبض سودآوری پروژه</h1>
+            <p class="text-lg text-slate-600 mt-2">بررسی واکنش نرخ بازده داخلی (IRR) به نوسانات ۲۰٪± درآمد و هزینه</p>
+        </header>
+        <section class="mb-8">
+            <div class="card p-6">
+                <h2 class="text-2xl font-bold text-center mb-1">نقشه حرارتی سودآوری (IRR)</h2>
+                <p class="text-center text-slate-500 mb-6">برای مشاهده جزئیات، ماوس را روی هر خانه حرکت دهید</p>
+                <div class="chart-container-heatmap">
+                    <canvas id="sensitivityHeatmap"></canvas>
+                </div>
             </div>
         </section>
-
-        <!-- Main KPIs -->
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-8">
-            <div class="card text-center">
-                <p class="text-slate-500 text-sm">خالص ارزش فعلی (NPV)</p>
-                <p class="text-2xl font-bold text-green-600 mt-2">۰.۱+</p>
-                <p class="text-xs text-slate-400 mt-1">میلیارد ریال</p>
-            </div>
-             <div class="card text-center">
-                <p class="text-slate-500 text-sm">نرخ بازده داخلی (IRR)</p>
-                <p class="text-2xl font-bold text-blue-600 mt-2">۴۰.۰۰٪</p>
-                 <p class="text-xs text-slate-400 mt-1">برابر هزینه سرمایه</p>
-            </div>
-            <div class="card text-center">
-                <p class="text-slate-500 text-sm">بازگشت سرمایه (PP)</p>
-                <p class="text-2xl font-bold text-orange-600 mt-2">۴.۰</p>
-                 <p class="text-xs text-slate-400 mt-1">سال</p>
-            </div>
-            <div class="card text-center">
-                <p class="text-slate-500 text-sm">بازگشت سود (DPBP)</p>
-                <p class="text-2xl font-bold text-amber-600 mt-2">۱۸.۹</p>
-                 <p class="text-xs text-slate-400 mt-1">سال</p>
-            </div>
-             <div class="card text-center">
-                <p class="text-slate-500 text-sm">دوره بهره‌برداری</p>
-                <p class="text-2xl font-bold text-teal-600 mt-2">۱۹</p>
-                 <p class="text-xs text-slate-400 mt-1">سال</p>
-            </div>
-            <div class="card text-center">
-                <p class="text-slate-500 text-sm">سرمایه‌گذاری ثابت</p>
-                <p class="text-2xl font-bold text-indigo-600 mt-2">۷۴۰</p>
-                 <p class="text-xs text-slate-400 mt-1">میلیارد ریال</p>
-            </div>
-        </div>
-
-        <!-- Main Dashboard Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div class="lg:col-span-2 space-y-8">
-                <div class="card">
-                    <h2 class="text-xl font-semibold text-slate-700 mb-4">نمودار جریان نقدی (میلیارد ریال)</h2>
-                    <div id="cashFlowChart"></div>
+        <section>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="card text-center border-t-4 border-green-500">
+                    <p class="text-4xl mb-2"></p>
+                    <h3 class="text-xl font-bold text-green-600">بهترین سناریو</h3>
+                    <p class="text-4xl font-black text-green-500 my-2">۴۵.۳٪</p>
+                    <p class="text-slate-500 text-sm">۲۰٪ کاهش هزینه | ۲۰٪ افزایش درآمد</p>
                 </div>
-                 <div class="card">
-                     <h2 class="text-xl font-semibold text-slate-700 mb-4">روند درآمدها در مقابل هزینه‌های عملیاتی (میلیارد ریال)</h2>
-                    <div id="revenueOpexChart"></div>
+                <div class="card text-center border-t-4 border-blue-500">
+                    <p class="text-4xl mb-2"></p>
+                    <h3 class="text-xl font-bold text-blue-600">سناریوی پایه</h3>
+                    <p class="text-4xl font-black text-blue-500 my-2">۴۰.۰٪</p>
+                    <p class="text-slate-500 text-sm">بدون تغییر در هزینه و درآمد</p>
                 </div>
-                 <div class="card">
-                    <h2 class="text-xl font-semibold text-slate-700 mb-4">تحلیل نقطه سر به سر (دوره بازگشت)</h2>
-                    <div id="breakevenLineChart" style="height: 350px;"></div>
+                <div class="card text-center border-t-4 border-red-500">
+                    <p class="text-4xl mb-2"></p>
+                    <h3 class="text-xl font-bold text-red-600">بدترین سناریو</h3>
+                    <p class="text-4xl font-black text-red-500 my-2">۳۴.۲٪</p>
+                    <p class="text-slate-500 text-sm">۲۰٪ افزایش هزینه | ۲۰٪ کاهش درآمد</p>
                 </div>
             </div>
-            <div class="lg:col-span-1 space-y-8">
-                <div class="card">
-                    <h2 class="text-xl font-semibold text-slate-700 mb-4">ترکیب سرمایه‌گذاری ثابت (CAPEX)</h2>
-                     <div class="flex flex-col md:flex-row-reverse gap-4 items-center">
-                        <div class="w-full md:w-2/5">
-                            <div id="capexChartContainer" class="relative">
-                                <div id="capexChart"></div>
-                            </div>
-                        </div>
-                        <div class="w-full md:w-3/5">
-                            <div class="overflow-x-auto">
-                                <h3 class="text-lg font-semibold text-slate-700 mb-3 px-2">جدول تفکیک هزینه‌های ثابت (میلیارد ریال)</h3>
-                                <table id="capex-table" class="w-full text-sm text-right text-slate-600">
-                                    <thead class="text-xs text-slate-700 uppercase bg-slate-100">
-                                        <tr>
-                                            <th class="px-2 py-2 font-semibold">شرح هزینه</th>
-                                            <th class="px-2 py-2 font-semibold">مبلغ</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="divide-y divide-slate-200">
-                                        <tr data-index="0" class="cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50">
-                                            <td class="px-2 py-2 flex items-center"><span class="capex-color-indicator"></span>هزینه ابنیه و ساخت‌وساز</td>
-                                            <td class="px-2 py-2">۳۶۵.۰</td>
-                                        </tr>
-                                        <tr data-index="1" class="cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50">
-                                            <td class="px-2 py-2 flex items-center"><span class="capex-color-indicator"></span>محوطه‌سازی و آماده‌سازی</td>
-                                            <td class="px-2 py-2">۱۰۰.۰</td>
-                                        </tr>
-                                        <tr data-index="2" class="cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50">
-                                            <td class="px-2 py-2 flex items-center"><span class="capex-color-indicator"></span>تأسیسات</td>
-                                            <td class="px-2 py-2">۷۵.۰</td>
-                                        </tr>
-                                        <tr data-index="3" class="cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50">
-                                            <td class="px-2 py-2 flex items-center"><span class="capex-color-indicator"></span>تجهیزات باغ خزندگان</td>
-                                            <td class="px-2 py-2">۶۵.۰</td>
-                                        </tr>
-                                        <tr data-index="4" class="cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50">
-                                            <td class="px-2 py-2 flex items-center"><span class="capex-color-indicator"></span>تجهیزات پذیرایی</td>
-                                            <td class="px-2 py-2">۵۰.۰</td>
-                                        </tr>
-                                        <tr data-index="5" class="cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50">
-                                            <td class="px-2 py-2 flex items-center"><span class="capex-color-indicator"></span>تجهیزات کلینیک</td>
-                                            <td class="px-2 py-2">۳۰.۰</td>
-                                        </tr>
-                                        <tr data-index="6" class="cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50">
-                                            <td class="px-2 py-2 flex items-center"><span class="capex-color-indicator"></span>هزینه‌های قبل از بهره‌برداری</td>
-                                            <td class="px-2 py-2">۲۳.۵</td>
-                                        </tr>
-                                        <tr data-index="7" class="cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50">
-                                            <td class="px-2 py-2 flex items-center"><span class="capex-color-indicator"></span>هزینه‌های پیش‌بینی نشده</td>
-                                            <td class="px-2 py-2">۳۱.۵</td>
-                                        </tr>
-                                    </tbody>
-                                    <tfoot class="bg-slate-100 font-bold">
-                                        <tr data-index="total" class="cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-600">
-                                            <td class="px-2 py-2">جمع کل</td>
-                                            <td class="px-2 py-2">۷۴۰.۰</td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <h2 class="text-xl font-semibold text-slate-700 mb-4">نقشه راه زمانی پروژه</h2>
-                    <div style="height:300px;"><canvas id="newRoadmapChart"></canvas></div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Physical Plan Section -->
-        <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 mt-8">
-            <div class="lg:col-span-3 card">
-                <h2 class="text-xl font-semibold text-slate-700 mb-4">برنامه فیزیکی و مساحت‌ها</h2>
-                 <p class="text-sm text-slate-500 mb-4">مساحت کل: <strong>۲۳ هکتار</strong> (فاز ۱: ۱۶.۵ هکتار، فاز ۲: ۶.۵ هکتار)</p>
-                 <div class="max-h-80 overflow-y-auto pr-2">
-                     <table class="w-full text-sm text-right text-slate-600">
-                         <thead class="text-xs text-slate-700 uppercase bg-slate-100 sticky top-0">
-                            <tr>
-                                <th scope="col" class="px-4 py-2">فاز</th>
-                                <th scope="col" class="px-4 py-2">شرح</th>
-                                <th scope="col" class="px-4 py-2">مساحت (m²)</th>
-                                <th scope="col" class="px-4 py-2">وضعیت</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-200">
-                            <tr><td class="px-4 py-2">۱</td><td class="px-4 py-2">فضای حیات وحش</td><td class="px-4 py-2">۹۵,۰۰۰</td><td class="px-4 py-2"><span class="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">نیمه‌فعال</span></td></tr>
-                            <tr><td class="px-4 py-2">۱</td><td class="px-4 py-2">رستوران سلفین</td><td class="px-4 py-2">۷۵</td><td class="px-4 py-2"><span class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">فعال</span></td></tr>
-                            <tr><td class="px-4 py-2">۱</td><td class="px-4 py-2">رستوران فاز یک</td><td class="px-4 py-2">۵۰۰</td><td class="px-4 py-2"><span class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">غیرفعال</span></td></tr>
-                            <tr><td class="px-4 py-2">۱</td><td class="px-4 py-2">سالن گرمسیری</td><td class="px-4 py-2">۱,۰۰۰</td><td class="px-4 py-2"><span class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">فعال</span></td></tr>
-                            <tr><td class="px-4 py-2">۱</td><td class="px-4 py-2">کافی شاپ</td><td class="px-4 py-2">۲۴</td><td class="px-4 py-2"><span class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">فعال</span></td></tr>
-                             <tr><td class="px-4 py-2">۱</td><td class="px-4 py-2">غرفه‌های خروجی</td><td class="px-4 py-2">۳۰۰</td><td class="px-4 py-2"><span class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">غیرفعال</span></td></tr>
-                            <tr><td class="px-4 py-2">۱</td><td class="px-4 py-2">فضای سبز و پیاده‌راه</td><td class="px-4 py-2">۶۷,۶۷۷</td><td class="px-4 py-2"><span class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">فعال</span></td></tr>
-                            <tr><td class="px-4 py-2">۲</td><td class="px-4 py-2">سازه کابل و تور</td><td class="px-4 py-2">۷,۲۰۰</td><td class="px-4 py-2"><span class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">فعال</span></td></tr>
-                             <tr><td class="px-4 py-2">۲</td><td class="px-4 py-2">رستوران فاز دو</td><td class="px-4 py-2">۴۰۰</td><td class="px-4 py-2"><span class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">غیرفعال</span></td></tr>
-                            <tr><td class="px-4 py-2">۲</td><td class="px-4 py-2">بوفه‌ها</td><td class="px-4 py-2">۶۰</td><td class="px-4 py-2"><span class="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">نیمه‌فعال</span></td></tr>
-                             <tr><td class="px-4 py-2">۲</td><td class="px-4 py-2">دریاچه و فضای سبز</td><td class="px-4 py-2">۵۶,۶۹۰</td><td class="px-4 py-2"><span class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">فعال</span></td></tr>
-                        </tbody>
-                     </table>
-                 </div>
-            </div>
-            <div class="lg:col-span-2 card">
-                <h2 class="text-xl font-semibold text-slate-700 mb-4">ماتریس تحلیل حساسیت (NPV & IRR)</h2>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-sm text-center font-medium">
-                        <thead class="text-xs text-slate-700 uppercase bg-slate-100">
-                            <tr>
-                                <th class="px-4 py-3">متغیر</th>
-                                <th class="px-4 py-3">تغییر</th>
-                                <th class="px-4 py-3">NPV (میلیارد ریال)</th>
-                                <th class="px-4 py-3">IRR</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td rowspan="3" class="border p-2 align-middle bg-slate-50 font-semibold">درآمدها</td>
-                                <td class="border p-2">۱۰٪-</td><td class="border p-2 heatmap-negative">-۷۳.۹</td><td class="border p-2 heatmap-negative">۳۷.۶۰٪</td>
-                            </tr>
-                            <tr>
-                                <td class="border p-2 font-semibold">پایه</td><td class="border p-2 heatmap-base">۰.۱+</td><td class="border p-2 heatmap-base">۴۰.۰۰٪</td>
-                            </tr>
-                            <tr>
-                                <td class="border p-2">۱۰٪+</td><td class="border p-2 heatmap-positive">۷۴.۱+</td><td class="border p-2 heatmap-positive">۴۲.۴۵٪</td>
-                            </tr>
-                            <tr class="bg-slate-50">
-                                <td rowspan="3" class="border p-2 align-middle font-semibold">هزینه (OPEX)</td>
-                                <td class="border p-2">۱۰٪+</td><td class="border p-2 heatmap-negative">-۷۳.۹</td><td class="border p-2 heatmap-negative">۳۷.۶۰٪</td>
-                            </tr>
-                            <tr class="bg-slate-50">
-                                <td class="border p-2 font-semibold">پایه</td><td class="border p-2 heatmap-base">۰.۱+</td><td class="border p-2 heatmap-base">۴۰.۰۰٪</td>
-                            </tr>
-                            <tr class="bg-slate-50">
-                                <td class="border p-2">۱۰٪-</td><td class="border p-2 heatmap-positive">۷۴.۱+</td><td class="border p-2 heatmap-positive">۴۲.۴۵٪</td>
-                            </tr>
-                             <tr>
-                                <td rowspan="3" class="border p-2 align-middle bg-slate-50 font-semibold">سرمایه‌گذاری (CAPEX)</td>
-                                <td class="border p-2">۱۰٪+</td><td class="border p-2 heatmap-negative">-۷۳.۹</td><td class="border p-2 heatmap-negative">۳۷.۶۰٪</td>
-                            </tr>
-                            <tr>
-                                <td class="border p-2 font-semibold">پایه</td><td class="border p-2 heatmap-base">۰.۱+</td><td class="border p-2 heatmap-base">۴۰.۰۰٪</td>
-                            </tr>
-                            <tr>
-                                <td class="border p-2">۱۰٪-</td><td class="border p-2 heatmap-positive">۷۴.۱+</td><td class="border p-2 heatmap-positive">۴۲.۴۵٪</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        
-        <!-- New Sensitivity Analysis Heatmap -->
-        <div class="mt-12">
-            <header class="text-center mb-8">
-                 <h1 class="text-3xl md:text-4xl font-black text-slate-900">تحلیل حساسیت: نبض سودآوری پروژه</h1>
-                 <p class="text-lg text-slate-600 mt-2">بررسی واکنش نرخ بازده داخلی (IRR) به نوسانات ۲۰٪± درآمد و هزینه</p>
-            </header>
-            
-            <section class="mb-8">
-                <div class="card p-6">
-                    <h2 class="text-2xl font-bold text-center mb-1">نقشه حرارتی سودآوری (IRR)</h2>
-                    <p class="text-center text-slate-500 mb-6">برای مشاهده جزئیات، ماوس را روی هر خانه حرکت دهید</p>
-                    <div class="chart-container-heatmap">
-                        <canvas id="sensitivityHeatmap"></canvas>
-                    </div>
-                </div>
-            </section>
-             <section>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="card text-center border-t-4 border-green-500">
-                        <p class="text-4xl mb-2">🚀</p>
-                        <h3 class="text-xl font-bold text-green-600">بهترین سناریو</h3>
-                        <p class="text-4xl font-black text-green-500 my-2">۴۵.۳٪</p>
-                        <p class="text-slate-500 text-sm">۲۰٪ کاهش هزینه | ۲۰٪ افزایش درآمد</p>
-                    </div>
-                    <div class="card text-center border-t-4 border-blue-500">
-                         <p class="text-4xl mb-2">🎯</p>
-                        <h3 class="text-xl font-bold text-blue-600">سناریوی پایه</h3>
-                        <p class="text-4xl font-black text-blue-500 my-2">۴۰.۰٪</p>
-                        <p class="text-slate-500 text-sm">بدون تغییر در هزینه و درآمد</p>
-                    </div>
-                    <div class="card text-center border-t-4 border-red-500">
-                        <p class="text-4xl mb-2">📉</p>
-                        <h3 class="text-xl font-bold text-red-600">بدترین سناریو</h3>
-                        <p class="text-4xl font-black text-red-500 my-2">۳۴.۲٪</p>
-                        <p class="text-slate-500 text-sm">۲۰٪ افزایش هزینه | ۲۰٪ کاهش درآمد</p>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-
+        </section>
     </div>
-
+</div>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         // Chart Global Options
         const chartOptions = {
             chart: {
                 fontFamily: 'Vazirmatn, sans-serif',
-                toolbar: { show: true, tools: { download: '<i class="w-4 h-4" data-lucide="download"></i>' }},
+                toolbar: {
+                    show: true,
+                    tools: {
+                        download: '<i class="w-4 h-4" data-lucide="download"></i>'
+                    }
+                },
             },
-            dataLabels: { enabled: false },
-            stroke: { curve: 'smooth', width: 3 },
-            markers: { size: 0 },
-            tooltip: { theme: 'light', style: { fontSize: '12px', fontFamily: 'Vazirmatn, sans-serif' }},
+            dataLabels: {enabled: false},
+            stroke: {curve: 'smooth', width: 3},
+            markers: {size: 0},
+            tooltip: {
+                theme: 'light',
+                style: {
+                    fontSize: '12px',
+                    fontFamily: 'Vazirmatn, sans-serif'
+                }
+            },
         };
         const chartDefaultOptions = {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: { labels: { color: '#cbd5e1', font: { family: 'Vazirmatn'}}},
-                tooltip: { bodyFont: { family: 'Vazirmatn' }, titleFont: { family: 'Vazirmatn' }}
+                legend: {
+                    labels: {
+                        color: '#cbd5e1',
+                        font: {family: 'Vazirmatn'}
+                    }
+                },
+                tooltip: {
+                    bodyFont: {family: 'Vazirmatn'},
+                    titleFont: {family: 'Vazirmatn'}
+                }
             }
         };
-        
+
         // Cash Flow Chart
         const cashFlowData = {
             years: ['سال ۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹', '۱۰', '۱۱', '۱۲', '۱۳', '۱۴', '۱۵', '۱۶', '۱۷', '۱۸', '۱۹'],
@@ -438,17 +617,47 @@
         };
         const cashFlowChart = new ApexCharts(document.querySelector("#cashFlowChart"), {
             ...chartOptions,
-            series: [{ name: 'جریان نقدی آزاد (FCF)', type: 'column', data: cashFlowData.fcf }],
-            chart: { ...chartOptions.chart, height: 350, type: 'line' },
-            xaxis: { categories: cashFlowData.years, labels: { style: { fontFamily: 'Vazirmatn' }}},
-            yaxis: [{ title: { text: 'جریان نقدی آزاد (FCF)', style: { fontFamily: 'Vazirmatn', fontWeight: 400 }}}],
+            series: [{
+                name: 'جریان نقدی آزاد (FCF)',
+                type: 'column',
+                data: cashFlowData.fcf
+            }],
+            chart: {
+                ...chartOptions.chart,
+                height: 350,
+                type: 'line'
+            },
+            xaxis: {
+                categories: cashFlowData.years,
+                labels: {style: {fontFamily: 'Vazirmatn'}}
+            },
+            yaxis: [{
+                title: {
+                    text: 'جریان نقدی آزاد (FCF)',
+                    style: {fontFamily: 'Vazirmatn', fontWeight: 400}
+                }
+            }],
             colors: ['#2563eb'],
-            plotOptions: { bar: { colors: { ranges: [{ from: -1000, to: 0, color: '#ef4444' }, { from: 1, to: 5000, color: '#2563eb' }] }, columnWidth: '80%' }},
-            legend: { position: 'top', horizontalAlign: 'left' }
+            plotOptions: {
+                bar: {
+                    colors: {
+                        ranges: [{from: -1000, to: 0, color: '#ef4444'}, {
+                            from: 1,
+                            to: 5000,
+                            color: '#2563eb'
+                        }]
+                    },
+                    columnWidth: '80%'
+                }
+            },
+            legend: {
+                position: 'top',
+                horizontalAlign: 'left'
+            }
         });
         cashFlowChart.render();
-        
-         // Revenue vs OPEX Chart
+
+        // Revenue vs OPEX Chart
         const revenueOpexData = {
             years: ['۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹', '۱۰', '۱۱', '۱۲', '۱۳', '۱۴', '۱۵', '۱۶', '۱۷', '۱۸', '۱۹'],
             revenue: [387.8, 453.8, 531.3, 622.1, 729.0, 854.4, 1002.0, 1175.6, 1380.2, 1620.8, 1904.3, 2238.2, 2631.9, 3096.4, 3644.4, 4291.5, 5054.6, 5955.9, 6947.0],
@@ -456,12 +665,34 @@
         };
         const revenueOpexChart = new ApexCharts(document.querySelector("#revenueOpexChart"), {
             ...chartOptions,
-            series: [{ name: 'درآمد کل', data: revenueOpexData.revenue }, { name: 'هزینه عملیاتی (OPEX)', data: revenueOpexData.opex }],
-            chart: { ...chartOptions.chart, height: 350, type: 'line' },
-            xaxis: { title: { text: 'سال بهره‌برداری', style: { fontFamily: 'Vazirmatn', fontWeight: 400 }}, categories: revenueOpexData.years, labels: { style: { fontFamily: 'Vazirmatn' }}},
-            yaxis: { title: { text: 'میلیارد ریال', style: { fontFamily: 'Vazirmatn', fontWeight: 400 }}},
+            series: [{name: 'درآمد کل', data: revenueOpexData.revenue}, {
+                name: 'هزینه عملیاتی (OPEX)',
+                data: revenueOpexData.opex
+            }],
+            chart: {
+                ...chartOptions.chart,
+                height: 350,
+                type: 'line'
+            },
+            xaxis: {
+                title: {
+                    text: 'سال بهره‌برداری',
+                    style: {fontFamily: 'Vazirmatn', fontWeight: 400}
+                },
+                categories: revenueOpexData.years,
+                labels: {style: {fontFamily: 'Vazirmatn'}}
+            },
+            yaxis: [{
+                title: {
+                    text: 'میلیارد ریال',
+                    style: {fontFamily: 'Vazirmatn', fontWeight: 400}
+                }
+            }],
             colors: ['#16a34a', '#dc2626'],
-            legend: { position: 'top', horizontalAlign: 'left' }
+            legend: {
+                position: 'top',
+                horizontalAlign: 'left'
+            }
         });
         revenueOpexChart.render();
 
@@ -471,30 +702,20 @@
             cumulative_fcf: [-740.0, -583.6, -395.9, -170.7, 99.5, 423.8, 812.9, 1279.8, 1840.1, 2512.5, 3319.4, 4287.7, 5449.6, 6843.9, 8517.1, 10524.9, 12934.2, 15825.4, 19294.9, 23458.2],
             cumulative_npv: [-740.0, -628.3, -532.6, -450.5, -380.2, -319.9, -268.2, -223.9, -185.9, -153.4, -125.5, -101.6, -81.1, -63.5, -48.4, -35.5, -24.5, -15.0, -6.9, 0.1]
         };
-        
+
         function getBreakevenAnnotations(isDark) {
-             const labelStyle = {
-                color: '#fff',
-                background: '#f97316',
-                fontFamily: 'Vazirmatn'
-            };
+            const labelStyle = {color: '#fff', background: '#f97316', fontFamily: 'Vazirmatn'};
             return {
                 xaxis: [
                     {
                         x: 4, // Numerical index for Year 4
                         borderColor: '#f97316',
-                        label: {
-                            style: labelStyle,
-                            text: 'PP: 4.0 سال'
-                        }
+                        label: {style: labelStyle, text: 'PP: 4.0 سال'}
                     },
                     {
                         x: 19, // Numerical index for Year 19
                         borderColor: '#0891b2',
-                        label: {
-                            style: { ...labelStyle, background: '#0891b2'},
-                            text: 'DPBP: 18.9 سال'
-                        }
+                        label: {style: {...labelStyle, background: '#0891b2'}, text: 'DPBP: 18.9 سال'}
                     }
                 ],
                 yaxis: [{
@@ -502,11 +723,7 @@
                     borderColor: '#F44336',
                     label: {
                         borderColor: '#F44336',
-                        style: {
-                            color: '#fff',
-                            background: '#F44336',
-                            fontFamily: 'Vazirmatn'
-                        },
+                        style: {color: '#fff', background: '#F44336', fontFamily: 'Vazirmatn'},
                         text: 'نقطه سر به سر'
                     }
                 }]
@@ -515,189 +732,266 @@
 
         const breakevenLineChart = new ApexCharts(document.querySelector("#breakevenLineChart"), {
             ...chartOptions,
-            series: [{ name: 'جریان نقدی تجمعی (برای PP)', data: breakevenData.cumulative_fcf }, { name: 'خالص ارزش فعلی تجمعی (برای DPBP)', data: breakevenData.cumulative_npv }],
-            chart: { ...chartOptions.chart, height: 350, type: 'line', },
-            annotations: getBreakevenAnnotations(false), // Initial render for light mode
-            xaxis: { 
-                type: 'category',
-                title: { text: 'سال پروژه', style: { fontFamily: 'Vazirmatn', fontWeight: 400 }}, 
-                categories: breakevenData.years 
+            series: [{
+                name: 'جریان نقدی تجمعی (برای PP)',
+                data: breakevenData.cumulative_fcf
+            }, {name: 'خالص ارزش فعلی تجمعی (برای DPBP)', data: breakevenData.cumulative_npv}],
+            chart: {
+                ...chartOptions.chart,
+                height: 350,
+                type: 'line',
             },
-            yaxis: { title: { text: 'میلیارد ریال', style: { fontFamily: 'Vazirmatn', fontWeight: 400 }}},
+            annotations: getBreakevenAnnotations(false), // Initial render for light mode
+            xaxis: {
+                type: 'category',
+                title: {
+                    text: 'سال پروژه',
+                    style: {fontFamily: 'Vazirmatn', fontWeight: 400}
+                },
+                categories: breakevenData.years
+            },
+            yaxis: [{
+                title: {
+                    text: 'میلیارد ریال',
+                    style: {fontFamily: 'Vazirmatn', fontWeight: 400}
+                }
+            }],
             colors: ['#f97316', '#0891b2'],
-            legend: { position: 'top', horizontalAlign: 'left' }
+            legend: {
+                position: 'top',
+                horizontalAlign: 'left'
+            }
         });
-        
         breakevenLineChart.render();
         
-        // CAPEX Chart
+        // ===================================================================
+        // START: CAPEX Chart Interactivity (REWRITTEN LOGIC)
+        // ===================================================================
         const capexData = {
             series: [365.0, 100.0, 75.0, 65.0, 50.0, 30.0, 23.5, 31.5],
-            labels: ['هزینه ابنیه و ساخت‌وساز', 'محوطه‌سازی و آماده‌سازی زمین', 'تأسیسات', 'تجهیزات باغ خزندگان', 'تجهیزات پذیرایی', 'تجهیزات کلینیک', 'هزینه‌های قبل از بهره‌برداری', 'هزینه‌های پیش‌بینی نشده']
+            labels: ['ابنیه و ساخت‌وساز', 'محوطه‌سازی', 'تأسیسات', 'باغ خزندگان', 'پذیرایی', 'کلینیک', 'قبل بهره‌برداری', 'پیش‌بینی نشده']
         };
         const capexColors = ['#008FFB', '#00E396', '#FEB019', '#FF4560', '#775DD0', '#546E7A', '#26a69a', '#D10CE8'];
         const totalCapex = capexData.series.reduce((a, b) => a + b, 0);
+        let capexChart;
+        let currentlyHighlighted = null;
 
+        // Function to update the text in the center of the donut chart
+        function updateCapexCenterLabel(index) {
+            let newTotalOptions;
+            if (index === null) {
+                // Default state: Show total title and value
+                newTotalOptions = {
+                    label: 'جمع کل',
+                    formatter: () => totalCapex.toFixed(1)
+                };
+            } else {
+                 // Hover state: Show item's title and its percentage
+                const value = capexData.series[index];
+                const percentage = (value / totalCapex * 100).toFixed(1);
+                newTotalOptions = {
+                    label: capexData.labels[index],
+                    formatter: () => `${percentage}%` 
+                };
+            }
+            capexChart.updateOptions({
+                plotOptions: {
+                    pie: {
+                        donut: {
+                            labels: {
+                                total: newTotalOptions
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Single function to handle highlighting an item from any source (chart or table)
+        function highlightItem(index) {
+            if (currentlyHighlighted === index) return;
+            
+            // Un-highlight the previously selected item on the chart
+            if (currentlyHighlighted !== null) {
+                capexChart.toggleDataPointSelection(currentlyHighlighted);
+            }
+            
+            currentlyHighlighted = index;
+
+            // Highlight the corresponding table row
+            document.querySelectorAll('#capex-table tbody tr').forEach(row => {
+                const rowIndex = parseInt(row.getAttribute('data-index'));
+                const shouldHighlight = rowIndex === index;
+                row.classList.toggle('bg-sky-100', shouldHighlight);
+                row.classList.toggle('dark:bg-sky-900/50', shouldHighlight);
+            });
+            
+             // Highlight the new item on the chart (if not already highlighted)
+            if (index !== null) {
+                 capexChart.toggleDataPointSelection(index);
+            }
+            
+            // Update the center label
+            updateCapexCenterLabel(index);
+        }
+
+        // Single function to reset all highlights
+        function resetHighlight() {
+            if (currentlyHighlighted === null) return;
+            
+            // Un-highlight table rows
+            document.querySelectorAll('#capex-table tbody tr').forEach(row => {
+                 row.classList.remove('bg-sky-100', 'dark:bg-sky-900/50');
+            });
+
+            // Un-highlight chart slice
+            if (currentlyHighlighted !== null) {
+                capexChart.toggleDataPointSelection(currentlyHighlighted);
+            }
+            currentlyHighlighted = null;
+
+            // Reset center label
+            updateCapexCenterLabel(null);
+        }
+
+        // Populate the CAPEX table
+        const capexTableBody = document.querySelector('#capex-table tbody');
+        capexData.labels.forEach((label, i) => {
+            const value = capexData.series[i];
+            const percentage = (value / totalCapex * 100).toFixed(1);
+            const row = `
+                <tr data-index="${i}" class="cursor-pointer">
+                    <td class="px-2 py-2 flex items-center"><span class="capex-color-indicator" style="background-color: ${capexColors[i]}"></span>${label}</td>
+                    <td class="px-2 py-2">${value.toFixed(1)}</td>
+                    <td class="px-2 py-2">${percentage}%</td>
+                </tr>
+            `;
+            capexTableBody.innerHTML += row;
+        });
+
+        // Define CAPEX chart options
         const capexChartOptions = {
             series: capexData.series,
-            chart: { 
-                type: 'donut', 
-                height: 300 
+            chart: {
+                type: 'donut',
+                height: 300,
+                events: {
+                    dataPointMouseEnter: (event, chartContext, config) => {
+                        highlightItem(config.dataPointIndex);
+                    },
+                }
             },
             labels: capexData.labels,
             colors: capexColors,
-            legend: { 
-                show: false
-            },
-            tooltip: { 
-                y: { formatter: (val) => val.toFixed(1) + " میلیارد ریال" }, 
-                style: { fontFamily: 'Vazirmatn, sans-serif' }
-            },
+            legend: { show: false },
+            tooltip: { enabled: false }, // Tooltip is redundant, info is in the center
             plotOptions: {
                 pie: {
+                    expandOnClick: false, // Prevents selection from "sticking" on click
                     donut: {
                         labels: {
                             show: true,
+                            name: {
+                                show: true // This is needed to show the 'label' from 'total' options
+                            },
+                            value: {
+                                show: true // This is needed to show the 'formatter' from 'total' options
+                            },
                             total: {
                                 show: true,
+                                showAlways: true,
                                 label: 'جمع کل',
                                 fontFamily: 'Vazirmatn',
                                 fontSize: '18px',
                                 fontWeight: 'bold',
-                                formatter: () => `${totalCapex.toFixed(1)}`
-                            },
-                            value: {
-                               fontFamily: 'Vazirmatn' 
+                                formatter: () => totalCapex.toFixed(1)
                             }
                         }
                     }
                 }
             },
-            dataLabels: {
-                enabled: false
-            }
+            dataLabels: { enabled: false }
         };
 
-        const capexChart = new ApexCharts(document.querySelector("#capexChart"), capexChartOptions);
+        // Render the chart and set up final event listeners
+        capexChart = new ApexCharts(document.querySelector("#capexChart"), capexChartOptions);
         capexChart.render();
-
-        // Interactivity for CAPEX Table
-        const capexTableRows = document.querySelectorAll('#capex-table tbody tr, #capex-table tfoot tr');
-        capexTableRows.forEach((row, i) => {
-            const colorIndicator = row.querySelector('.capex-color-indicator');
-            if (colorIndicator) {
-                colorIndicator.style.backgroundColor = capexColors[i];
-            }
-            row.addEventListener('click', () => {
-                const index = row.getAttribute('data-index');
-                capexTableRows.forEach(r => r.classList.remove('bg-sky-100', 'dark:bg-sky-900/50'));
-                row.classList.add('bg-sky-100', 'dark:bg-sky-900/50');
-                
-                let newTotalOptions;
-
-                if (index === 'total' || index === null) {
-                    newTotalOptions = {
-                        label: 'جمع کل',
-                        formatter: () => `${totalCapex.toFixed(1)}`
-                    };
-                } else {
-                    const seriesIndex = parseInt(index);
-                    const value = capexData.series[seriesIndex];
-                    const percentage = (value / totalCapex * 100).toFixed(1);
-                    newTotalOptions = {
-                        label: capexData.labels[seriesIndex].split(' ')[0],
-                        formatter: () => `${percentage}%`
-                    };
-                }
-
-                capexChart.updateOptions({
-                    plotOptions: {
-                        pie: {
-                            donut: {
-                                labels: {
-                                    total: newTotalOptions
-                                }
-                            }
-                        }
-                    }
-                });
-            });
-
-            row.addEventListener('mouseover', () => {
-                const index = row.getAttribute('data-index');
-                if (index !== 'total' && index !== null) {
-                    capexChart.toggleDataPointSelection(parseInt(index));
-                }
-            });
-            row.addEventListener('mouseout', () => {
-                const index = row.getAttribute('data-index');
-                if (index !== 'total' && index !== null) {
-                    capexChart.toggleDataPointSelection(parseInt(index));
-                }
+        
+        // Add listeners to table rows
+        document.querySelectorAll('#capex-table tbody tr').forEach(row => {
+            row.addEventListener('mouseenter', (e) => {
+                const index = parseInt(e.currentTarget.getAttribute('data-index'));
+                highlightItem(index);
             });
         });
-
+        
+        // Add a listener to the parent container to reset everything when the mouse leaves the component
+        document.getElementById('capex-container').addEventListener('mouseleave', () => {
+            resetHighlight();
+        });
+        // ===================================================================
+        // END: CAPEX Chart Interactivity
+        // ===================================================================
 
         // New Roadmap Chart (Chart.js)
-        const roadmapChartData = { 
-            labels: ['دوران بهره\u200cبرداری', 'بازگشت سود و سرمایه', 'بازگشت سرمایه'], 
-            datasets: [{ 
-                data: [[0, 19], [0, 18.9], [0, 4.0]], 
-                backgroundColor: ['#2dd4bf', '#f97316', '#fbbf24'], 
-                borderWidth: 1, 
-                borderColor: '#fff', 
-                barPercentage: 0.6 
-            }] 
+        const roadmapChartData = {
+            labels: ['دوران بهره\u200cبرداری', 'بازگشت سود و سرمایه', 'بازگشت سرمایه'],
+            datasets: [{
+                data: [[0, 19], [0, 18.9], [0, 4.0]],
+                backgroundColor: ['#2dd4bf', '#f97316', '#fbbf24'],
+                borderWidth: 1,
+                borderColor: '#fff',
+                barPercentage: 0.6
+            }]
         };
         const roadmapDatalabelsPlugin = {
             id: 'roadmapDatalabels',
             afterDatasetsDraw(chart, args, options) {
-                const { ctx } = chart;
+                const {ctx} = chart;
                 ctx.save();
                 chart.getDatasetMeta(0).data.forEach((datapoint, index) => {
                     const barData = chart.data.datasets[0].data[index];
                     const label = `${barData[1].toFixed(1)} سال`;
-                    
-                    const { x, y, width, height } = datapoint;
-                    
+                    const {x, y, width, height} = datapoint;
                     ctx.font = 'bold 12px Vazirmatn';
                     ctx.fillStyle = 'white';
                     ctx.textAlign = 'center';
                     ctx.textBaseline = 'middle';
-                    
                     // Position text in the middle of the bar
-                    ctx.fillText(label, x - (width/2) - 30, y);
+                    ctx.fillText(label, x - (width / 2) - 30, y);
                 });
                 ctx.restore();
             }
         };
         const newRoadmapChart = new Chart(document.getElementById('newRoadmapChart').getContext('2d'), {
-            type: 'bar', 
+            type: 'bar',
             data: roadmapChartData,
-            options: { 
-                ...chartDefaultOptions, 
-                indexAxis: 'y', 
+            options: {
+                ...chartDefaultOptions,
+                indexAxis: 'y',
                 plugins: {
-                    legend: {display: false}, 
+                    legend: {display: false},
                     tooltip: {
-                        callbacks: { 
+                        callbacks: {
                             label: (ctx) => ` ${ctx.raw[1].toFixed(2)} سال`
                         }
                     }
-                }, 
-                scales: { 
-                    x: { 
-                        min: 0, 
-                        max: 20, 
-                        ticks: { color: '#64748b', stepSize: 2, font:{family: 'Vazirmatn'} }, 
-                        grid: { color: '#e2e8f0' }, 
-                        title: { display: true, text: 'سال\u200cهای بهره\u200cبرداری', color: '#334155', font: { family: 'Vazirmatn' } } 
-                    }, 
-                    y: { 
-                        ticks: {color: '#334155', font:{family: 'Vazirmatn'}}, 
-                        grid: { display: false } 
-                    } 
-                } 
+                },
+                scales: {
+                    x: {
+                        min: 0,
+                        max: 20,
+                        ticks: {color: '#64748b', stepSize: 2, font: {family: 'Vazirmatn'}},
+                        grid: {color: '#e2e8f0'},
+                        title: {
+                            display: true,
+                            text: 'سال\u200cهای بهره\u200cبرداری',
+                            color: '#334155',
+                            font: {family: 'Vazirmatn'}
+                        }
+                    },
+                    y: {ticks: {color: '#334155', font: {family: 'Vazirmatn'}}, grid: {display: false}}
+                }
             },
             plugins: [roadmapDatalabelsPlugin]
         });
@@ -707,28 +1001,27 @@
         const heatmapData = {
             labels: ['-20%', '-10%', '0%', '+10%', '+20%'], // Cost Changes
             datasets: [
-                { label: '+20%', data: [45.3, 44.1, 42.9, 41.7, 40.5] },
-                { label: '+10%', data: [44.0, 42.9, 41.7, 40.6, 39.4] },
-                { label: '0%',   data: [42.6, 41.3, 40.0, 38.8, 37.5] },
-                { label: '-10%', data: [41.1, 39.8, 38.5, 37.1, 35.8] },
-                { label: '-20%', data: [39.5, 38.2, 36.8, 35.5, 34.2] }
+                {label: '+20%', data: [45.3, 44.1, 42.9, 41.7, 40.5]},
+                {label: '+10%', data: [44.0, 42.9, 41.7, 40.6, 39.4]},
+                {label: '0%', data: [42.6, 41.3, 40.0, 38.8, 37.5]},
+                {label: '-10%', data: [41.1, 39.8, 38.5, 37.1, 35.8]},
+                {label: '-20%', data: [39.5, 38.2, 36.8, 35.5, 34.2]}
             ]
         };
-        const matrixData = heatmapData.datasets.flatMap((dataset) => 
-            dataset.data.map((value, j) => ({ x: heatmapData.labels[j], y: dataset.label, v: value }))
+        const matrixData = heatmapData.datasets.flatMap((dataset) =>
+            dataset.data.map((value, j) => ({x: heatmapData.labels[j], y: dataset.label, v: value}))
         );
-
         const datalabelsPlugin = {
             id: 'datalabels',
             afterDatasetsDraw(chart) {
-                const { ctx } = chart;
+                const {ctx} = chart;
                 const isDark = document.documentElement.classList.contains('dark');
                 ctx.save();
                 chart.getDatasetMeta(0).data.forEach((datapoint, index) => {
-                    const { x, y, width, height } = datapoint.getProps(['x', 'y', 'width', 'height']);
+                    const {x, y, width, height} = datapoint.getProps(['x', 'y', 'width', 'height']);
                     const value = chart.data.datasets[0].data[index].v;
                     ctx.font = 'bold 14px Vazirmatn';
-                    if(isDark) {
+                    if (isDark) {
                         ctx.fillStyle = 'white';
                     } else {
                         ctx.fillStyle = value >= 41 ? 'white' : 'black';
@@ -740,7 +1033,6 @@
                 ctx.restore();
             }
         };
-
         const sensitivityHeatmap = new Chart(ctxHeatmap, {
             type: 'matrix',
             data: {
@@ -756,8 +1048,8 @@
                     },
                     borderColor: 'white',
                     borderWidth: 2,
-                    width: ({ chart }) => (chart.chartArea || {}).width / heatmapData.labels.length,
-                    height: ({ chart }) => (chart.chartArea || {}).height / heatmapData.datasets.length,
+                    width: ({chart}) => (chart.chartArea || {}).width / heatmapData.labels.length,
+                    height: ({chart}) => (chart.chartArea || {}).height / heatmapData.datasets.length,
                 }]
             },
             options: {
@@ -767,22 +1059,30 @@
                     x: {
                         type: 'category',
                         labels: heatmapData.labels,
-                        title: { display: true, text: 'تغییر در هزینه ها', font: { size: 14, weight: 'bold', family: 'Vazirmatn' } },
-                        grid: { display: false },
+                        title: {
+                            display: true,
+                            text: 'تغییر در هزینه ها',
+                            font: {size: 14, weight: 'bold', family: 'Vazirmatn'}
+                        },
+                        grid: {display: false},
                     },
                     y: {
                         type: 'category',
                         labels: heatmapData.datasets.map(d => d.label).reverse(),
-                        title: { display: true, text: 'تغییر در درآمدها', font: { size: 14, weight: 'bold', family: 'Vazirmatn' } },
-                        grid: { display: false },
+                        title: {
+                            display: true,
+                            text: 'تغییر در درآمدها',
+                            font: {size: 14, weight: 'bold', family: 'Vazirmatn'}
+                        },
+                        grid: {display: false},
                         offset: true,
                     }
                 },
                 plugins: {
-                    legend: { display: false },
+                    legend: {display: false},
                     tooltip: {
-                        bodyFont: { family: 'Vazirmatn' },
-                        titleFont: { family: 'Vazirmatn' },
+                        bodyFont: {family: 'Vazirmatn'},
+                        titleFont: {family: 'Vazirmatn'},
                         callbacks: {
                             title: () => '',
                             label: (context) => {
@@ -798,30 +1098,41 @@
 
         // --- THEME TOGGLER SCRIPT ---
         lucide.createIcons();
-
         // Define constants and functions that depend on the DOM after it's ready
         const themeToggleBtn = document.getElementById('theme-toggle');
         const themeIconSun = document.getElementById('theme-icon-sun');
         const themeIconMoon = document.getElementById('theme-icon-moon');
         const docElement = document.documentElement;
-
         const allCharts = {
             apex: [cashFlowChart, revenueOpexChart, breakevenLineChart, capexChart],
             chartjs: [newRoadmapChart, sensitivityHeatmap]
         };
-        
+
         function getApexThemeOptions(isDark) {
             const textColor = isDark ? '#e2e8f0' : '#334155';
             return {
-                theme: { mode: isDark ? 'dark' : 'light' },
-                chart: { 
-                    foreColor: textColor,
-                    background: 'transparent'
+                theme: {mode: isDark ? 'dark' : 'light'},
+                chart: {foreColor: textColor, background: 'transparent'},
+                xaxis: {
+                    title: {style: {color: textColor, fontFamily: 'Vazirmatn'}},
+                    labels: {style: {fontFamily: 'Vazirmatn'}}
                 },
-                xaxis: { title: { style: { color: textColor, fontFamily: 'Vazirmatn' } }, labels: { style: { fontFamily: 'Vazirmatn' } } },
-                yaxis: [{ title: { style: { color: textColor, fontFamily: 'Vazirmatn' } }, labels: { style: { fontFamily: 'Vazirmatn' } } }],
-                legend: { labels: { colors: [textColor] }},
-                plotOptions: { pie: { donut: { labels: { total: { color: textColor }, value: { color: textColor } } } } }
+                yaxis: [{
+                    title: {style: {color: textColor, fontFamily: 'Vazirmatn'}},
+                    labels: {style: {fontFamily: 'Vazirmatn'}}
+                }],
+                legend: {labels: {colors: [textColor]}},
+                plotOptions: {
+                    pie: {
+                        donut: {
+                            labels: {
+                                name: { color: textColor },
+                                value: { color: textColor },
+                                total: {color: textColor},
+                            }
+                        }
+                    }
+                }
             };
         }
 
@@ -831,34 +1142,29 @@
             return {
                 scales: {
                     x: {
-                        ticks: { color: textColor, font: {family: 'Vazirmatn'} },
-                        grid: { color: gridColor },
-                        title: { color: textColor, font: { family: 'Vazirmatn' } }
+                        ticks: {color: textColor, font: {family: 'Vazirmatn'}},
+                        grid: {color: gridColor},
+                        title: {color: textColor, font: {family: 'Vazirmatn'}}
                     },
                     y: {
-                        ticks: { color: textColor, font: {family: 'Vazirmatn'} },
-                        grid: { color: gridColor },
-                        title: { color: textColor, font: { family: 'Vazirmatn' } }
+                        ticks: {color: textColor, font: {family: 'Vazirmatn'}},
+                        grid: {color: gridColor},
+                        title: {color: textColor, font: {family: 'Vazirmatn'}}
                     }
                 },
             };
         }
 
         function updateChartsTheme(isDark) {
-            // Update general theme for all ApexCharts
             const apexOptions = getApexThemeOptions(isDark);
             allCharts.apex.forEach(chart => {
-                chart.updateOptions(apexOptions);
+                if (chart === breakevenLineChart) {
+                    chart.updateOptions({...apexOptions, annotations: getBreakevenAnnotations(isDark)});
+                } else {
+                    chart.updateOptions(apexOptions);
+                }
             });
-            
-            // Separately update only the annotations for the breakeven chart
-            if (breakevenLineChart) {
-                 breakevenLineChart.updateOptions({
-                    annotations: getBreakevenAnnotations(isDark)
-                });
-            }
 
-            // Update Chart.js charts
             const chartJsOptions = getChartJsThemeOptions(isDark);
             allCharts.chartjs.forEach(chart => {
                 Object.assign(chart.options.scales.x, chartJsOptions.scales.x);
@@ -886,7 +1192,6 @@
             const isCurrentlyDark = docElement.classList.contains('dark');
             setTheme(!isCurrentlyDark);
         });
-
         // Set initial theme
         const savedTheme = localStorage.getItem('theme');
         const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -896,7 +1201,6 @@
             setTheme(false);
         }
     });
-
 </script>
 </body>
 </html>
