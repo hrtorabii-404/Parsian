@@ -296,6 +296,45 @@
             <p class="text-xs text-slate-400 mt-1">میلیارد ریال</p>
         </div>
     </div>
+
+    <!-- New Full-Width CAPEX Section -->
+    <div class="mb-8">
+        <div class="card">
+            <h2 class="text-xl font-semibold text-slate-700 mb-4">ترکیب سرمایه‌گذاری ثابت (CAPEX)</h2>
+            <div id="capex-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                <div class="w-full order-2 md:order-1">
+                    <h3 class="text-lg font-semibold text-slate-700 mb-3">تفکیک هزینه‌ها</h3>
+                    <div class="overflow-x-auto">
+                        <table id="capex-table" class="w-full text-sm text-right text-slate-600">
+                            <thead class="text-xs text-slate-700 uppercase bg-slate-100">
+                            <tr>
+                                <th class="px-2 py-2 font-semibold">شرح هزینه</th>
+                                <th class="px-2 py-2 font-semibold">مبلغ</th>
+                                <th class="px-2 py-2 font-semibold">درصد</th>
+                            </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-200">
+                            <!-- Rows will be populated by script -->
+                            </tbody>
+                            <tfoot class="bg-slate-100 font-bold">
+                            <tr data-index="total">
+                                <td class="px-2 py-2">جمع کل</td>
+                                <td class="px-2 py-2">۷۴۰.۰</td>
+                                <td class="px-2 py-2">۱۰۰٪</td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                <div class="w-full order-1 md:order-2">
+                    <div id="capexChartContainer" class="relative min-h-[300px]">
+                        <div id="capexChart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Main Dashboard Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div class="lg:col-span-2 space-y-8">
@@ -314,40 +353,6 @@
             </div>
         </div>
         <div class="lg:col-span-1 space-y-8">
-            <div class="card">
-                <h2 class="text-xl font-semibold text-slate-700 mb-4">ترکیب سرمایه‌گذاری ثابت (CAPEX)</h2>
-                <div id="capex-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-                    <div class="w-full order-2 md:order-1">
-                        <h3 class="text-lg font-semibold text-slate-700 mb-3">تفکیک هزینه‌ها</h3>
-                        <div class="overflow-x-auto">
-                            <table id="capex-table" class="w-full text-sm text-right text-slate-600">
-                                <thead class="text-xs text-slate-700 uppercase bg-slate-100">
-                                <tr>
-                                    <th class="px-2 py-2 font-semibold">شرح هزینه</th>
-                                    <th class="px-2 py-2 font-semibold">مبلغ</th>
-                                    <th class="px-2 py-2 font-semibold">درصد</th>
-                                </tr>
-                                </thead>
-                                <tbody class="divide-y divide-slate-200">
-                                <!-- Rows will be populated by script -->
-                                </tbody>
-                                <tfoot class="bg-slate-100 font-bold">
-                                <tr data-index="total">
-                                    <td class="px-2 py-2">جمع کل</td>
-                                    <td class="px-2 py-2">۷۴۰.۰</td>
-                                    <td class="px-2 py-2">۱۰۰٪</td>
-                                </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="w-full order-1 md:order-2">
-                        <div id="capexChartContainer" class="relative min-h-[300px]">
-                            <div id="capexChart"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div class="card">
                 <h2 class="text-xl font-semibold text-slate-700 mb-4">نقشه راه زمانی پروژه</h2>
                 <div style="height:300px;"><canvas id="newRoadmapChart"></canvas></div>
