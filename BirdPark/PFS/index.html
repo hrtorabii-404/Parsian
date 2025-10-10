@@ -213,6 +213,25 @@
             margin-left: 8px;
             flex-shrink: 0;
         }
+
+        /* Neon Divider for Footer */
+        .neon-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #38bdf8, #818cf8, #38bdf8, transparent);
+            background-size: 200% 100%;
+            box-shadow: 0 0 5px #38bdf8, 0 0 10px #38bdf8, 0 0 15px #818cf8, 0 0 20px #818cf8;
+            animation: animate-neon-divider 4s linear infinite;
+            border-radius: 1px;
+        }
+
+        @keyframes animate-neon-divider {
+            0% {
+                background-position: 150% 0;
+            }
+            100% {
+                background-position: -150% 0;
+            }
+        }
     </style>
 </head>
 <body class="p-4 md:p-8 bg-slate-100 transition-colors duration-300">
@@ -573,6 +592,32 @@
             </div>
         </section>
     </div>
+
+    <!-- Animated Neon Footer -->
+    <footer class="mt-16 text-center">
+        <div class="neon-divider"></div>
+        <div class="relative inline-block group mt-6">
+            <p class="text-slate-500 dark:text-slate-400 text-sm">
+                تهیه شده در
+                <span class="font-semibold text-slate-600 dark:text-slate-300 cursor-pointer">
+                    مهندسین مشاور ایده پرداز محیط
+                </span>
+                </p>
+                 پاییز 1404
+            </p>
+            <!-- Hover Tooltip -->
+            <div class="absolute bottom-full mb-2 w-max max-w-xs left-1/2 -translate-x-1/2
+                        bg-slate-800 dark:bg-slate-700 text-white text-xs rounded-lg py-2 px-4
+                        opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none group-hover:pointer-events-auto
+                        shadow-lg text-right">
+                <p class="font-bold">تحلیل و طراحی: حمیدرضا ترابی</p>
+                <p class="mt-1 font-mono" dir="ltr">hr.torabii@gmail.com</p>
+                <div class="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0
+                            border-x-8 border-x-transparent
+                            border-t-8 border-t-slate-800 dark:border-t-slate-700"></div>
+            </div>
+        </div>
+    </footer>
 </div>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
