@@ -213,25 +213,6 @@
             margin-left: 8px;
             flex-shrink: 0;
         }
-
-        /* Neon Divider for Footer */
-        .neon-divider {
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #38bdf8, #818cf8, #38bdf8, transparent);
-            background-size: 200% 100%;
-            box-shadow: 0 0 5px #38bdf8, 0 0 10px #38bdf8, 0 0 15px #818cf8, 0 0 20px #818cf8;
-            animation: animate-neon-divider 4s linear infinite;
-            border-radius: 1px;
-        }
-
-        @keyframes animate-neon-divider {
-            0% {
-                background-position: 150% 0;
-            }
-            100% {
-                background-position: -150% 0;
-            }
-        }
     </style>
 </head>
 <body class="p-4 md:p-8 bg-slate-100 transition-colors duration-300">
@@ -286,22 +267,22 @@
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-8">
         <div class="card text-center">
             <p class="text-slate-500 text-sm">خالص ارزش فعلی (NPV)</p>
-            <p class="text-2xl font-bold text-green-600 mt-2">۴.۹</p>
+            <p class="text-2xl font-bold text-green-600 mt-2">۰.۱+</p>
             <p class="text-xs text-slate-400 mt-1">میلیارد ریال</p>
         </div>
         <div class="card text-center">
             <p class="text-slate-500 text-sm">نرخ بازده داخلی (IRR)</p>
-            <p class="text-2xl font-bold text-blue-600 mt-2">۴۰.۱۵٪</p>
+            <p class="text-2xl font-bold text-blue-600 mt-2">۴۰.۰۰٪</p>
             <p class="text-xs text-slate-400 mt-1">برابر هزینه سرمایه</p>
         </div>
         <div class="card text-center">
             <p class="text-slate-500 text-sm">بازگشت سرمایه (PP)</p>
-            <p class="text-2xl font-bold text-orange-600 mt-2">۳.۶۲</p>
+            <p class="text-2xl font-bold text-orange-600 mt-2">۴.۰</p>
             <p class="text-xs text-slate-400 mt-1">سال</p>
         </div>
         <div class="card text-center">
             <p class="text-slate-500 text-sm">بازگشت سود (DPBP)</p>
-            <p class="text-2xl font-bold text-amber-600 mt-2">۱۸.۳۵</p>
+            <p class="text-2xl font-bold text-amber-600 mt-2">۱۸.۹</p>
             <p class="text-xs text-slate-400 mt-1">سال</p>
         </div>
         <div class="card text-center">
@@ -311,49 +292,10 @@
         </div>
         <div class="card text-center">
             <p class="text-slate-500 text-sm">سرمایه‌گذاری ثابت</p>
-            <p class="text-2xl font-bold text-indigo-600 mt-2">745</p>
+            <p class="text-2xl font-bold text-indigo-600 mt-2">۷۴۰</p>
             <p class="text-xs text-slate-400 mt-1">میلیارد ریال</p>
         </div>
     </div>
-
-    <!-- New Full-Width CAPEX Section -->
-    <div class="mb-8">
-        <div class="card">
-            <h2 class="text-xl font-semibold text-slate-700 mb-4">ترکیب سرمایه‌گذاری ثابت (CAPEX)</h2>
-            <div id="capex-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-                <div class="w-full order-2 md:order-1">
-                    <h3 class="text-lg font-semibold text-slate-700 mb-3">تفکیک هزینه‌ها</h3>
-                    <div class="overflow-x-auto">
-                        <table id="capex-table" class="w-full text-sm text-right text-slate-600">
-                            <thead class="text-xs text-slate-700 uppercase bg-slate-100">
-                            <tr>
-                                <th class="px-2 py-2 font-semibold">شرح هزینه</th>
-                                <th class="px-2 py-2 font-semibold">مبلغ</th>
-                                <th class="px-2 py-2 font-semibold">درصد</th>
-                            </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-200">
-                            <!-- Rows will be populated by script -->
-                            </tbody>
-                            <tfoot class="bg-slate-100 font-bold">
-                            <tr data-index="total">
-                                <td class="px-2 py-2">جمع</td>
-                                <td class="px-2 py-2">745.0</td>
-                                <td class="px-2 py-2">۱۰۰٪</td>
-                            </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                </div>
-                <div class="w-full order-1 md:order-2">
-                    <div id="capexChartContainer" class="relative min-h-[300px]">
-                        <div id="capexChart"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Main Dashboard Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div class="lg:col-span-2 space-y-8">
@@ -372,6 +314,40 @@
             </div>
         </div>
         <div class="lg:col-span-1 space-y-8">
+            <div class="card">
+                <h2 class="text-xl font-semibold text-slate-700 mb-4">ترکیب سرمایه‌گذاری ثابت (CAPEX)</h2>
+                <div id="capex-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                    <div class="w-full order-2 md:order-1">
+                        <h3 class="text-lg font-semibold text-slate-700 mb-3">تفکیک هزینه‌ها</h3>
+                        <div class="overflow-x-auto">
+                            <table id="capex-table" class="w-full text-sm text-right text-slate-600">
+                                <thead class="text-xs text-slate-700 uppercase bg-slate-100">
+                                <tr>
+                                    <th class="px-2 py-2 font-semibold">شرح هزینه</th>
+                                    <th class="px-2 py-2 font-semibold">مبلغ</th>
+                                    <th class="px-2 py-2 font-semibold">درصد</th>
+                                </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-200">
+                                <!-- Rows will be populated by script -->
+                                </tbody>
+                                <tfoot class="bg-slate-100 font-bold">
+                                <tr data-index="total">
+                                    <td class="px-2 py-2">جمع کل</td>
+                                    <td class="px-2 py-2">۷۴۰.۰</td>
+                                    <td class="px-2 py-2">۱۰۰٪</td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="w-full order-1 md:order-2">
+                        <div id="capexChartContainer" class="relative min-h-[300px]">
+                            <div id="capexChart"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="card">
                 <h2 class="text-xl font-semibold text-slate-700 mb-4">نقشه راه زمانی پروژه</h2>
                 <div style="height:300px;"><canvas id="newRoadmapChart"></canvas></div>
@@ -405,7 +381,7 @@
                     </tr>
                     <tr>
                         <td class="px-4 py-2">۱</td>
-                        <td class="px-4 py-2">رستوران سلفین</td>
+                        <td class="px-4 py-2">رستوران سلین</td>
                         <td class="px-4 py-2">۷۵</td>
                         <td class="px-4 py-2"><span
                                 class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">فعال</span>
@@ -416,7 +392,7 @@
                         <td class="px-4 py-2">رستوران فاز یک</td>
                         <td class="px-4 py-2">۵۰۰</td>
                         <td class="px-4 py-2"><span
-                                class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">غیرفعال</span>
+                                class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">غیرفعال - نیازمند سرمایه‌گذاری</span>
                         </td>
                     </tr>
                     <tr>
@@ -424,7 +400,7 @@
                         <td class="px-4 py-2">سالن گرمسیری</td>
                         <td class="px-4 py-2">۱,۰۰۰</td>
                         <td class="px-4 py-2"><span
-                                class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">فعال</span>
+                                class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">فعال - نیازمند سرمایه‌گذاری</span>
                         </td>
                     </tr>
                     <tr>
@@ -440,7 +416,7 @@
                         <td class="px-4 py-2">غرفه‌های خروجی</td>
                         <td class="px-4 py-2">۳۰۰</td>
                         <td class="px-4 py-2"><span
-                                class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">غیرفعال</span>
+                                class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">غیرفعال - نیازمند سرمایه‌گذاری</span>
                         </td>
                     </tr>
                     <tr>
@@ -464,7 +440,7 @@
                         <td class="px-4 py-2">رستوران فاز دو</td>
                         <td class="px-4 py-2">۴۰۰</td>
                         <td class="px-4 py-2"><span
-                                class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">غیرفعال</span>
+                                class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">غیرفعال - نیازمند سرمایه‌گذاری</span>
                         </td>
                     </tr>
                     <tr>
@@ -504,50 +480,50 @@
                         <td rowspan="3" class="border p-2 align-middle bg-slate-50 font-semibold">درآمدها</td>
                         <td class="border p-2">۱۰٪-</td>
                         <td class="border p-2 heatmap-negative">-۷۳.۹</td>
-                        <td class="border p-2 heatmap-negative">۳۷.۷۴٪</td>
+                        <td class="border p-2 heatmap-negative">۳۷.۶۰٪</td>
                     </tr>
                     <tr>
                         <td class="border p-2 font-semibold">پایه</td>
-                        <td class="border p-2 heatmap-base">۴.۹</td>
-                        <td class="border p-2 heatmap-base">۴۰.۱۵٪</td>
+                        <td class="border p-2 heatmap-base">۰.۱+</td>
+                        <td class="border p-2 heatmap-base">۴۰.۰۰٪</td>
                     </tr>
                     <tr>
                         <td class="border p-2">۱۰٪+</td>
-                        <td class="border p-2 heatmap-positive">۸۳.۷</td>
-                        <td class="border p-2 heatmap-positive">۴۲.۴۹٪</td>
+                        <td class="border p-2 heatmap-positive">۷۴.۱+</td>
+                        <td class="border p-2 heatmap-positive">۴۲.۴۵٪</td>
                     </tr>
                     <tr class="bg-slate-50">
                         <td rowspan="3" class="border p-2 align-middle font-semibold">هزینه (OPEX)</td>
                         <td class="border p-2">۱۰٪+</td>
                         <td class="border p-2 heatmap-negative">-۷۳.۹</td>
-                        <td class="border p-2 heatmap-negative">۳۷.۷۴٪</td>
+                        <td class="border p-2 heatmap-negative">۳۷.۶۰٪</td>
                     </tr>
                     <tr class="bg-slate-50">
                         <td class="border p-2 font-semibold">پایه</td>
-                        <td class="border p-2 heatmap-base">۴.۹</td>
-                        <td class="border p-2 heatmap-base">۴۰.۱۵٪</td>
+                        <td class="border p-2 heatmap-base">۰.۱+</td>
+                        <td class="border p-2 heatmap-base">۴۰.۰۰٪</td>
                     </tr>
                     <tr class="bg-slate-50">
                         <td class="border p-2">۱۰٪-</td>
-                        <td class="border p-2 heatmap-positive">۸۳.۷</td>
-                        <td class="border p-2 heatmap-positive">۴۲.۴۹٪</td>
+                        <td class="border p-2 heatmap-positive">۷۴.۱+</td>
+                        <td class="border p-2 heatmap-positive">۴۲.۴۵٪</td>
                     </tr>
                     <tr>
                         <td rowspan="3" class="border p-2 align-middle bg-slate-50 font-semibold">سرمایه‌گذاری (CAPEX)
                         </td>
                         <td class="border p-2">۱۰٪+</td>
-                        <td class="border p-2 heatmap-negative">-۷۳.۴</td>
-                        <td class="border p-2 heatmap-negative">۳۷.۹۶٪</td>
+                        <td class="border p-2 heatmap-negative">-۷۳.۹</td>
+                        <td class="border p-2 heatmap-negative">۳۷.۶۰٪</td>
                     </tr>
                     <tr>
                         <td class="border p-2 font-semibold">پایه</td>
-                        <td class="border p-2 heatmap-base">۴.۹</td>
-                        <td class="border p-2 heatmap-base">۴۰.۱۵٪</td>
+                        <td class="border p-2 heatmap-base">۰.۱+</td>
+                        <td class="border p-2 heatmap-base">۴۰.۰۰٪</td>
                     </tr>
                     <tr>
                         <td class="border p-2">۱۰٪-</td>
-                        <td class="border p-2 heatmap-positive">۸۳.۲</td>
-                        <td class="border p-2 heatmap-positive">۴۲.۷۵٪</td>
+                        <td class="border p-2 heatmap-positive">۷۴.۱+</td>
+                        <td class="border p-2 heatmap-positive">۴۲.۴۵٪</td>
                     </tr>
                     </tbody>
                 </table>
@@ -574,50 +550,24 @@
                 <div class="card text-center border-t-4 border-green-500">
                     <p class="text-4xl mb-2"></p>
                     <h3 class="text-xl font-bold text-green-600">بهترین سناریو</h3>
-                    <p class="text-4xl font-black text-green-500 my-2">۴۹.۲۱٪</p>
+                    <p class="text-4xl font-black text-green-500 my-2">۴۵.۳٪</p>
                     <p class="text-slate-500 text-sm">۲۰٪ کاهش هزینه | ۲۰٪ افزایش درآمد</p>
                 </div>
                 <div class="card text-center border-t-4 border-blue-500">
                     <p class="text-4xl mb-2"></p>
                     <h3 class="text-xl font-bold text-blue-600">سناریوی پایه</h3>
-                    <p class="text-4xl font-black text-blue-500 my-2">۴۰.۱۵٪</p>
+                    <p class="text-4xl font-black text-blue-500 my-2">۴۰.۰٪</p>
                     <p class="text-slate-500 text-sm">بدون تغییر در هزینه و درآمد</p>
                 </div>
                 <div class="card text-center border-t-4 border-red-500">
                     <p class="text-4xl mb-2"></p>
                     <h3 class="text-xl font-bold text-red-600">بدترین سناریو</h3>
-                    <p class="text-4xl font-black text-red-500 my-2">۳۰.۸۹٪</p>
+                    <p class="text-4xl font-black text-red-500 my-2">۳۴.۲٪</p>
                     <p class="text-slate-500 text-sm">۲۰٪ افزایش هزینه | ۲۰٪ کاهش درآمد</p>
                 </div>
             </div>
         </section>
     </div>
-
-    <!-- Animated Neon Footer -->
-    <footer class="mt-16 text-center">
-        <div class="neon-divider"></div>
-        <div class="relative inline-block group mt-6">
-            <p class="text-slate-500 dark:text-slate-400 text-sm">
-                تهیه شده در
-                <span class="font-semibold text-slate-600 dark:text-slate-300 cursor-pointer">
-                    مهندسین مشاور ایده پرداز محیط
-                </span>
-                </p>
-                 پاییز 1404
-            </p>
-            <!-- Hover Tooltip -->
-            <div class="absolute bottom-full mb-2 w-max max-w-xs left-1/2 -translate-x-1/2
-                        bg-slate-800 dark:bg-slate-700 text-white text-xs rounded-lg py-2 px-4
-                        opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none group-hover:pointer-events-auto
-                        shadow-lg text-right">
-                <p class="font-bold">تحلیل و طراحی: حمیدرضا ترابی</p>
-                <p class="mt-1 font-mono" dir="ltr">hr.torabii@gmail.com</p>
-                <div class="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0
-                            border-x-8 border-x-transparent
-                            border-t-8 border-t-slate-800 dark:border-t-slate-700"></div>
-            </div>
-        </div>
-    </footer>
 </div>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -663,7 +613,7 @@
         // Cash Flow Chart
         const cashFlowData = {
             years: ['سال ۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹', '۱۰', '۱۱', '۱۲', '۱۳', '۱۴', '۱۵', '۱۶', '۱۷', '۱۸', '۱۹'],
-            fcf: [-783.3, 166.5, 199.8, 239.8, 287.7, 345.3, 414.3, 497.2, 596.6, 716.0, 859.1, 1031.0, 1237.2, 1484.6, 1781.5, 2137.8, 2565.4, 3078.5, 3694.2, 4527.3]
+            fcf: [-740.0, 156.4, 187.7, 225.2, 270.2, 324.3, 389.1, 466.9, 560.3, 672.4, 806.9, 968.3, 1161.9, 1394.3, 1673.2, 2007.8, 2409.3, 2891.2, 3469.5, 4163.3]
         };
         const cashFlowChart = new ApexCharts(document.querySelector("#cashFlowChart"), {
             ...chartOptions,
@@ -710,8 +660,8 @@
         // Revenue vs OPEX Chart
         const revenueOpexData = {
             years: ['۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹', '۱۰', '۱۱', '۱۲', '۱۳', '۱۴', '۱۵', '۱۶', '۱۷', '۱۸', '۱۹'],
-            revenue: [1061.8, 1229.4, 1423.8, 1649.3, 1911.2, 2215.1, 2568.1, 2978.1, 3454.7, 4008.7, 4653.0, 5402.5, 6274.7, 7290.1, 8472.7, 9850.5, 11456.4, 13328.8, 15529.5],
-            opex: [895.3, 1029.6, 1184.0, 1361.6, 1565.9, 1800.8, 2070.9, 2381.5, 2738.7, 3149.6, 3622.0, 4165.3, 4790.1, 5508.6, 6334.9, 7285.1, 8377.9, 9634.6, 11079.7]
+            revenue: [387.8, 453.8, 531.3, 622.1, 729.0, 854.4, 1002.0, 1175.6, 1380.2, 1620.8, 1904.3, 2238.2, 2631.9, 3096.4, 3644.4, 4291.5, 5054.6, 5955.9, 6947.0],
+            opex: [231.4, 266.1, 306.1, 351.9, 404.7, 465.3, 535.1, 615.3, 707.8, 813.9, 936.0, 1076.3, 1237.6, 1423.2, 1636.6, 1882.2, 2163.4, 2486.4, 2859.0]
         };
         const revenueOpexChart = new ApexCharts(document.querySelector("#revenueOpexChart"), {
             ...chartOptions,
@@ -748,28 +698,24 @@
 
         // Breakeven Line Chart
         const breakevenData = {
-            years: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19],
-            cumulative_fcf: [-783.3, -616.8, -417.0, -177.2, 110.5, 455.8, 870.1, 1367.3, 1963.9, 2679.9, 3539.0, 4570.0, 5807.2, 7291.8, 9073.3, 11211.1, 13776.5, 16855.0, 20549.2, 25076.5],
-            cumulative_npv: [-783.3, -664.4, -562.4, -475.0, -400.2, -335.9, -280.9, -233.8, -193.3, -158.7, -129.0, -103.5, -81.7, -63.0, -47.0, -33.2, -21.4, -11.3, -2.7, 4.9]
+            years: ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹', '۱۰', '۱۱', '۱۲', '۱۳', '۱۴', '۱۵', '۱۶', '۱۷', '۱۸', '۱۹'],
+            cumulative_fcf: [-740.0, -583.6, -395.9, -170.7, 99.5, 423.8, 812.9, 1279.8, 1840.1, 2512.5, 3319.4, 4287.7, 5449.6, 6843.9, 8517.1, 10524.9, 12934.2, 15825.4, 19294.9, 23458.2],
+            cumulative_npv: [-740.0, -628.3, -532.6, -450.5, -380.2, -319.9, -268.2, -223.9, -185.9, -153.4, -125.5, -101.6, -81.1, -63.5, -48.4, -35.5, -24.5, -15.0, -6.9, 0.1]
         };
-        
-        const cumulativeFcfSeries = breakevenData.cumulative_fcf.map((val, i) => [breakevenData.years[i], val]);
-        const cumulativeNpvSeries = breakevenData.cumulative_npv.map((val, i) => [breakevenData.years[i], val]);
-
 
         function getBreakevenAnnotations(isDark) {
             const labelStyle = {color: '#fff', background: '#f97316', fontFamily: 'Vazirmatn'};
             return {
                 xaxis: [
                     {
-                        x: 3.62,
+                        x: 4, // Numerical index for Year 4
                         borderColor: '#f97316',
-                        label: {style: labelStyle, text: 'PP: 3.62 سال'}
+                        label: {style: labelStyle, text: 'PP: 4.0 سال'}
                     },
                     {
-                        x: 18.35,
+                        x: 19, // Numerical index for Year 19
                         borderColor: '#0891b2',
-                        label: {style: {...labelStyle, background: '#0891b2'}, text: 'DPBP: 18.35 سال'}
+                        label: {style: {...labelStyle, background: '#0891b2'}, text: 'DPBP: 18.9 سال'}
                     }
                 ],
                 yaxis: [{
@@ -788,11 +734,8 @@
             ...chartOptions,
             series: [{
                 name: 'جریان نقدی تجمعی (برای PP)',
-                data: cumulativeFcfSeries
-            }, {
-                name: 'خالص ارزش فعلی تجمعی (برای DPBP)',
-                data: cumulativeNpvSeries
-            }],
+                data: breakevenData.cumulative_fcf
+            }, {name: 'خالص ارزش فعلی تجمعی (برای DPBP)', data: breakevenData.cumulative_npv}],
             chart: {
                 ...chartOptions.chart,
                 height: 350,
@@ -800,17 +743,12 @@
             },
             annotations: getBreakevenAnnotations(false), // Initial render for light mode
             xaxis: {
-                type: 'numeric',
+                type: 'category',
                 title: {
                     text: 'سال پروژه',
                     style: {fontFamily: 'Vazirmatn', fontWeight: 400}
                 },
-                 tickAmount: 10,
-                 labels: {
-                    formatter: function(val) {
-                        return val.toFixed(0);
-                    }
-                 }
+                categories: breakevenData.years
             },
             yaxis: [{
                 title: {
@@ -830,16 +768,8 @@
         // START: CAPEX Chart Interactivity (REWRITTEN LOGIC)
         // ===================================================================
         const capexData = {
-            series: [120.0, 25.0, 180.0, 130.0, 90.0, 80.0, 120.0],
-            labels: [
-                'تجهیز ساختمان بخش شمالی باغ برای تبدیل به کلینیک پرندگان',
-                'اجرای پوشش پرتگاه و رمپ گذر توان یابان',
-                'بازسازی اساسی و راه اندازی رستوران‌های باغ پرندگان',
-                'ایجاد بخش گرمسیری تخصصی در فاز 2',
-                'تغییر کاربری سالن گرمسیری فرسوده موجود به سالن خزندگان',
-                'بهسازی تور و کابل',
-                'بازسازی و ایمن سازی و توسعه قفس های موجود و ایجاد قفس های جدید برای ورود گونه های جدید حیات وحش در قالب استاندارد شهروندان'
-            ]
+            series: [365.0, 100.0, 75.0, 65.0, 50.0, 30.0, 23.5, 31.5],
+            labels: ['ابنیه و ساخت‌وساز', 'محوطه‌سازی', 'تأسیسات', 'باغ خزندگان', 'پذیرایی', 'کلینیک', 'قبل بهره‌برداری', 'پیش‌بینی نشده']
         };
         const capexColors = ['#008FFB', '#00E396', '#FEB019', '#FF4560', '#775DD0', '#546E7A', '#26a69a', '#D10CE8'];
         const totalCapex = capexData.series.reduce((a, b) => a + b, 0);
@@ -1007,7 +937,7 @@
         const roadmapChartData = {
             labels: ['دوران بهره\u200cبرداری', 'بازگشت سود و سرمایه', 'بازگشت سرمایه'],
             datasets: [{
-                data: [[0, 19], [0, 18.35], [0, 3.62]],
+                data: [[0, 19], [0, 18.9], [0, 4.0]],
                 backgroundColor: ['#2dd4bf', '#f97316', '#fbbf24'],
                 borderWidth: 1,
                 borderColor: '#fff',
@@ -1021,7 +951,7 @@
                 ctx.save();
                 chart.getDatasetMeta(0).data.forEach((datapoint, index) => {
                     const barData = chart.data.datasets[0].data[index];
-                    const label = `${barData[1].toFixed(2)} سال`;
+                    const label = `${barData[1].toFixed(1)} سال`;
                     const {x, y, width, height} = datapoint;
                     ctx.font = 'bold 12px Vazirmatn';
                     ctx.fillStyle = 'white';
@@ -1071,11 +1001,11 @@
         const heatmapData = {
             labels: ['-20%', '-10%', '0%', '+10%', '+20%'], // Cost Changes
             datasets: [
-                { label: '+20%', data: [49.21, 46.91, 44.79, 42.66, 40.42] },
-                { label: '+10%', data: [46.91, 44.61, 42.49, 40.36, 38.12] },
-                { label: '0%', data: [44.57, 42.27, 40.15, 38.02, 35.78] },
-                { label: '-10%', data: [42.16, 39.86, 37.74, 35.61, 33.37] },
-                { label: '-20%', data: [39.68, 37.38, 35.26, 33.13, 30.89] }
+                {label: '+20%', data: [45.3, 44.1, 42.9, 41.7, 40.5]},
+                {label: '+10%', data: [44.0, 42.9, 41.7, 40.6, 39.4]},
+                {label: '0%', data: [42.6, 41.3, 40.0, 38.8, 37.5]},
+                {label: '-10%', data: [41.1, 39.8, 38.5, 37.1, 35.8]},
+                {label: '-20%', data: [39.5, 38.2, 36.8, 35.5, 34.2]}
             ]
         };
         const matrixData = heatmapData.datasets.flatMap((dataset) =>
@@ -1098,7 +1028,7 @@
                     }
                     ctx.textAlign = 'center';
                     ctx.textBaseline = 'middle';
-                    ctx.fillText(`${value.toFixed(2)}%`, x + width / 2, y + height / 2);
+                    ctx.fillText(`${value}%`, x + width / 2, y + height / 2);
                 });
                 ctx.restore();
             }
@@ -1157,7 +1087,7 @@
                             title: () => '',
                             label: (context) => {
                                 const item = context.dataset.data[context.dataIndex];
-                                return [`نرخ بازده داخلی: ${item.v.toFixed(2)}%`, `تغییر درآمد: ${item.y}`, `تغییر هزینه: ${item.x}`];
+                                return [`نرخ بازده داخلی: ${item.v}%`, `تغییر درآمد: ${item.y}`, `تغییر هزینه: ${item.x}`];
                             }
                         }
                     }
