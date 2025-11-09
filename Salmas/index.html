@@ -5413,6 +5413,7 @@
 
     // نمایش بخش مربوطه
     function showSection(sectionId) {
+      window.scrollTo(0, 0);
       // مخفی کردن همه بخش‌ها
       document.querySelectorAll('.content-section').forEach(section => {
         section.classList.remove('active');
