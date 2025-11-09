@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اینفوگرافیک: طرح پدافند سایبری (طرح ۸)</title>
+    
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Load Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Load Vazirmatn Font (Clean Persian Font) -->
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Apply the Persian font */
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            scroll-behavior: smooth;
+            background-color: #f8fafc; /* gray-50 */
+        }
+
+        /* Custom style for the logical connection */
+        .highlight-box {
+            border-right: 4px solid #4f46e5; /* indigo-600 */
+            padding: 1rem 1.5rem 1rem 1rem;
+            background-color: #eef2ff; /* indigo-50 */
+            border-radius: 0 0.5rem 0.5rem 0;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Justification Card */
+        .justification-card {
+            background-color: #ffffff;
+            border-radius: 0.75rem; /* rounded-xl */
+            border-width: 1px;
+            border-color: #e5e7eb; /* gray-200 */
+            border-top-width: 4px;
+            padding: 1rem 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        }
+        
+        /* Governance Card */
+        .governance-card {
+            background-color: #f9fafb; /* gray-50 */
+            border: 1px solid #e5e7eb; /* gray-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1.5rem 1rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem; /* gap-2 */
+        }
+        .governance-card i {
+            font-size: 2.5rem; /* text-4xl */
+            color: #4f46e5; /* indigo-600 */
+        }
+
+        /* IT/OT Segregation Diagram */
+        .network-box {
+            border: 3px dashed #9ca3af; /* gray-400 */
+            border-radius: 0.75rem; /* rounded-xl */
+            padding: 1rem;
+            text-align: center;
+            width: 40%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem; /* gap-2 */
+        }
+        .it-network {
+            border-color: #ef4444; /* red-500 */
+            background-color: #fef2f2; /* red-50 */
+        }
+        .ot-network {
+            border-color: #22c55e; /* green-500 */
+            background-color: #f0fdf4; /* green-50 */
+        }
+        .air-gap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 20%;
+            text-align: center;
+        }
+        .air-gap-icon {
+            font-size: 3rem; /* text-5xl */
+            color: #4f46e5; /* indigo-600 */
+            line-height: 1;
+        }
+        
+        /* D-R-R Columns */
+        .drr-column {
+            background-color: #ffffff;
+            border-radius: 0.75rem; /* rounded-xl */
+            border-width: 1px;
+            border-color: #e5e7eb; /* gray-200 */
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .drr-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 0.5rem; /* gap-2 */
+            margin-bottom: 1rem; /* mb-4 */
+            padding-bottom: 1rem; /* pb-4 */
+            border-bottom: 2px solid #e5e7eb; /* gray-200 */
+        }
+        .drr-header i {
+            font-size: 3rem; /* text-5xl */
+        }
+        .drr-header-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 700; /* font-bold */
+        }
+
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-6xl mx-auto">
+
+        <!-- Header -->
+        <header class="text-center mb-10 p-6 bg-white rounded-lg shadow-lg">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800">بخش ششم: ارائه الگوی بومی و طرح‌های عملیاتی (فصل ۷)</h1>
+        </header>
+
+        <!-- Slide 30: Justification & Governance -->
+        <section id="slide-30-governance" class="mb-8">
+            <div class="p-6 md:p-8 bg-white rounded-lg shadow-md">
+                <h2 class="text-2xl md:text-3xl font-bold text-indigo-700 mb-6 text-center">
+                    💻 طرح عملیاتی ۸: طرح جامع پدافند سایبری
+                </h2>
+                
+                <!-- Logical Connection -->
+                <div class="highlight-box">
+                    <h3 class="text-xl font-bold mb-2 text-indigo-800">اتصال منطقی (گذار از طرح‌های قبلی)</h3>
+                    <p class="text-lg text-gray-700">
+                        «طرح‌های قبلی بر حفاظت "کالبدی" متمرکز بودند. این طرح، بر حفاظت از <strong>"لایه دیجیتال و کنترلی" (Digital & Control Layer)</strong> منطقه متمرکز است.»
+                    </p>
+                </div>
+
+                <!-- Technical Justification -->
+                <div class="mt-8">
+                    <h3 class="text-xl font-bold mb-4 text-blue-800">توجیه فنی (چرا این طرح حیاتی است؟)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="justification-card" style="border-top-color: #ef4444;"> <!-- red-500 -->
+                            <i class="fas fa-skull-crossbones text-4xl text-red-500 mb-3"></i>
+                            <h4 class="text-lg font-semibold mb-2">پاسخ به تهدید #۳</h4>
+                            <p class="text-gray-700">تهدید <strong>"سایبری"</strong> با امتیاز ۵.۷۵، به عنوان <strong>تهدید رتبه ۳</strong> منطقه شناسایی شد.</p>
+                        </div>
+                        <div class="justification-card" style="border-top-color: #f59e0b;"> <!-- amber-500 -->
+                            <i class="fas fa-bug-slash text-4xl text-amber-500 mb-3"></i>
+                            <h4 class="text-lg font-semibold mb-2">پاسخ به آسیب‌پذیری بحرانی</h4>
+                            <p class="text-gray-700">دارایی‌های "IT" (امتیاز ۶.۴۸) و "CCTV" (امتیاز ۶.۱۹) بالاترین آسیب‌پذیری را به دلیل <strong>"سطح حمله" (Attack Surface)</strong> گسترده نشان دادند.</p>
+                        </div>
+                        <div class="justification-card" style="border-top-color: #f97316;"> <!-- orange-500 -->
+                            <i class="fas fa-triangle-exclamation text-4xl text-orange-500 mb-3"></i>
+                            <h4 class="text-lg font-semibold mb-2">پاسخ به ریسک بالا</h4>
+                            <p class="text-gray-700">ریسک سایبری در دارایی‌های مدیریتی (امتیاز ۳۸۰.۶) در سطح <strong>"قابل توجه"</strong> ارزیابی شد.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Governance -->
+                <div class="mt-10">
+                    <h3 class="text-xl font-bold mb-6 text-blue-800">الزام فنی ۱: حاکمیت، مدیریت دارایی و ریسک (Governance & Risk)</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-5">
+                        <div class="governance-card">
+                            <i class="fas fa-gavel"></i>
+                            <span class="font-semibold">"کمیته پدافند سایبری"</span>
+                        </div>
+                        <div class="governance-card">
+                            <i class="fas fa-user-tie"></i>
+                            <span class="font-semibold">انتصاب "مدیر امنیت (CISO)"</span>
+                        </div>
+                        <div class="governance-card">
+                            <i class="fas fa-clipboard-list"></i>
+                            <span class="font-semibold">"فهرست جامع دارایی‌های IT و OT"</span>
+                        </div>
+                        <div class="governance-card">
+                            <i class="fas fa-user-secret"></i>
+                            <span class="font-semibold">"آزمون نفوذپذیری" (Pen Test) سالانه</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Connector Arrow -->
+        <div class="text-center my-8">
+            <i class="fas fa-arrow-down text-4xl text-gray-400 animate-bounce"></i>
+        </div>
+
+        <!-- Slide 31: Protection Requirements -->
+        <section id="slide-31-protection" class="mb-8">
+            <div class="p-6 md:p-8 bg-white rounded-lg shadow-md">
+                <h2 class="text-2xl md:text-3xl font-bold text-indigo-700 mb-6 text-center">
+                    🛡️ طرح ۸ (ادامه): الزامات فنی "حفاظت" (Protection)
+                </h2>
+                
+                <!-- Requirement 2: Secure Architecture (IT/OT) -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-bold mb-4 text-blue-800">الزام فنی ۲: معماری امن شبکه (جداسازی IT / OT)</h3>
+                    <p class="text-gray-600 mb-4">«بزرگترین آسیب‌پذیری، اتصال شبکه آلوده IT (اداری/اینترنت) به شبکه پاک OT (کنترل صنعتی) است. الزاماً باید تفکیک مطلق (Air-Gapping) یا حداقل جداسازی منطقی (با فایروال صنعتی و DMZ) برقرار شود.»</p>
+                    
+                    <!-- IT/OT Segregation Diagram -->
+                    <div class="flex items-center justify-center p-4 bg-gray-50 rounded-lg">
+                        <!-- IT Network (Unsafe) -->
+                        <div class="network-box it-network">
+                            <i class="fas fa-globe text-4xl text-red-600"></i>
+                            <strong class="text-red-700">شبکه IT (اداری)</strong>
+                            <span class="text-sm text-gray-700">(ایمیل، اینترنت، سرورها)</span>
+                            <span class="text-xs font-bold text-red-600">"سطح حمله بالا"</span>
+                        </div>
+                        
+                        <!-- Air Gap / Firewall -->
+                        <div class="air-gap">
+                            <i class="fas fa-fire-wall air-gap-icon"></i>
+                            <strong class="text-indigo-700">جداسازی</strong>
+                            <span class="text-xs font-bold text-indigo-700">(Air-Gap / DMZ)</span>
+                        </div>
+                        
+                        <!-- OT Network (Safe) -->
+                        <div class="network-box ot-network">
+                            <i class="fas fa-industry text-4xl text-green-600"></i>
+                            <strong class="text-green-700">شبکه OT (صنعتی)</strong>
+                            <span class="text-sm text-gray-700">(SCADA, PLC, HMI)</span>
+                            <span class="text-xs font-bold text-green-600">"محیط ایزوله"</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Other Protection Requirements -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Requirement 3: Access Control -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-4 text-blue-800">الزام فنی ۳: کنترل دسترسی</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start bg-gray-50 p-3 rounded-md">
+                                <i class="fas fa-key text-xl text-indigo-600 ml-3 mt-1"></i>
+                                <div><strong>احراز هویت چندعاملی (MFA):</strong> برای تمام دسترسی‌های مدیریتی (Admin Access) به سرورها و فایروال‌ها.</div>
+                            </li>
+                            <li class="flex items-start bg-gray-50 p-3 rounded-md">
+                                <i class="fab fa-usb text-xl text-red-600 ml-3 mt-1"></i>
+                                <div><strong>کنترل دسترسی فیزیکی (تهدید حافظه جانبی):</strong> الزام به <strong>"مسدودسازی فیزیکی پورت‌های USB"</strong> در HMIها و اتاق‌های کنترل صنعتی (OT).</div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Requirement 4: Endpoint Security -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-4 text-blue-800">الزام فنی ۴: امنیت نقاط پایانی و داده‌ها</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start bg-gray-50 p-3 rounded-md">
+                                <i class="fas fa-desktop text-xl text-indigo-600 ml-3 mt-1"></i>
+                                <div><strong>امنیت Endpoint:</strong> نصب سیستم‌های EDR (Endpoint Detection & Response) بر روی سرورهای اداری.</div>
+                            </li>
+                            <li class="flex items-start bg-gray-50 p-3 rounded-md">
+                                <i class="fas fa-camera-cctv text-xl text-indigo-600 ml-3 mt-1"></i>
+                                <div><strong>مدیریت وصله‌ها (Patch Management):</strong> برنامه مدون برای به‌روزرسانی فریم‌ور (Firmware) تجهیزات SCADA و دوربین‌های CCTV.</div>
+                            </li>
+                            <li class="flex items-start bg-gray-50 p-3 rounded-md">
+                                <i class="fas fa-file-shield text-xl text-indigo-600 ml-3 mt-1"></i>
+                                <div><strong>امنیت داده:</strong> الزام به رمزنگاری (Encryption) داده‌های حساس ذخیره‌شده و در حال انتقال (مانند تصاویر CCTV).</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Connector Arrow -->
+        <div class="text-center my-8">
+            <i class="fas fa-arrow-down text-4xl text-gray-400 animate-bounce"></i>
+        </div>
+
+        <!-- Slide 32: Detect, Respond, Recover -->
+        <section id="slide-32-drr" class="mb-8">
+            <div class="p-6 md:p-8 bg-white rounded-lg shadow-md">
+                <h2 class="text-2xl md:text-3xl font-bold text-indigo-700 mb-4 text-center">
+                    📡 طرح ۸ (ادامه): الزامات فنی "تشخیص، واکنش و بازیابی"
+                </h2>
+                <p class="text-center text-gray-600 text-lg mb-8">
+                    «ما فرض می‌کنیم حفاظت (اسلاید قبل) با شکست مواجه می‌شود (Assume Breach). این سه الزام، برنامه ما برای بعد از نفوذ است.»
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    
+                    <!-- 5. Detect -->
+                    <div class="drr-column">
+                        <div class="drr-header">
+                            <i class="fas fa-magnifying-glass-chart text-blue-600"></i>
+                            <span class="drr-header-title text-blue-800">۵. تشخیص (Detection)</span>
+                        </div>
+                        <ul class="list-disc list-outside pr-5 space-y-3 text-sm text-gray-700">
+                            <li><strong>مرکز SOC:</strong> الزام به ایجاد "مرکز عملیات امنیت (SOC)" (متمرکز یا برون‌سپاری) برای پایش ۲۴/۷ ترافیک IT و OT.</li>
+                            <li><strong>ابزارهای پایش:</strong> استقرار <strong>SIEM</strong> (مدیریت وقایع) برای تحلیل لاگ‌ها و <strong>IDS/IPS</strong> (تشخیص نفوذ) در ورودی شبکه SCADA.</li>
+                            <li><strong>شکار تهدید (Threat Hunting):</strong> جستجوی فعال نشانه‌های نفوذ (IoCs).</li>
+                        </ul>
+                    </div>
+
+                    <!-- 6. Respond -->
+                    <div class="drr-column">
+                        <div class="drr-header">
+                            <i class="fas fa-fire-extinguisher text-red-600"></i>
+                            <span class="drr-header-title text-red-800">۶. واکنش (Response)</span>
+                        </div>
+                        <ul class="list-disc list-outside pr-5 space-y-3 text-sm text-gray-700">
+                            <li><strong>تیم واکنش:</strong> تشکیل "تیم واکنش به حوادث سایبری (CSIRT)" در منطقه.</li>
+                            <li><strong>کتابچه عملیاتی (Playbooks):</strong> تدوین سناریوهای واکنش مشخص برای:</li>
+                            <ul class="list-['\2D'] pr-4 mt-1 space-y-1">
+                                <li>۱. حمله باج‌افزار (Ransomware)</li>
+                                <li>۲. حمله DDoS به ورودی‌ها</li>
+                                <li>۳. نفوذ به SCADA پست برق</li>
+                            </ul>
+                        </ul>
+                    </div>
+
+                    <!-- 7. Recover -->
+                    <div class="drr-column">
+                        <div class="drr-header">
+                            <i class="fas fa-box-archive text-green-600"></i>
+                            <span class="drr-header-title text-green-800">۷. بازیابی (Recovery)</span>
+                        </div>
+                        <ul class="list-disc list-outside pr-5 space-y-3 text-sm text-gray-700">
+                            <li><strong>پشتیبان‌گیری (Backup):</strong> الزام به تهیه <strong>"نسخه‌های پشتیبان آفلاین" (Offline/Immutable Backups)</strong> (اصل ۳-۲-۱) به صورت روزانه از داده‌های حیاتی.</li>
+                            <li><strong>تست بازیابی (DR Drills):</strong> الزام به تست‌های دوره‌ای بازیابی (Disaster Recovery Drills) برای اطمینان از تحقق RPO < ۱ ساعت (از طرح BCP).</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final Summary -->
+        <section id="summary" class="bg-gray-800 text-white p-6 md:p-8 rounded-lg shadow-lg mt-10">
+            <h2 class="text-2xl font-bold text-right mb-6 border-b-2 border-green-400 pb-2">جمع‌ بندی بخش طرح ۸ (پدافند سایبری)</h2>
+            <p class="mb-4 text-gray-200">«این سه اسلاید نشان می‌دهند که طرح پدافند سایبری ما:»</p>
+            <ul class="list-disc list-outside pr-6 space-y-2 text-green-300">
+                <li><strong>مبتنی بر ریسک (Risk-Based)</strong> است (مستقیماً به تهدید رتبه ۳ و آسیب‌پذیری‌های IT پاسخ می‌دهد).</li>
+                <li><strong>مبتنی بر استاندارد (Standard-Based)</strong> است (بر اساس IEC 62443 و مفاهیم SOC, SIEM, MFA عمل می‌کند).</li>
+                <li><strong>جامع (Holistic)</strong> است (هر ۵ حوزه حاکمیت، حفاظت، تشخیص، واکنش و بازیابی را پوشش می‌دهد).</li>
+                <li><strong>فنی و اجرایی (Actionable)</strong> است (الزامات دقیقی مانند Air-Gapping و مسدودسازی USB را مشخص می‌کند).</li>
+            </ul>
+        </section>
+
+    </div> <!-- End max-w-6xl container -->
+
+</body>
+</html>
