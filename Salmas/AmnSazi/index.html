@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اینفوگرافیک: طرح امن‌سازی و تاب‌آوری (طرح ۳)</title>
+    
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Load Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Load Vazirmatn Font (Clean Persian Font) -->
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Apply the Persian font */
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            scroll-behavior: smooth;
+            background-color: #f8fafc; /* gray-50 */
+        }
+
+        /* Custom style for the logical connection */
+        .highlight-box {
+            border-right: 4px solid #16a34a; /* green-600 */
+            padding: 1rem 1.5rem 1rem 1rem;
+            background-color: #f0fdf4; /* green-50 */
+            border-radius: 0 0.5rem 0.5rem 0;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Justification Cards */
+        .justification-card {
+            background-color: #f9fafb; /* gray-50 */
+            border-radius: 0.75rem; /* rounded-xl */
+            border-width: 1px;
+            border-color: #e5e7eb; /* gray-200 */
+            border-top-width: 4px;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        /* Pillar Card */
+        .pillar-card {
+            background-color: #ffffff;
+            border-radius: 0.5rem; /* rounded-lg */
+            border: 1px solid #e5e7eb; /* gray-200 */
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        .pillar-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+        }
+        .pillar-card i {
+            font-size: 2.5rem; /* text-4xl */
+            margin-bottom: 0.75rem; /* mb-3 */
+        }
+        .pillar-card-title {
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 600; /* font-semibold */
+        }
+        
+        /* Requirement Group */
+        .requirement-group {
+            background-color: #ffffff;
+            border-radius: 0.75rem; /* rounded-xl */
+            border-width: 1px;
+            border-color: #e5e7eb; /* gray-200 */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem; /* mb-6 */
+        }
+        .requirement-header {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e5e7eb; /* gray-200 */
+        }
+        .requirement-header i {
+            font-size: 1.875rem; /* text-3xl */
+            margin-left: 1rem;
+        }
+        .requirement-header-title {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 700; /* font-bold */
+        }
+        .requirement-body {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem; /* space-y-5 */
+        }
+        .requirement-item {
+            padding-right: 1.25rem; /* pr-5 */
+            border-right: 3px solid #d1d5db; /* border-gray-300 */
+        }
+        .requirement-item strong {
+            font-size: 1rem; /* text-base */
+            font-weight: 600; /* font-semibold */
+            color: #1f2937; /* gray-800 */
+        }
+        .requirement-item p {
+            font-size: 0.875rem; /* text-sm */
+            color: #4b5563; /* gray-600 */
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-6xl mx-auto">
+
+        <!-- Header -->
+        <header class="text-center mb-10 p-6 bg-white rounded-lg shadow-lg">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800">بخش ششم: ارائه الگوی بومی و طرح‌های عملیاتی (فصل ۷)</h1>
+        </header>
+
+        <!-- Slide 25: Hardening Concepts -->
+        <section id="slide-25-hardening" class="mb-8">
+            <div class="p-6 md:p-8 bg-white rounded-lg shadow-md">
+                <h2 class="text-2xl md:text-3xl font-bold text-green-700 mb-6 text-center">
+                    🏗️ طرح عملیاتی ۳: اَمن‌سازی اضطراری و تاب‌آوری
+                </h2>
+                
+                <!-- Technical Goal -->
+                <div class="highlight-box">
+                    <h3 class="text-xl font-bold mb-2 text-green-800">هدف فنی (این طرح چیست؟)</h3>
+                    <p class="text-lg text-gray-700">
+                        «این طرح، <strong>"سخت‌افزار" دفاعی و مهندسی</strong> منطقه است. هدف آن، ارتقاء <strong>حفاظت فیزیکی (Physical Protection)</strong> و <strong>مقاوم‌سازی سازه‌ای (Structural Hardening)</strong> دارایی‌ها برای تضمین <strong>تاب‌آوری (Resilience)</strong> در برابر تهدیدات کالبدی است.»
+                    </p>
+                </div>
+
+                <!-- Technical Justification -->
+                <div class="mt-8">
+                    <h3 class="text-xl font-bold mb-4 text-blue-800">توجیه فنی (چرا این طرح حیاتی است؟)</h3>
+                    <p class="text-gray-600 mb-4">«این طرح، پاسخ مستقیم به یافته‌های "تحلیل آسیب‌پذیری" (فصل ۴) و "تحلیل ریسک" (فصل ۵) است:»</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="justification-card" style="border-top-color: #f59e0b;"> <!-- amber-500 -->
+                            <i class="fas fa-bullseye text-4xl text-amber-500 mb-3"></i>
+                            <h4 class="text-lg font-semibold mb-2">پاسخ به آسیب‌پذیری فیزیکی</h4>
+                            <p class="text-gray-700">«اثبات کردیم که دارایی‌های حیاتی (پست برق) به دلیل «ضعف رویارویی» و «ضعف حفاظتی»، بالاترین امتیاز آسیب‌پذیری (<strong class="text-amber-600">۸.۰۰</strong>) را دارند.»</p>
+                        </div>
+                        <div class="justification-card" style="border-top-color: #ef4444;"> <!-- red-500 -->
+                            <i class="fas fa-exclamation-triangle text-4xl text-red-500 mb-3"></i>
+                            <h4 class="text-lg font-semibold mb-2">پاسخ به ریسک بحرانی</h4>
+                            <p class="text-gray-700">«اثبات کردیم که "پست برق" (ریسک <strong class="text-red-600">۶۵۲.۶</strong>) به همین دلایل، "پاشنه آشیل" (SPOF) و ریسک شماره یک منطقه است.»</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5 Pillars -->
+                <div class="mt-10">
+                    <h3 class="text-xl font-bold mb-6 text-blue-800 text-center">پنج ستون فنی امن‌سازی</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
+                        <div class="pillar-card">
+                            <i class="fas fa-building-shield" style="color: #4b5563;"></i>
+                            <span class="pillar-card-title">🏛️ ۱. استحکامات فیزیکی</span>
+                        </div>
+                        <div class="pillar-card">
+                            <i class="fas fa-person-military-pointing" style="color: #4b5563;"></i>
+                            <span class="pillar-card-title">🧱 ۲. حفاظت پیرامونی</span>
+                        </div>
+                        <div class="pillar-card">
+                            <i class="fas fa-microchip" style="color: #4b5563;"></i>
+                            <span class="pillar-card-title">💻 ۳. تاب‌آوری سایبری</span>
+                        </div>
+                        <div class="pillar-card">
+                            <i class="fas fa-cogs" style="color: #4b5563;"></i>
+                            <span class="pillar-card-title">⚙️ ۴. تاب‌آوری عملیاتی</span>
+                        </div>
+                        <div class="pillar-card">
+                            <i class="fas fa-person-shelter" style="color: #4b5563;"></i>
+                            <span class="pillar-card-title">🧑‍🤝‍🧑 ۵. تاب‌آوری انسانی</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Connector Arrow -->
+        <div class="text-center my-8">
+            <i class="fas fa-arrow-down text-4xl text-gray-400 animate-bounce"></i>
+        </div>
+
+        <!-- Slide 26: Hardening Requirements -->
+        <section id="slide-26-requirements" class="mb-8">
+            <h2 class="text-2xl md:text-3xl font-bold text-green-700 mb-6 text-center">
+                🔩 طرح عملیاتی ۳: الزامات فنی و مهندسی اَمن‌سازی
+            </h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+                <!-- Column 1: Hardening & Perimeter -->
+                <div class="flex flex-col gap-6">
+                    <!-- 1. Physical Hardening -->
+                    <div class="requirement-group">
+                        <div class="requirement-header" style="background-color: #f3f4f6;"> <!-- gray-100 -->
+                            <i class="fas fa-building-shield" style="color: #1e3a8a;"></i>
+                            <span class="requirement-header-title" style="color: #1e3a8a;">۱. الزامات استحکامات فیزیکی (Hardening)</span>
+                        </div>
+                        <div class="requirement-body">
+                            <div class="requirement-item">
+                                <strong>▪️ مراکز فرماندهی (C2):</strong>
+                                <p>الزام به ساخت اتاق‌های کنترل، مراکز داده و HSE با دیوارهای بتن مسلح (RC Walls) (حداقل ۳۰ سانتی‌متر) و درب/پنجره‌های «ضد انفجار و ترکش».</p>
+                            </div>
+                            <div class="requirement-item">
+                                <strong>▪️ پست برق (ریسک ۱):</strong>
+                                <p>ایجاد دیوارهای حائل ضد انفجار (Blast Baffle Walls) پیرامون ترانسفورماتورهای اصلی برای جلوگیری از آسیب زنجیره‌ای.</p>
+                            </div>
+                            <div class="requirement-item">
+                                <strong>▪️ مخازن و انبارها:</strong>
+                                <p>احداث خاکریزهای محافظ (Protective Berms) پیرامون مخازن آب و انبارهای مواد شیمیایی (مطابق استاندارد NFPA400).</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Perimeter Security -->
+                    <div class="requirement-group">
+                        <div class="requirement-header" style="background-color: #f3f4f6;"> <!-- gray-100 -->
+                            <i class="fas fa-person-military-pointing" style="color: #1e3a8a;"></i>
+                            <span class="requirement-header-title" style="color: #1e3a8a;">۲. الزامات حفاظت پیرامونی</span>
+                        </div>
+                        <div class="requirement-body">
+                            <div class="requirement-item">
+                                <strong>▪️ حصارکشی:</strong>
+                                <p>الزام به استفاده از حصارکشی هوشمند (Smart Fencing) (مجهز به سنسور نفوذ) و دوربین‌های حرارتی (Thermal Cameras) برای دارایی‌های ریسک بالا.</p>
+                            </div>
+                            <div class="requirement-item">
+                                <strong>▪️ کنترل دسترسی:</strong>
+                                <p>الزام به استفاده از موانع ضد خودرو (Bollards/Barriers) در ورودی‌های اصلی و مسیرهای دسترسی به تأسیسات حیاتی.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Column 2: Operational & Human Resilience -->
+                <div class="flex flex-col gap-6">
+                    <!-- 3. Operational Resilience -->
+                    <div class="requirement-group">
+                        <div class="requirement-header" style="background-color: #f3f4f6;"> <!-- gray-100 -->
+                            <i class="fas fa-cogs" style="color: #1e3a8a;"></i>
+                            <span class="requirement-header-title" style="color: #1e3a8a;">۳. الزامات تاب‌آوری عملیاتی</span>
+                        </div>
+                        <div class="requirement-body">
+                            <div class="requirement-item">
+                                <strong>▪️ خاموشی اضطراری (ESD):</strong>
+                                <p>تدوین و تست پروتکل‌های خاموشی اضطراری (ESD) برای صنایع پرخطر (شیمیایی، نساجی) با قابلیت فعال‌سازی خودکار در زمان زلزله یا نشت.</p>
+                            </div>
+                            <div class="requirement-item">
+                                <strong>▪️ افزونگی سیستم‌ها (Redundancy):</strong>
+                                <p>الزام به تأمین افزونگی (N+1) برای سیستم‌های حیاتی (مانند پمپ‌های تصفیه‌خانه) و تأمین ژنراتورهای اضطراری (مربوط به طرح BCP).</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4. Human Resilience -->
+                    <div class="requirement-group">
+                        <div class="requirement-header" style="background-color: #f3f4f6;"> <!-- gray-100 -->
+                            <i class="fas fa-person-shelter" style="color: #1e3a8a;"></i>
+                            <span class="requirement-header-title" style="color: #1e3a8a;">۴. الزامات تاب‌آوری انسانی</span>
+                        </div>
+                        <div class="requirement-body">
+                            <div class="requirement-item">
+                                <strong>▪️ پناهگاه‌سازی:</strong>
+                                <p>طراحی پناهگاه‌های استاندارد (بر اساس طرح ۷) در نزدیکی خوشه‌های صنعتی (مانند فلزی و نساجی) با تهویه مستقل و خروجی اضطراری.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final Summary -->
+        <section id="summary" class="bg-gray-800 text-white p-6 md:p-8 rounded-lg shadow-lg mt-10">
+            <h2 class="text-2xl font-bold text-right mb-6 border-b-2 border-green-400 pb-2">جمع‌بندی بخش طرح ۳ (امن‌سازی)</h2>
+            <p class="mb-4 text-gray-200">«این دو اسلاید نشان می‌دهند که طرح امن‌سازی ما یک درخواست کلی برای "مقاوم‌سازی" نیست، بلکه:»</p>
+            <ul class="list-disc list-outside pr-6 space-y-2 text-green-300">
+                <li><strong>مبتنی بر ریسک (Risk-Based)</strong> است (تمرکز بر پست برق و مراکز C2).</li>
+                <li><strong>فنی و مهندسی (Technical)</strong> است (الزامات دقیق مانند دیوار ۳۰ سانتی‌متری، Blast Walls، و موانع ضد خودرو را مشخص می‌کند).</li>
+                <li><strong>جامع (Holistic)</strong> است (هم سازه، هم پیرامون، هم عملیات و هم نیروی انسانی را پوشش می‌دهد).</li>
+            </ul>
+        </section>
+
+    </div> <!-- End max-w-6xl container -->
+
+</body>
+</html>
