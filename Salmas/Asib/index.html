@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اینفوگرافیک: تحلیل آسیب‌پذیری (فصل ۴)</title>
+    
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Load Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Load Vazirmatn Font (Clean Persian Font) -->
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Apply the Persian font */
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        /* Custom styles for the bar charts */
+        .bar-wrapper {
+            width: 100%;
+            background-color: #e5e7eb; /* gray-200 */
+            border-radius: 0.375rem; /* rounded-md */
+            overflow: hidden;
+            direction: ltr; /* Bars should fill from left-to-right */
+        }
+
+        .bar-fill {
+            height: 1.25rem; /* h-5 */
+            border-radius: 0.375rem; /* rounded-md */
+            transition: width 0.8s ease-in-out;
+            text-align: left;
+            padding-left: 0.5rem;
+            color: white;
+            font-size: 0.75rem; /* text-xs */
+            font-weight: 600;
+            line-height: 1.25rem; /* for vertical centering */
+        }
+
+        /* Custom style for the connecting quote */
+        .connector-quote {
+            border-right: 4px solid #3b82f6; /* border-blue-500 */
+            padding-right: 1rem;
+            background-color: #f9fafb; /* gray-50 */
+            border-radius: 0 0.5rem 0.5rem 0;
+        }
+
+        /* Style for the flowchart cards */
+        .flow-card {
+            background-color: #fef2f2; /* red-50 */
+            border: 2px solid #ef4444; /* red-500 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+            min-width: 200px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 p-4 md:p-8">
+
+    <div class="max-w-5xl mx-auto">
+
+        <!-- Header -->
+        <header class="text-center mb-10 p-6 bg-white rounded-lg shadow-lg">
+            <h1 class="text-3xl md:text-4xl font-bold text-blue-700">بخش سوم: تحلیل آسیب‌پذیری (فصل 3)</h1>
+            <p class="text-xl md:text-2xl font-light text-gray-600 mt-2">(کجا ضعیف هستیم؟)</p>
+        </header>
+
+        <!-- Slide 14: Methodology -->
+        <section id="slide-14" class="bg-white p-6 md:p-8 rounded-lg shadow-md mb-8">
+            
+            <!-- Logical Connection -->
+            <div class="connector-quote mb-8">
+                <p class="text-lg italic text-gray-700">
+                    «در بخش دوم، تهدیدات اصلی (پهپادی، هوایی، سایبری) را شناسایی کردیم. اکنون، ارزیابی می‌کنیم که دارایی‌های حیاتی ما چقدر در برابر همین تهدیدات ضعیف و آسیب‌پذیر هستند.»
+                </p>
+            </div>
+
+            <h2 class="text-2xl font-bold text-right mb-2 text-blue-600">متدولوژی فنی ارزیابی آسیب‌پذیری</h2>
+            <p class="text-right mb-6 text-gray-600">«آسیب‌پذیری هر دارایی در برابر هر تهدید، بر اساس ۴ معیار استاندارد پدافند غیرعامل سنجیده شده است:»</p>
+
+            <!-- 4 Columns for Methodology -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+                
+                <!-- 1. Inherent Vulnerability -->
+                <div class="bg-blue-50 p-5 rounded-lg shadow-sm border-t-4 border-blue-300 text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                    <i class="fas fa-bullseye text-4xl text-blue-500 mb-3"></i>
+                    <h3 class="text-xl font-semibold mb-2">🎯 ۱. ضعف رویارویی</h3>
+                    <p class="text-sm text-gray-700">"ذات" دارایی چقدر در برابر تهدید ضعیف است؟ (مثلاً ساختمان شیشه‌ای در برابر انفجار).</p>
+                </div>
+
+                <!-- 2. Protective Weakness -->
+                <div class="bg-blue-50 p-5 rounded-lg shadow-sm border-t-4 border-blue-300 text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                    <i class="fas fa-shield-halved text-4xl text-blue-500 mb-3"></i>
+                    <h3 class="text-xl font-semibold mb-2">🛡️ ۲. ضعف حفاظتی</h3>
+                    <p class="text-sm text-gray-700">سیستم‌های حفاظتی موجود (فنس، نگهبان، فایروال) چقدر ضعیف هستند؟</p>
+                </div>
+
+                <!-- 3. Access -->
+                <div class="bg-blue-50 p-5 rounded-lg shadow-sm border-t-4 border-blue-300 text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                    <i class="fas fa-door-open text-4xl text-blue-500 mb-3"></i>
+                    <h3 class="text-xl font-semibold mb-2">🚪 ۳. امکان دسترسی</h3>
+                    <p class="text-sm text-gray-700">دشمن چقدر راحت می‌تواند به هدف (فیزیکی یا سایبری) نزدیک شود؟</p>
+                </div>
+
+                <!-- 4. Identification -->
+                <div class="bg-blue-50 p-5 rounded-lg shadow-sm border-t-4 border-blue-300 text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                    <i class="fas fa-eye text-4xl text-blue-500 mb-3"></i>
+                    <h3 class="text-xl font-semibold mb-2">👁️ ۴. امکان شناسایی</h3>
+                    <p class="text-sm text-gray-700">دارایی چقدر راحت از دور (ماهواره، پهپاد، امضای حرارتی) قابل شناسایی است؟</p>
+                </div>
+            </div>
+
+            <!-- Process Analysis -->
+            <div class="mt-6 pt-4 border-t border-gray-200">
+                <p class="text-center text-gray-600">
+                    «ما هر ۲۸ دارایی را در برابر هر ۱۲ تهدید به‌صورت متقاطع (Cross-Analysis) تحلیل کردیم. در ادامه، یافته‌های کلیدی ارائه می‌شود.»
+                </p>
+            </div>
+        </section>
+        
+        <!-- Connector Arrow -->
+        <div class="text-center my-8">
+            <i class="fas fa-arrow-down text-4xl text-gray-400 animate-bounce"></i>
+        </div>
+
+        <!-- Slide 15: Physical Vulnerability -->
+        <section id="slide-15" class="bg-white p-6 md:p-8 rounded-lg shadow-md mb-8">
+            <h2 class="text-2xl font-bold text-right mb-6 text-red-700">یافته کلیدی (الف): آسیب‌پذیری فیزیکی بحرانی</h2>
+            <p class="text-right mb-6 text-gray-600">در برابر تهدیدات رتبه ۱ و ۲ (هوایی/پهپادی)</p>
+            
+            <!-- Bar Charts Section -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                
+                <!-- Asset: Power Post -->
+                <div class="border p-4 rounded-lg bg-gray-50">
+                    <h4 class="text-lg font-semibold text-center mb-4">⚡️ پست برق (ریسک ۱)</h4>
+                    <div class="space-y-3">
+                        <div>
+                            <span class="text-sm font-medium">در برابر پهپاد (امتیاز: ۸.۰۰)</span>
+                            <div class="bar-wrapper">
+                                <div class="bar-fill bg-red-600" style="width: 100%;">8.00</div> <!-- Scaled: 8.00/8.00 = 100% -->
+                            </div>
+                        </div>
+                        <div>
+                            <span class="text-sm font-medium">در برابر هوایی (امتیاز: ۷.۵۷)</span>
+                            <div class="bar-wrapper">
+                                <div class="bar-fill bg-red-500" style="width: 94.6%;">7.57</div> <!-- Scaled: 7.57/8.00 = 94.6% -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Asset: Admin/Bank -->
+                <div class="border p-4 rounded-lg bg-gray-50">
+                    <h4 class="text-lg font-semibold text-center mb-4">🏦 ساختمان‌های اداری و بانک (ریسک ۳)</h4>
+                    <div class="space-y-3">
+                        <div>
+                            <span class="text-sm font-medium">در برابر پهپاد (امتیاز: ۵.۴۶)</span>
+                            <div class="bar-wrapper">
+                                <div class="bar-fill bg-orange-500" style="width: 68.2%;">5.46</div> <!-- Scaled: 5.46/8.00 = 68.2% -->
+                            </div>
+                        </div>
+                        <div>
+                            <span class="text-sm font-medium">در برابر هوایی (امتیاز: ۵.۴۶)</span>
+                            <div class="bar-wrapper">
+                                <div class="bar-fill bg-orange-500" style="width: 68.2%;">5.46</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Asset: HSE Center -->
+                <div class="border p-4 rounded-lg bg-gray-50">
+                    <h4 class="text-lg font-semibold text-center mb-4">🧑‍🚒 مرکز HSE و آتش‌نشانی (ریسک ۳)</h4>
+                    <div class="space-y-3">
+                        <div>
+                            <span class="text-sm font-medium">در برابر پهپاد (امتیاز: ۴.۹۱)</span>
+                            <div class="bar-wrapper">
+                                <div class="bar-fill bg-yellow-500 text-black" style="width: 61.3%;">4.91</div> <!-- Scaled: 4.91/8.00 = 61.3% -->
+                            </div>
+                        </div>
+                        <div>
+                            <span class="text-sm font-medium">در برابر هوایی (امتیاز: ۳.۰۰)</span>
+                            <div class="bar-wrapper">
+                                <div class="bar-fill bg-yellow-400 text-black" style="width: 37.5%;">3.00</div> <!-- Scaled: 3.00/8.00 = 37.5% -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Technical Justification -->
+            <div class="bg-red-50 border-r-4 border-red-500 p-4 rounded-lg">
+                <h3 class="text-xl font-bold mb-3 text-red-800">توجیه فنی: چرا "پست برق" آسیب‌پذیرترین دارایی فیزیکی ماست؟</h3>
+                <ul class="list-decimal list-outside pr-6 space-y-2 text-gray-700">
+                    <li><strong>ضعف رویارویی:</strong> یک پست برق سنتی (AIS)، ذاتاً یک <strong class="text-red-600">"هدف نرم" (Soft Target)</strong> در برابر موج انفجار و ترکش است.</li>
+                    <li><strong>ضعف حفاظتی:</strong> معمولاً فقط یک فنس ساده دارد و فاقد هرگونه حفاظت بالستیک یا ضد انفجار است.</li>
+                    <li><strong>امکان دسترسی:</strong> یک موقعیت ثابت، غیرمتحرک و در فضای باز است که دسترسی هوایی (پهپاد) یا زمینی (خرابکاری) به آن آسان است.</li>
+                    <li><strong>امکان شناسایی:</strong> به دلیل <strong class="text-red-600">"امضای حرارتی" (Thermal Signature)</strong> ترانس‌ها و هندسه مشخص، به راحتی قابل شناسایی (Identifiable) است.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Connector Arrow -->
+        <div class="text-center my-8">
+            <i class="fas fa-arrow-down text-4xl text-gray-400 animate-bounce"></i>
+        </div>
+
+        <!-- Slide 16: Cyber Vulnerability -->
+        <section id="slide-16" class="bg-white p-6 md:p-8 rounded-lg shadow-md mb-8">
+            <h2 class="text-2xl font-bold text-right mb-6 text-indigo-700">یافته کلیدی (ب): آسیب‌پذیری سایبری بحرانی</h2>
+            <p class="text-right mb-6 text-gray-600">بالا بودن آسیب‌پذیری در دارایی‌های IT و کنترل</p>
+
+            <!-- Cyber Bar Charts -->
+            <div class="space-y-4 mb-8">
+
+                <div class="border p-4 rounded-lg bg-gray-50">
+                    <h4 class="text-base font-semibold mb-2">🏦 ساختمان‌های اداری و بانک (ریسک ۳) - (امتیاز: ۶.۴۸)</h4>
+                    <div class="bar-wrapper">
+                        <div class="bar-fill bg-indigo-600" style="width: 92.8%;">6.48</div> <!-- Scaled against 7 (approx max cyber) -->
+                    </div>
+                </div>
+
+                <div class="border p-4 rounded-lg bg-gray-50">
+                    <h4 class="text-base font-semibold mb-2">☎️ سیستم تلفن (ریسک ۳) - (امتیاز: ۶.۳۶)</h4>
+                    <div class="bar-wrapper">
+                        <div class="bar-fill bg-indigo-500" style="width: 90.8%;">6.36</div>
+                    </div>
+                </div>
+
+                <div class="border p-4 rounded-lg bg-gray-50">
+                    <h4 class="text-base font-semibold mb-2">📹 دوربین‌های مداربسته (CCTV) (ریسک ۴) - (امتیاز: ۶.۱۹)</h4>
+                    <div class="bar-wrapper">
+                        <div class="bar-fill bg-purple-500" style="width: 88.4%;">6.19</div>
+                    </div>
+                </div>
+
+                <div class="border p-4 rounded-lg bg-gray-50">
+                    <h4 class="text-base font-semibold mb-2">⚡️ پست برق (SCADA/OT) (ریسک ۱) - (امتیاز: ۴.۹۸)</h4>
+                    <div class="bar-wrapper">
+                        <div class="bar-fill bg-purple-400" style="width: 71.1%;">4.98</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Technical Justification -->
+            <div class="bg-indigo-50 border-r-4 border-indigo-500 p-4 rounded-lg">
+                <h3 class="text-xl font-bold mb-3 text-indigo-800">توجیه فنی: چرا دارایی‌های IT آسیب‌پذیرتر از OT هستند؟</h3>
+                <ul class="list-decimal list-outside pr-6 space-y-2 text-gray-700">
+                    <li><strong>سطح حمله (Attack Surface):</strong> "ساختمان‌های اداری" (سرورها، ایمیل‌ها) و "سیستم تلفن" به اینترنت متصل‌اند. اینها <strong class="text-indigo-600">"دروازه ورودی" (Gateway)</strong> اصلی برای نفوذ هکرها هستند.</li>
+                    <li><strong>آسیب‌پذیری سیستم‌های کنترلی (OT):</strong> سیستم‌های SCADA پست برق (امتیاز ۴.۹۸) ذاتاً آسیب‌پذیری کمتری ندارند، بلکه به دلیل ایزوله بودن <strong class="text-indigo-600">(Air-Gapped)</strong> از اینترنت، "امکان دسترسی" کمتری دارند.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Connector Arrow -->
+        <div class="text-center my-8">
+            <i class="fas fa-arrow-down text-4xl text-gray-400 animate-bounce"></i>
+        </div>
+
+        <!-- Slide 17: Systemic Vulnerability -->
+        <section id="slide-17" class="bg-white p-6 md:p-8 rounded-lg shadow-md mb-8">
+            <h2 class="text-2xl font-bold text-right mb-6 text-amber-700">یافته کلیدی (ج): آسیب‌پذیری سیستمی (Cascading Failure)</h2>
+            <p class="text-right mb-4 text-gray-600">«آسیب‌پذیری صرفاً در یک دارایی منفرد نیست، بلکه در <strong class="text-amber-600">"وابستگی‌های متقابل" (Interdependencies)</strong> بین دارایی‌ها نهفته است.»</p>
+            <p class="text-right mb-6 text-gray-600">«تحلیل ما نشان داد که یک شکست در دارایی‌های کلیدی، منجر به <strong class="text-amber-600">"خرابی آبشاری" (Cascading Failure)</strong> در کل سیستم می‌شود.»</p>
+
+            <!-- Cascading Failure Flowchart -->
+            <div class="mt-8">
+                <h3 class="text-xl font-bold text-center mb-6">نمودار جریان وابستگی (اثر آبشاری)</h3>
+                <div class="flex flex-col md:flex-row items-center justify-center gap-4 text-center">
+                    
+                    <!-- Box 1 -->
+                    <div class="flex-shrink-0">
+                        <div class="flow-card">
+                            <i class="fas fa-bolt text-red-600 text-2xl mb-2"></i>
+                            <p>[حمله به: ⚡️ پست برق]</p>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-2">(باعث قطعی برق می‌شود)</p>
+                    </div>
+
+                    <!-- Arrow 1 -->
+                    <div class="my-2 md:my-0">
+                        <i class="fas fa-arrow-down md:fa-arrow-left text-4xl text-red-500"></i>
+                    </div>
+
+                    <!-- Box 2 -->
+                    <div class="flex-shrink-0">
+                        <div class="flow-card">
+                            <i class="fas fa-tint text-red-600 text-2xl mb-2"></i>
+                            <p>[شکست در: 💧 تصفیه‌خانه آب]</p>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-2">(وابستگی پمپ‌ها به برق)</p>
+                    </div>
+
+                    <!-- Arrow 2 -->
+                    <div class="my-2 md:my-0">
+                        <i class="fas fa-arrow-down md:fa-arrow-left text-4xl text-red-500"></i>
+                    </div>
+
+                    <!-- Box 3 -->
+                    <div class="flex-shrink-0">
+                        <div class="flow-card">
+                            <i class="fas fa-flask text-red-600 text-2xl mb-2"></i>
+                            <p>[شکست در: 🏭 صنایع شیمیایی]</p>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-2">(وابستگی به آب و خنک‌کاری)</p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Final Summary & Transition -->
+        <section id="summary" class="bg-gray-800 text-white p-6 md:p-8 rounded-lg shadow-lg mt-10">
+            <h2 class="text-2xl font-bold text-right mb-6 border-b-2 border-green-400 pb-2">جمع‌بندی فنی بخش آسیب‌پذیری</h2>
+            <p class="mb-4">«تحلیل آسیب‌پذیری ما ۳ یافته کلیدی داشت:»</p>
+            <ul class="list-decimal list-outside pr-6 space-y-2 mb-8 text-gray-200">
+                <li><strong>آسیب‌پذیری فیزیکی بحرانی:</strong> پست برق (در برابر تهدید هوایی/پهپادی).</li>
+                <li><strong>آسیب‌پذیری سایبری بحرانی:</strong> شبکه‌های IT اداری (در برابر تهدید سایبری).</li>
+                <li><strong>آسیب‌پذیری سیستمی بحرانی:</strong> وابستگی آبشاری (Power-Water-Industry).</li>
+            </ul>
+
+            <!-- Transition to next section -->
+            <div class_id="transition" style="border-right: 4px solid #4ade80; padding-right: 1rem; background-color: #374151; border-radius: 0 0.5rem 0.5rem 0;">
+                <p class="text-lg italic text-gray-100">
+                    «اکنون که "ارزش دارایی"، "احتمال تهدید" و "میزان آسیب‌پذیری" را در اختیار داریم، آماده‌ایم تا در بخش بعدی، این سه مولفه را در هم ضرب کرده و "ماتریس نهایی ریسک" را ارائه دهیم.»
+                </p>
+            </div>
+        </section>
+
+    </div> <!-- End max-w-5xl container -->
+
+</body>
+</html>
