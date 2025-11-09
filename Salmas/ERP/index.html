@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اینفوگرافیک: طرح پاسخ اضطراری (ERP)</title>
+    
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Load Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Load Vazirmatn Font (Clean Persian Font) -->
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Apply the Persian font */
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            scroll-behavior: smooth;
+            background-color: #f4f7f6; /* A very light, neutral green/gray */
+        }
+
+        /* Custom style for the connecting quote */
+        .highlight-box {
+            border-right: 4px solid #3b82f6; /* border-blue-500 */
+            padding: 1rem 1.5rem 1rem 1rem;
+            background-color: #f0f4f8; /* A light blue/gray */
+            border-radius: 0 0.5rem 0.5rem 0;
+            margin-bottom: 1.5rem;
+        }
+
+        /* ICS Chart Styles */
+        .ics-box {
+            border: 2px solid #9ca3af; /* gray-400 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 0.75rem;
+            text-align: center;
+            background-color: #f9fafb; /* gray-50 */
+            font-weight: 600;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .ics-commander {
+            border-color: #1d4ed8; /* blue-700 */
+            background-color: #dbeafe; /* blue-100 */
+            color: #1e3a8a; /* blue-900 */
+        }
+        .ics-operations {
+            border-color: #d97706; /* amber-600 */
+            background-color: #fef3c7; /* amber-100 */
+            color: #92400e; /* amber-900 */
+        }
+        .ics-connector {
+            width: 2px;
+            background-color: #9ca3af; /* gray-400 */
+            margin: 0.5rem auto;
+            position: relative;
+        }
+
+        /* Scenario Card Styles */
+        .scenario-card {
+            background-color: #ffffff;
+            border-radius: 0.75rem; /* rounded-xl */
+            border-width: 1px;
+            border-color: #e5e7eb; /* gray-200 */
+            border-right-width: 5px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        .scenario-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        .scenario-title {
+            display: flex;
+            align-items: center;
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 700; /* font-bold */
+            margin-bottom: 0.75rem; /* mb-3 */
+        }
+        .scenario-title i {
+            margin-left: 0.75rem; /* ml-3 */
+            font-size: 1.5rem; /* text-2xl */
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-6xl mx-auto">
+
+        <!-- Header -->
+        <header class="text-center mb-10 p-6 bg-white rounded-lg shadow-lg">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800">بخش ششم: ارائه الگوی بومی و طرح‌های عملیاتی (فصل ۷)</h1>
+        </header>
+
+        <!-- Slide 21: ERP Concepts & ICS -->
+        <section id="slide-21-erp" class="mb-8">
+            <div class="p-6 md:p-8 bg-white rounded-lg shadow-md">
+                <h2 class="text-2xl md:text-3xl font-bold text-blue-700 mb-6 text-center">
+                    📢 طرح عملیاتی ۱: پاسخ به شرایط اضطراری (ERP)
+                </h2>
+                
+                <!-- Technical Goal -->
+                <div class="highlight-box">
+                    <h3 class="text-xl font-bold mb-2 text-blue-800">هدف فنی (این طرح چیست؟)</h3>
+                    <p class="text-lg text-gray-700">
+                        «این طرح، "دفترچه راهنمای عملیاتی روز حادثه" و یک چارچوب منسجم برای <strong>فرماندهی، کنترل و هماهنگی (C2)</strong> در لحظه وقوع بحران است. هدف آن، نه بازسازی، بلکه:»
+                    </p>
+                    <ul class="list-decimal list-outside pr-6 mt-2 space-y-1 text-lg">
+                        <li><strong>حفاظت از جان (Life Safety)</strong></li>
+                        <li><strong>پایدارسازی صحنه حادثه (Incident Stabilization)</strong></li>
+                    </ul>
+                </div>
+
+                <!-- ICS Structure -->
+                <div class="mt-8">
+                    <h3 class="text-xl font-bold mb-4 text-blue-800">الزام فنی ۱: استقرار ساختار فرماندهی حادثه (ICS)</h3>
+                    <p class="text-gray-600 mb-6">«برای جلوگیری از سردرگمی در فرماندهی و تداخل وظایف در لحظات اولیه بحران، استقرار یک ساختار استاندارد ICS (Incident Command System) الزامی است.»</p>
+                    
+                    <!-- ICS Chart -->
+                    <div class="w-full text-center">
+                        <!-- Commander -->
+                        <div class="ics-box ics-commander max-w-sm mx-auto">
+                            <i class="fas fa-user-crown text-2xl mb-2"></i>
+                            <strong>👑 فرمانده حادثه (IC)</strong>
+                            <span class="text-sm font-normal">(مدیر ارشد HSE یا رئیس آتش‌نشانی)</span>
+                        </div>
+                        
+                        <!-- Connecting Line -->
+                        <div class="h-6 w-0.5 bg-gray-400 mx-auto"></div>
+                        
+                        <!-- Staff Officers -->
+                        <div class="grid grid-cols-3 gap-4 max-w-2xl mx-auto">
+                            <div class="ics-box">
+                                <i class="fas fa-user-shield text-xl mb-1 text-green-600"></i>
+                                <span class="text-sm">افسر ایمنی</span>
+                            </div>
+                            <div class="ics-box">
+                                <i class="fas fa-hands-helping text-xl mb-1 text-blue-600"></i>
+                                <span class="text-sm">افسر رابط</span>
+                            </div>
+                            <div class="ics-box">
+                                <i class="fas fa-bullhorn text-xl mb-1 text-purple-600"></i>
+                                <span class="text-sm">افسر اطلاع‌رسانی</span>
+                            </div>
+                        </div>
+
+                        <!-- Connecting Line -->
+                        <div class="h-6 w-0.5 bg-gray-400 mx-auto"></div>
+                        
+                        <!-- Horizontal Line -->
+                        <div class="max-w-3xl h-0.5 bg-gray-400 mx-auto"></div>
+
+                        <!-- Connecting Lines Down -->
+                        <div class="grid grid-cols-4 gap-4 max-w-3xl mx-auto">
+                            <div class="h-6 w-0.5 bg-gray-400 mx-auto"></div>
+                            <div class="h-6 w-0.5 bg-gray-400 mx-auto"></div>
+                            <div class="h-6 w-0.5 bg-gray-400 mx-auto"></div>
+                            <div class="h-6 w-0.5 bg-gray-400 mx-auto"></div>
+                        </div>
+                        
+                        <!-- 4 Operation Arms -->
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
+                            <div class="ics-box ics-operations">
+                                <i class="fas fa-fire-extinguisher text-2xl mb-2"></i>
+                                <strong>🧑‍🚒 ۱. بخش عملیات</strong>
+                                <span class="text-sm font-normal">(ERTs, اطفاء, Hazmat)</span>
+                            </div>
+                            <div class="ics-box">
+                                <i class="fas fa-clipboard-list text-2xl mb-2 text-blue-600"></i>
+                                <strong>🧭 ۲. بخش برنامه‌ریزی</strong>
+                                <span class="text-sm font-normal">(اطلاعات، پیش‌بینی)</span>
+                            </div>
+                            <div class="ics-box">
+                                <i class="fas fa-truck text-2xl mb-2 text-green-600"></i>
+                                <strong>🚚 ۳. بخش لجستیک</strong>
+                                <span class="text-sm font-normal">(تجهیزات، ارتباطات)</span>
+                            </div>
+                            <div class="ics-box">
+                                <i class="fas fa-dollar-sign text-2xl mb-2 text-purple-600"></i>
+                                <strong>💰 ۴. بخش پشتیبانی/مالی</strong>
+                                <span class="text-sm font-normal">(هزینه‌ها، اسناد)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Key Responsibilities -->
+                <div class="mt-10">
+                    <h3 class="text-xl font-bold mb-4 text-blue-800">الزام فنی ۲: تعریف دقیق مسئولیت‌های کلیدی</h3>
+                    <ul class="space-y-4 text-gray-700">
+                        <li class="flex items-start">
+                            <i class="fas fa-fire-extinguisher text-2xl text-red-500 ml-4 mt-1"></i>
+                            <div>
+                                <strong class="text-lg text-gray-900">مرکز HSE و آتش‌نشانی:</strong>
+                                به عنوان هسته اصلی، مسئول فعال‌سازی ICS، هماهنگی تیم‌های واکنش داخلی (ERTs) و برقراری ارتباط با نهادهای برون‌سازمانی.
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-shield-alt text-2xl text-gray-700 ml-4 mt-1"></i>
+                            <div>
+                                <strong class="text-lg text-gray-900">حراست و امنیت:</strong>
+                                مسئول کنترل محیطی (Perimeter Control)، ایمن‌سازی ورودی/خروجی‌ها و مدیریت صحنه در تهدیدات امنیتی (خرابکاری/بمب‌گذاری).
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-cogs text-2xl text-blue-500 ml-4 mt-1"></i>
+                            <div>
+                                <strong class="text-lg text-gray-900">واحدهای فنی:</strong>
+                                مسئول اجرای پروتکل‌های خاموشی اضطراری (ESD) و ارائه اطلاعات فنی حیاتی (نقشه‌های تأسیسات، MSDS) به فرمانده حادثه.
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Connector Arrow -->
+        <div class="text-center my-8">
+            <i class="fas fa-arrow-down text-4xl text-gray-400 animate-bounce"></i>
+        </div>
+
+        <!-- Slide 22: ERP Protocols & Lifecycle -->
+        <section id="slide-22-protocols" class="mb-8">
+            <div class="p-6 md:p-8 bg-white rounded-lg shadow-md">
+                <h2 class="text-2xl md:text-3xl font-bold text-blue-700 mb-4 text-center">
+                    📢 طرح عملیاتی ۱: پروتکل‌های واکنش (SOPs)
+                </h2>
+                <p class="text-center text-gray-600 text-lg mb-8">
+                    «این طرح دارای "کتابچه عملیاتی" (Playbooks) مشخص برای سناریوهای پرریسک منطقه سلماس است.»
+                </p>
+
+                <!-- Scenarios Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    
+                    <!-- Scenario 1: Earthquake -->
+                    <div class="scenario-card" style="border-right-color: #f59e0b;"> <!-- amber-500 -->
+                        <h3 class="scenario-title" style="color: #b45309;">
+                            <i class="fas fa-house-damage"></i> ⛰️ سناریو ۱: زلزله
+                        </h3>
+                        <p class="text-gray-700"><strong>پروتکل:</strong> فعال‌سازی ICS ⬅️ دستور تخلیه به "نقاط تجمع امن" ⬅️ بازرسی سریع فنی از پست برق و خطوط گاز برای جلوگیری از حوادث ثانویه.</p>
+                    </div>
+
+                    <!-- Scenario 2: Fire -->
+                    <div class="scenario-card" style="border-right-color: #ef4444;"> <!-- red-500 -->
+                        <h3 class="scenario-title" style="color: #b91c1c;">
+                            <i class="fas fa-fire"></i> 🔥 سناریو ۲: آتش‌سوزی شیمیایی
+                        </h3>
+                        <p class="text-gray-700"><strong>پروتکل:</strong> فعال‌سازی ERTs ⬅️ استفاده از فوم/پودر خشک ⬅️ تخلیه کارکنان ⬅️ عملیات خنک‌سازی (Cooling) مخازن مجاور برای جلوگیری از BLEVE.</p>
+                    </div>
+
+                    <!-- Scenario 3: Hazmat -->
+                    <div class="scenario-card" style="border-right-color: #10b981;"> <!-- emerald-500 -->
+                        <h3 class="scenario-title" style="color: #047857;">
+                            <i class="fas fa-biohazard"></i> ☣️ سناریو ۳: نشت مواد Hazmat
+                        </h3>
+                        <p class="text-gray-700"><strong>پروتکل:</strong> فعال‌سازی Gas Detectors ⬅️ دستور پناهگیری (Shelter-in-Place) ⬅️ اعزام تیم Hazmat با (PPE) سطح A برای مهار نشت.</p>
+                    </div>
+
+                    <!-- Scenario 4: Security -->
+                    <div class="scenario-card" style="border-right-color: #4b5563;"> <!-- gray-600 -->
+                        <h3 class="scenario-title" style="color: #1f2937;">
+                            <i class="fas fa-user-secret"></i> 🛡️ سناریو ۴: تهدید امنیتی
+                        </h3>
+                        <p class="text-gray-700"><strong>پروتکل:</strong> اعلام کد امنیتی (Code Red) ⬅️ "قفل‌داون" (Lockdown) تأسیسات حیاتی (اتاق کنترل، سرورها) ⬅️ تخلیه ⬅️ همکاری با حراست و تیم‌های EOD.</p>
+                    </div>
+
+                    <!-- Scenario 5: Blackout -->
+                    <div class="scenario-card" style="border-right-color: #6366f1;"> <!-- indigo-500 -->
+                        <h3 class="scenario-title" style="color: #4338ca;">
+                            <i class="fas fa-plug-circle-bolt"></i> 🔌 سناریو ۵: قطعی کامل (Blackout)
+                        </h3>
+                        <p class="text-gray-700"><strong>پروتکل:</strong> فعال‌سازی فوری ژنراتورهای اضطراری ⬅️ اولویت‌بندی بازیابی برای حفظ سیستم‌های Life Safety و SCADA ⬅️ هماهنگی با تیم‌های فنی.</p>
+                    </div>
+
+                </div>
+
+                <!-- Lifecycle & Resources -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10 pt-6 border-t border-gray-200">
+                    
+                    <!-- Resources -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-4 text-blue-800">الزام فنی ۳: منابع و تجهیزات</h3>
+                        <ul class="space-y-3 text-gray-700">
+                            <li class="flex items-center">
+                                <i class="fas fa-helmet-safety text-xl text-orange-500 ml-3"></i>
+                                <span>تجهیز مرکز HSE (فوم‌پاش، لباس ضداسید، آشکارساز گاز).</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-medkit text-xl text-green-500 ml-3"></i>
+                                <span>تامین کیت‌های کمک‌های اولیه و ماسک‌های فرار در صنایع.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Training -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-4 text-blue-800">الزام فنی ۴: آموزش و تمرین (Lifecycle)</h3>
+                        <ul class="space-y-3 text-gray-700">
+                            <li class="flex items-center">
+                                <i class="fas fa-clipboard-check text-xl text-blue-500 ml-3"></i>
+                                <span>آموزش‌های الزامی اطفاء حریق و کمک‌های اولیه.</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-calendar-alt text-xl text-purple-500 ml-3"></i>
+                                <span>برگزاری رزمایش‌های شبیه‌سازی (Drills) حداقل سالانه.</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-sync-alt text-xl text-gray-500 ml-3"></i>
+                                <span>بازنگری (Review) سالانه طرح ERP پس از هر رزمایش.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Final Summary -->
+        <section id="summary" class="bg-gray-800 text-white p-6 md:p-8 rounded-lg shadow-lg mt-10">
+            <h2 class="text-2xl font-bold text-right mb-6 border-b-2 border-green-400 pb-2">جمع‌بندی بخش ERP</h2>
+            <p class="mb-4 text-gray-200">«این دو اسلاید، طرح ERP را از یک مفهوم کلی به یک "دستورالعمل عملیاتی فنی" تبدیل می‌کنند. ما نشان دادیم که:»</p>
+            <ul class="list-disc list-outside pr-6 space-y-2 text-green-300">
+                <li>ساختار فرماندهی (ICS) ما مشخص است.</li>
+                <li>مسئولیت‌ها (HSE, Security) تفکیک شده است.</li>
+                <li>سناریوهای ما (SOPs) مبتنی بر ریسک‌های واقعی خود منطقه (زلزله، شیمیایی) است.</li>
+                <li>چرخه عمر (آموزش و رزمایش) برای پویایی آن تعریف شده است.</li>
+            </ul>
+        </section>
+
+    </div> <!-- End max-w-6xl container -->
+
+</body>
+</html>
