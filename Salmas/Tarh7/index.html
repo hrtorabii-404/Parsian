@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اینفوگرافیک: طرح استفاده چندمنظوره (طرح ۷)</title>
+    
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Load Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Load Vazirmatn Font (Clean Persian Font) -->
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Apply the Persian font */
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            scroll-behavior: smooth;
+            background-color: #f8fafc; /* gray-50 */
+        }
+
+        /* Custom style for the logical connection */
+        .highlight-box {
+            border-right: 4px solid #0d9488; /* teal-600 */
+            padding: 1rem 1.5rem 1rem 1rem;
+            background-color: #f0fdfa; /* teal-50 */
+            border-radius: 0 0.5rem 0.5rem 0;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Efficiency Card */
+        .efficiency-card {
+            background-color: #ffffff;
+            border-radius: 0.75rem; /* rounded-xl */
+            border-width: 1px;
+            border-color: #e5e7eb; /* gray-200 */
+            border-top-width: 4px;
+            padding: 1rem 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        }
+
+        /* Principle Card */
+        .principle-card {
+            background-color: #f9fafb; /* gray-50 */
+            border: 1px solid #e5e7eb; /* gray-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem; /* gap-3 */
+        }
+        .principle-card i {
+            font-size: 1.5rem; /* text-2xl */
+            color: #0d9488; /* teal-600 */
+        }
+
+        /* Conversion Card (Slide 30) */
+        .conversion-card {
+            background-color: #ffffff;
+            border-radius: 0.75rem; /* rounded-xl */
+            border-width: 1px;
+            border-color: #e5e7eb; /* gray-200 */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+        .conversion-header {
+            padding: 1.5rem;
+            text-align: center;
+            background-color: #f9fafb; /* gray-50 */
+            border-bottom: 1px solid #e5e7eb; /* gray-200 */
+        }
+        .conversion-title {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 700; /* font-bold */
+            color: #1e3a8a; /* blue-900 */
+        }
+        .conversion-arrow {
+            font-size: 2rem; /* text-3xl */
+            color: #6b7280; /* gray-500 */
+            margin: 0.5rem 1rem;
+        }
+        .conversion-body {
+            padding: 1.5rem;
+        }
+        .requirement-list li {
+            position: relative;
+            padding-right: 1.5rem; /* pr-6 */
+            margin-bottom: 0.5rem; /* mb-2 */
+            font-size: 0.875rem; /* text-sm */
+        }
+        .requirement-list li::before {
+            content: "\f00c"; /* check icon */
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            color: #10b981; /* emerald-500 */
+            position: absolute;
+            right: 0;
+            top: 4px;
+        }
+        
+        /* Logistics Card (Slide 31) */
+        .logistics-card {
+            background-color: #ffffff;
+            border-radius: 0.75rem; /* rounded-xl */
+            border-width: 1px;
+            border-color: #e5e7eb; /* gray-200 */
+            border-top-width: 4px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .logistics-header {
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 700; /* font-bold */
+            margin-bottom: 1rem;
+        }
+        .usage-box {
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem; /* rounded-md */
+            margin-bottom: 0.75rem; /* mb-3 */
+            display: flex;
+            align-items: center;
+            gap: 0.5rem; /* gap-2 */
+        }
+        .usage-normal {
+            background-color: #f3f4f6; /* gray-100 */
+            color: #374151; /* gray-700 */
+        }
+        .usage-crisis {
+            background-color: #fef2f2; /* red-50 */
+            color: #991b1b; /* red-800 */
+        }
+
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-6xl mx-auto">
+
+        <!-- Header -->
+        <header class="text-center mb-10 p-6 bg-white rounded-lg shadow-lg">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800">بخش ششم: ارائه الگوی بومی و طرح‌های عملیاتی (فصل ۷)</h1>
+        </header>
+
+        <!-- Slide 29: Dual-Purpose Concepts -->
+        <section id="slide-29-concepts" class="mb-8">
+            <div class="p-6 md:p-8 bg-white rounded-lg shadow-md">
+                <h2 class="text-2xl md:text-3xl font-bold text-teal-700 mb-6 text-center">
+                    🔄 طرح عملیاتی ۷: استفاده چندمنظوره از فضاها (Dual-Purpose Design)
+                </h2>
+                
+                <!-- Technical Goal -->
+                <div class="highlight-box">
+                    <h3 class="text-xl font-bold mb-2 text-teal-800">هدف فنی (این طرح چیست؟)</h3>
+                    <p class="text-lg text-gray-700">
+                        «این طرح، "راهکار پدافند غیرعامل اقتصادی" است. هدف آن، ادغام الزامات پدافندی در فضاهای کالبدی با کاربری عادی است. ما به جای ساخت تأسیسات گران‌قیمت و بلااستفاده، از فضاهای موجود <strong>"استفاده دوگانه" (Dual-Use)</strong> می‌کنیم.»
+                    </p>
+                </div>
+
+                <!-- Technical Justification -->
+                <div class="mt-8">
+                    <h3 class="text-xl font-bold mb-4 text-blue-800">توجیه فنی (چرا این طرح ضروری است؟)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="efficiency-card" style="border-top-color: #10b981;"> <!-- emerald-500 -->
+                            <i class="fas fa-dollar-sign text-4xl text-emerald-500 mb-3"></i>
+                            <h4 class="text-lg font-semibold mb-2">۱. بهره‌وری اقتصادی</h4>
+                            <p class="text-gray-700">اجرای الزامات در <strong>"فاز طراحی و ساخت"</strong>، بسیار ارزان‌تر از "مقاوم‌سازی پس از ساخت" (Retrofitting) است.</p>
+                        </div>
+                        <div class="efficiency-card" style="border-top-color: #3b82f6;"> <!-- blue-500 -->
+                            <i class="fas fa-clock-rotate-left text-4xl text-blue-500 mb-3"></i>
+                            <h4 class="text-lg font-semibold mb-2">۲. کارایی عملیاتی</h4>
+                            <p class="text-gray-700">فضاهای روزمره (مانند پارکینگ)، در زمان بحران "آشناتر"، "در دسترس‌تر" و "آماده‌تر" هستند.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Technical Principles -->
+                <div class="mt-10">
+                    <h3 class="text-xl font-bold mb-6 text-blue-800">اصول فنی حاکم بر طراحی:</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="principle-card">
+                            <i class="fas fa-clipboard-list"></i>
+                            <div><strong>اولویت‌بندی عملکرد:</strong> تعریف دقیق کاربری عادی و کاربری اضطراری.</div>
+                        </div>
+                        <div class="principle-card">
+                            <i class="fas fa-shield-halved"></i>
+                            <div><strong>ایمنی و استحکامات:</strong> رعایت الزامات سازه‌ای (درب ضد انفجار، خروجی اضطراری).</div>
+                        </div>
+                        <div class="principle-card">
+                            <i class="fas fa-arrows-retweet"></i>
+                            <div><strong>انعطاف‌پذیری:</strong> طراحی فضا برای "تغییر کاربری سریع" (Rapid Conversion).</div>
+                        </div>
+                        <div class="principle-card">
+                            <i class="fas fa-plug-circle-check"></i>
+                            <div><strong>تجهیزات:</strong> پیش‌بینی اتصالات (برق اضطراری، تهویه، آب) برای کاربری دوم.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Connector Arrow -->
+        <div class="text-center my-8">
+            <i class="fas fa-arrow-down text-4xl text-gray-400 animate-bounce"></i>
+        </div>
+
+        <!-- Slide 30: Command & Shelter Requirements -->
+        <section id="slide-30-command-shelter" class="mb-8">
+            <h2 class="text-2xl md:text-3xl font-bold text-teal-700 mb-6 text-center">
+                🏛️ طرح عملیاتی ۷: الزامات فنی (مراکز فرماندهی و پناهگاهی)
+            </h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                <!-- 1. EOC Conversion -->
+                <div class="conversion-card">
+                    <div class="conversion-header">
+                        <div class="flex items-center justify-center">
+                            <span class="text-center">
+                                <i class="fas fa-chalkboard-user text-4xl text-gray-700"></i>
+                                <div class="text-lg font-semibold">سالن همایش</div>
+                                <div class="text-sm">(کاربری عادی)</div>
+                            </span>
+                            <i class="fas fa-arrow-left conversion-arrow"></i>
+                            <span class="text-center">
+                                <i class="fas fa-building-shield text-4xl text-blue-700"></i>
+                                <div class="text-lg font-semibold">مرکز فرماندهی (EOC)</div>
+                                <div class="text-sm">(کاربری بحران)</div>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="conversion-body">
+                        <h4 class="text-lg font-semibold text-gray-800 mb-3">آسیب‌شناسی:</h4>
+                        <p class="text-sm text-gray-600 mb-4">در زمان بحران، نیاز به یک "مرکز فرماندهی و عملیات اضطراری (EOC)" امن برای اجرای طرح ۱ (ERP) داریم.</p>
+                        <h4 class="text-lg font-semibold text-gray-800 mb-3">الزامات فنی الزامی:</h4>
+                        <ul class="requirement-list text-gray-700">
+                            <li><strong>سازه:</strong> مقاوم‌سازی مطابق طرح ۳ (دیوارهای بتنی، درب ضد ترکش).</li>
+                            <li><strong>ارتباطات:</strong> تجهیز با خطوط ارتباطی پشتیبان و امن (رادیویی/ماهواره‌ای).</li>
+                            <li><strong>برق:</strong> اتصال مستقیم به برق اضطراری (ژنراتور).</li>
+                            <li><strong>تجهیزات:</strong> زیرساخت نصب نمایشگرهای عملیاتی و وایت‌بردها.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 2. Shelter Conversion -->
+                <div class="conversion-card">
+                    <div class="conversion-header">
+                        <div class="flex items-center justify-center">
+                            <span class="text-center">
+                                <i class="fas fa-car-side text-4xl text-gray-700"></i>
+                                <div class="text-lg font-semibold">پارکینگ زیرزمینی</div>
+                                <div class="text-sm">(کاربری عادی)</div>
+                            </span>
+                            <i class="fas fa-arrow-left conversion-arrow"></i>
+                            <span class="text-center">
+                                <i class="fas fa-person-shelter text-4xl text-blue-700"></i>
+                                <div class="text-lg font-semibold">پناهگاه امن کارکنان</div>
+                                <div class="text-sm">(کاربری بحران)</div>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="conversion-body">
+                        <h4 class="text-lg font-semibold text-gray-800 mb-3">آسیب‌شناسی:</h4>
+                        <p class="text-sm text-gray-600 mb-4">نیاز به حفاظت از نیروی انسانی در برابر تهدیدات هوایی/پهپادی (تهدید رتبه ۱ و ۲).</p>
+                        <h4 class="text-lg font-semibold text-gray-800 mb-3">الزامات فنی الزامی:</h4>
+                        <ul class="requirement-list text-gray-700">
+                            <li><strong>سازه:</strong> طراحی مطابق آیین‌نامه پناهگاه‌های سازمان (مقاومت در برابر موج انفجار).</li>
+                            <li><strong>دسترسی:</strong> نصب <strong>درب‌های موج‌گیر و ضد انفجار (Blast Doors)</strong> و خروجی‌های اضطراری مجزا.</li>
+                            <li><strong>تهویه:</strong> تجهیز با سیستم <strong>تهویه و فیلتراسیون هوای مستقل (CBRN/FBR)</strong>.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Connector Arrow -->
+        <div class="text-center my-8">
+            <i class="fas fa-arrow-down text-4xl text-gray-400 animate-bounce"></i>
+        </div>
+
+        <!-- Slide 31: Logistics & Support Requirements -->
+        <section id="slide-31-logistics" class="mb-8">
+            <h2 class="text-2xl md:text-3xl font-bold text-teal-700 mb-6 text-center">
+                🚁 طرح عملیاتی ۷: الزامات فنی (لجستیک، پزشکی و پشتیبانی)
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                <!-- 3. HLZ / Assembly Point -->
+                <div class="logistics-card" style="border-top-color: #f59e0b;"> <!-- amber-500 -->
+                    <h3 class="logistics-header text-amber-800">۳. پارکینگ روباز / فضای سبز ⬅️ HLZ</h3>
+                    <div class="usage-box usage-normal">
+                        <i class="fas fa-parking"></i>
+                        <span><strong>کاربری عادی:</strong> پارکینگ روباز و فضای سبز</span>
+                    </div>
+                    <div class="usage-box usage-crisis">
+                        <i class="fas fa-helicopter"></i>
+                        <span><strong>کاربری بحران:</strong> محل تجمع / باند فرود بالگرد (HLZ)</span>
+                    </div>
+                    <h4 class="text-sm font-semibold text-gray-800 mt-4 mb-2">الزامات فنی:</h4>
+                    <ul class="list-disc list-outside pr-5 text-sm text-gray-700 space-y-1">
+                        <li>جانمایی به دور از موانع هوایی (دکل برق، دودکش).</li>
+                        <li>نورپردازی اضطراری مناسب برای فرود در شب و علامت‌گذاری.</li>
+                    </ul>
+                </div>
+
+                <!-- 4. Triage Station -->
+                <div class="logistics-card" style="border-top-color: #ef4444;"> <!-- red-500 -->
+                    <h3 class="logistics-header text-red-800">۴. مرکز HSE ⬅️ درمانگاه صحرایی</h3>
+                    <div class="usage-box usage-normal">
+                        <i class="fas fa-fire-extinguisher"></i>
+                        <span><strong>کاربری عادی:</strong> مرکز مدیریت ایمنی و آتش‌نشانی</span>
+                    </div>
+                    <div class="usage-box usage-crisis">
+                        <i class="fas fa-heart-pulse"></i>
+                        <span><strong>کاربری بحران:</strong> مرکز تریاژ (Triage) و درمانگاه صحرایی</span>
+                    </div>
+                    <h4 class="text-sm font-semibold text-gray-800 mt-4 mb-2">الزامات فنی:</h4>
+                    <ul class="list-disc list-outside pr-5 text-sm text-gray-700 space-y-1">
+                        <li>طراحی یک بخش با ورودی مجزا و فضای باز جانبی برای تریاژ.</li>
+                        <li>انبار دارویی اضطراری و اتصالات آب و برق اضطراری مستقل.</li>
+                    </ul>
+                </div>
+
+                <!-- 5. Relief Warehouse -->
+                <div class="logistics-card" style="border-top-color: #8b5cf6;"> <!-- violet-500 -->
+                    <h3 class="logistics-header text-violet-800">۵. انبارهای صنایع ⬅️ انبار امدادی</h3>
+                    <div class="usage-box usage-normal">
+                        <i class="fas fa-warehouse"></i>
+                        <span><strong>کاربری عادی:</strong> انبار مواد اولیه صنایع (مانند غذایی)</span>
+                    </div>
+                    <div class="usage-box usage-crisis">
+                        <i class="fas fa-boxes-stacked"></i>
+                        <span><strong>کاربری بحران:</strong> انبار استراتژیک اقلام امدادی و قطعات</span>
+                    </div>
+                    <h4 class="text-sm font-semibold text-gray-800 mt-4 mb-2">الزامات فنی:</h4>
+                    <ul class="list-disc list-outside pr-5 text-sm text-gray-700 space-y-1">
+                        <li>بخش‌بندی (Compartmentalization) انبار با دیوارهای ضد حریق.</li>
+                        <li>طراحی یک "اتاق امن" (Secure Room) در داخل انبار با کنترل دسترسی ویژه.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final Summary -->
+        <section id="summary" class="bg-gray-800 text-white p-6 md:p-8 rounded-lg shadow-lg mt-10">
+            <h2 class="text-2xl font-bold text-right mb-6 border-b-2 border-green-400 pb-2">جمع‌بندی بخش طرح ۷</h2>
+            <p class="mb-4 text-gray-200">«این سه اسلاید نشان می‌دهند که طرح چندمنظوره ما:»</p>
+            <ul class="list-disc list-outside pr-6 space-y-2 text-green-300">
+                <li><strong>اقتصادی (Economical)</strong> است (از هزینه‌های اضافی ساخت پناهگاه جلوگیری می‌کند).</li>
+                <li><strong>یکپارچه (Integrated)</strong> است (مستقیماً نیازهای طرح‌های ۱، ۲، ۳ و ۵ را برآورده می‌کند).</li>
+                <li><strong>فنی و مهندسی (Engineering-Based)</strong> است (الزامات دقیق سازه‌ای و مکانیکی مانند درب ضد انفجار و تهویه FBR را مشخص می‌کند).</li>
+            </ul>
+        </section>
+
+    </div> <!-- End max-w-6xl container -->
+
+</body>
+</html>
