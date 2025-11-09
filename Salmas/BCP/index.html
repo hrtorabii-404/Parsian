@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اینفوگرافیک: طرح تداوم کارکرد (BCP)</title>
+    
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Load Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Load Vazirmatn Font (Clean Persian Font) -->
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Apply the Persian font */
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            scroll-behavior: smooth;
+            background-color: #f8fafc; /* gray-50 */
+        }
+
+        /* Custom style for the logical connection */
+        .highlight-box {
+            border-right: 4px solid #f59e0b; /* amber-500 */
+            padding: 1rem 1.5rem 1rem 1rem;
+            background-color: #fffbeb; /* amber-50 */
+            border-radius: 0 0.5rem 0.5rem 0;
+            margin-bottom: 1.5rem;
+        }
+
+        /* RTO/RPO Stat Card */
+        .stat-card {
+            background-color: #ffffff;
+            border-radius: 0.75rem; /* rounded-xl */
+            border-width: 1px;
+            border-color: #e5e7eb; /* gray-200 */
+            border-bottom-width: 4px;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.07);
+        }
+        .stat-card-time {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 700; /* font-bold */
+            line-height: 1;
+        }
+
+        /* Solution Card */
+        .solution-card {
+            background-color: #ffffff;
+            border-radius: 0.75rem; /* rounded-xl */
+            border-width: 1px;
+            border-color: #e5e7eb; /* gray-200 */
+            border-top-width: 4px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .solution-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .solution-card-header i {
+            font-size: 1.875rem; /* text-3xl */
+            margin-left: 0.75rem;
+        }
+        .solution-card-title {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 700; /* font-bold */
+        }
+        .solution-card-body strong {
+            color: #1f2937; /* gray-800 */
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-6xl mx-auto">
+
+        <!-- Header -->
+        <header class="text-center mb-10 p-6 bg-white rounded-lg shadow-lg">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800">بخش ششم: ارائه الگوی بومی و طرح‌های عملیاتی (فصل ۷)</h1>
+        </header>
+
+        <!-- Slide 23: BCP Methodology -->
+        <section id="slide-23-bcp" class="mb-8">
+            <div class="p-6 md:p-8 bg-white rounded-lg shadow-md">
+                <h2 class="text-2xl md:text-3xl font-bold text-amber-600 mb-6 text-center">
+                    ⏱️ طرح عملیاتی ۲: تضمین تداوم کارکرد (BCP)
+                </h2>
+                
+                <!-- Logical Connection -->
+                <div class="highlight-box">
+                    <h3 class="text-xl font-bold mb-2 text-amber-800">اتصال منطقی (گذار از طرح ۱)</h3>
+                    <p class="text-lg text-gray-700">
+                        «طرح ۱ (ERP) بر مدیریت "لحظه بحران" (Crisis Management) متمرکز بود. طرح ۲ (BCP) بر مدیریت <strong>"بازیابی پس از بحران" (Recovery Management)</strong> تمرکز دارد. هدف آن بازگرداندن منطقه به <strong>حداقل کارکرد قابل قبول (MVO)</strong> است.»
+                    </p>
+                </div>
+
+                <!-- Methodology & BIA -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h3 class="text-lg font-bold text-gray-800 mb-2">متدولوژی فنی (استاندارد جهانی)</h3>
+                        <p class="text-gray-700">«این طرح بر اساس متدولوژی استاندارد جهانی <strong>ISO 22301</strong> (مدیریت تداوم کسب‌وکار) تدوین شده است.»</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h3 class="text-lg font-bold text-gray-800 mb-2">الزام فنی ۱: تحلیل اثرات وقفه (BIA)</h3>
+                        <p class="text-gray-700">«BIA نشان داد که وقفه در <strong>برق، آب و IT</strong> منجر به توقف کامل و آبشاری خوشه‌های صنعتی و خسارت اقتصادی غیرقابل قبول می‌شود.»</p>
+                    </div>
+                </div>
+
+                <!-- RTO/RPO Goals -->
+                <div class="mt-10">
+                    <h3 class="text-xl font-bold mb-4 text-blue-800">الزام فنی ۲: تعریف اهداف کمی بازیابی (RTO / RPO)</h3>
+                    <p class="text-gray-600 mb-4">«بر اساس BIA، ما اهداف بازیابی را "به‌صورت کمی و الزامی" برای دارایی‌های حیاتی تعریف کردیم.»</p>
+                    
+                    <h4 class="text-lg font-semibold mb-3 text-gray-700">اهداف زمان بازیابی (RTO):</h4>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                        <div class="stat-card" style="border-bottom-color: #ef4444;"> <!-- red-500 -->
+                            <i class="fas fa-bolt text-3xl text-red-500 mb-2"></i>
+                            <span class="stat-card-time">&lt; ۲ <span class="text-base font-normal">ساعت</span></span>
+                            <p class="text-sm text-gray-600">⚡️ پست برق (اضطراری)</p>
+                        </div>
+                        <div class="stat-card" style="border-bottom-color: #3b82f6;"> <!-- blue-500 -->
+                            <i class="fas fa-network-wired text-3xl text-blue-500 mb-2"></i>
+                            <span class="stat-card-time">&lt; ۳ <span class="text-base font-normal">ساعت</span></span>
+                            <p class="text-sm text-gray-600">💻 ارتباطات (IT/OT)</p>
+                        </div>
+                        <div class="stat-card" style="border-bottom-color: #f59e0b;"> <!-- amber-500 -->
+                            <i class="fas fa-fire-flame-simple text-3xl text-amber-500 mb-2"></i>
+                            <span class="stat-card-time">&lt; ۴ <span class="text-base font-normal">ساعت</span></span>
+                            <p class="text-sm text-gray-600">🔥 خطوط گاز</p>
+                        </div>
+                        <div class="stat-card" style="border-bottom-color: #06b6d4;"> <!-- cyan-500 -->
+                            <i class="fas fa-tint text-3xl text-cyan-500 mb-2"></i>
+                            <span class="stat-card-time">&lt; ۶ <span class="text-base font-normal">ساعت</span></span>
+                            <p class="text-sm text-gray-600">💧 تصفیه‌خانه آب</p>
+                        </div>
+                        <div class="stat-card" style="border-bottom-color: #8b5cf6;"> <!-- violet-500 -->
+                            <i class="fas fa-industry text-3xl text-violet-500 mb-2"></i>
+                            <span class="stat-card-time">&lt; ۲۴ <span class="text-base font-normal">ساعت</span></span>
+                            <p class="text-sm text-gray-600">🏭 صنایع کلیدی</p>
+                        </div>
+                    </div>
+                    
+                    <h4 class="text-lg font-semibold mt-6 mb-3 text-gray-700">هدف نقطه بازیابی (RPO):</h4>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                         <div class="stat-card" style="border-bottom-color: #4b5563;"> <!-- gray-600 -->
+                            <i class="fas fa-database text-3xl text-gray-600 mb-2"></i>
+                            <span class="stat-card-time">&lt; ۱ <span class="text-base font-normal">ساعت</span></span>
+                            <p class="text-sm text-gray-600">💾 داده‌های کنترلی (SCADA/CCTV)</p>
+                        </div>
+                        <div class="text-sm text-gray-500 p-4 flex items-center col-span-2 md:col-span-2 lg:col-span-4">
+                            (به این معنا که حداکثر حجم داده‌ای که مجاز به از دست دادن آن در یک بحران هستیم، ۱ ساعت است)
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transition -->
+                <div class="mt-8 pt-4 border-t border-gray-200 text-center">
+                    <p class="text-lg italic text-gray-600">«اسلاید بعدی نشان می‌دهد که چگونه "به‌صورت فنی" به این اهداف RTO/RPO دست خواهیم یافت.»</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Connector Arrow -->
+        <div class="text-center my-8">
+            <i class="fas fa-arrow-down text-4xl text-gray-400 animate-bounce"></i>
+        </div>
+
+        <!-- Slide 24: BCP Technical Solutions -->
+        <section id="slide-24-solutions" class="mb-8">
+            <div class="p-6 md:p-8 bg-white rounded-lg shadow-md">
+                <h2 class="text-2xl md:text-3xl font-bold text-amber-600 mb-6 text-center">
+                    ⚙️ طرح عملیاتی ۲: BCP (راهکارهای فنی تحقق اهداف)
+                </h2>
+
+                <!-- 6-Part Solutions Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                    <!-- 1. Water -->
+                    <div class="solution-card" style="border-top-color: #06b6d4;"> <!-- cyan-500 -->
+                        <div class="solution-card-header">
+                            <i class="fas fa-tint" style="color: #06b6d4;"></i>
+                            <span class="solution-card-title">💧 ۱. آب و فاضلاب (RTO < 6h)</span>
+                        </div>
+                        <div class="solution-card-body text-sm text-gray-700 space-y-2">
+                            <p><strong>چالش:</strong> قطعی آب در زلزله، آلودگی.</p>
+                            <p><strong>راهکار فنی:</strong> ۱. احداث مخازن ذخیره آب اضطراری (۴۸ ساعته). ۲. الزام به لوله‌های انعطاف‌پذیر ضدزلزله. ۳. تأمین ژنراتورهای دیزلی اختصاصی برای پمپ‌ها.</p>
+                        </div>
+                    </div>
+
+                    <!-- 2. Energy -->
+                    <div class="solution-card" style="border-top-color: #ef4444;"> <!-- red-500 -->
+                        <div class="solution-card-header">
+                            <i class="fas fa-bolt" style="color: #ef4444;"></i>
+                            <span class="solution-card-title">⚡️ ۲. انرژی (برق و گاز) (RTO < 2h)</span>
+                        </div>
+                        <div class="solution-card-body text-sm text-gray-700 space-y-2">
+                            <p><strong>چالش:</strong> وابستگی به پست برق (ریسک ۱)، نشت گاز.</p>
+                            <p><strong>راهکار فنی:</strong> ۱. نصب ژنراتورهای اضطراری (Backup). ۲. طراحی خط لوله گاز جایگزین (Redundant Line). ۳. نصب شیرهای قطع اضطراری خودکار.</p>
+                        </div>
+                    </div>
+
+                    <!-- 3. IT/OT -->
+                    <div class="solution-card" style="border-top-color: #3b82f6;"> <!-- blue-500 -->
+                        <div class="solution-card-header">
+                            <i class="fas fa-network-wired" style="color: #3b82f6;"></i>
+                            <span class="solution-card-title">💻 ۳. فناوری اطلاعات (RPO < 1h)</span>
+                        </div>
+                        <div class="solution-card-body text-sm text-gray-700 space-y-2">
+                            <p><strong>چالش:</strong> قطعی ارتباطات، از دست رفتن داده‌های کنترلی.</p>
+                            <p><strong>راهکار فنی:</strong> ۱. راه‌اندازی مرکز داده پشتیبان (DR Site). ۲. تأمین UPS و ژنراتور مستقل. ۳. ایجاد مسیر فیبر نوری موازی (Redundant Path).</p>
+                        </div>
+                    </div>
+
+                    <!-- 4. Transport -->
+                    <div class="solution-card" style="border-top-color: #4b5563;"> <!-- gray-600 -->
+                        <div class="solution-card-header">
+                            <i class="fas fa-truck-fast" style="color: #4b5563;"></i>
+                            <span class="solution-card-title">🚚 ۴. حمل و نقل (لجستیک)</span>
+                        </div>
+                        <div class="solution-card-body text-sm text-gray-700 space-y-2">
+                            <p><strong>چالش:</strong> مسدود شدن جاده صوفیان-سلماس (SPOF لجستیکی).</p>
+                            <p><strong>راهکار فنی:</strong> ۱. طراحی و شناسایی مسیرهای دسترسی جایگزین (Alternate Routes). ۲. قرارداد با راهداری برای اولویت بازگشایی (Priority Clearance).</p>
+                        </div>
+                    </div>
+
+                    <!-- 5. Industry -->
+                    <div class="solution-card" style="border-top-color: #8b5cf6;"> <!-- violet-500 -->
+                        <div class="solution-card-header">
+                            <i class="fas fa-industry" style="color: #8b5cf6;"></i>
+                            <span class="solution-card-title">🏭 ۵. صنعت و تولید</span>
+                        </div>
+                        <div class="solution-card-body text-sm text-gray-700 space-y-2">
+                            <p><strong>چالش:</strong> توقف خطوط تولید (شیمیایی، دارویی).</p>
+                            <p><strong>راهکار فنی:</strong> ۱. تدوین پروتکل تداوم تولید (MCP). ۲. ایجاد انبار مشترک قطعات یدکی حیاتی (Critical Spares Pooling) بین صنایع مشابه.</p>
+                        </div>
+                    </div>
+
+                    <!-- 6. Life Safety -->
+                    <div class="solution-card" style="border-top-color: #10b981;"> <!-- emerald-500 -->
+                        <div class="solution-card-header">
+                            <i class="fas fa-briefcase-medical" style="color: #10b981;"></i>
+                            <span class="solution-card-title">🧑‍⚕️ ۶. خدمات و پشتیبانی</span>
+                        </div>
+                        <div class="solution-card-body text-sm text-gray-700 space-y-2">
+                            <p><strong>چالش:</strong> کمبود ذخایر در مرکز HSE.</p>
+                            <p><strong>راهکار فنی:</strong> ۱. استقرار ذخایر استراتژیک آب، غذا و دارو در نقاط امن. ۲. قرارداد پشتیبانی (SLA) با بیمارستان سلماس برای اعزام آمبولانس.</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- BCP Lifecycle -->
+                <div class="mt-8 pt-6 border-t border-gray-200">
+                    <h3 class="text-xl font-bold mb-3 text-blue-800">الزام نهایی BCP (پویایی)</h3>
+                    <p class="text-lg text-gray-700">«این طرح باید از طریق تست، نگهداری و بهبود مستمر شامل <strong>رزمایش‌های بازیابی (Recovery Drills)</strong> و <strong>بازنگری سالانه BIA</strong>، زنده بماند.»</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final Summary -->
+        <section id="summary" class="bg-gray-800 text-white p-6 md:p-8 rounded-lg shadow-lg mt-10">
+            <h2 class="text-2xl font-bold text-right mb-6 border-b-2 border-green-400 pb-2">جمع‌بندی بخش BCP</h2>
+            <p class="mb-4 text-gray-200">«این دو اسلاید نشان می‌دهند که BCP ما یک مفهوم انتزاعی نیست، بلکه:»</p>
+            <ul class="list-disc list-outside pr-6 space-y-2 text-green-300">
+                <li>مبتنی بر استاندارد (ISO 22301) است.</li>
+                <li>داده-محور (Data-Driven) است (بر اساس تحلیل BIA).</li>
+                <li>کمی (Quantitative) است (دارای اهداف دقیق RTO و RPO).</li>
+                <li>اجرایی (Actionable) است (راهکارهای فنی دقیق مانند ژنراتور و DR Site را مشخص می‌کند).</li>
+            </ul>
+        </section>
+
+    </div> <!-- End max-w-6xl container -->
+
+</body>
+</html>
