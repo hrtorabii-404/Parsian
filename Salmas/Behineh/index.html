@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اینفوگرافیک: طرح بهینه‌سازی وابستگی‌ها (طرح ۵)</title>
+    
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Load Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Load Vazirmatn Font (Clean Persian Font) -->
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Apply the Persian font */
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            scroll-behavior: smooth;
+            background-color: #f8fafc; /* gray-50 */
+        }
+
+        /* Custom style for the logical connection */
+        .highlight-box {
+            border-right: 4px solid #8b5cf6; /* violet-500 */
+            padding: 1rem 1.5rem 1rem 1rem;
+            background-color: #f5f3ff; /* violet-50 */
+            border-radius: 0 0.5rem 0.5rem 0;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Cascading Failure Flowchart Card */
+        .flow-card {
+            border: 2px solid #ef4444; /* red-500 */
+            background-color: #fef2f2; /* red-50 */
+            color: #b91c1c; /* red-800 */
+            border-radius: 0.75rem; /* rounded-xl */
+            padding: 1rem 1.5rem;
+            text-align: center;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            min-width: 250px;
+        }
+        .flow-card.level-2 {
+            border-color: #f59e0b; /* amber-500 */
+            background-color: #fffbeb; /* amber-50 */
+            color: #b45309; /* amber-800 */
+        }
+        .flow-card.level-3 {
+            border-color: #e11d48; /* rose-600 */
+            background-color: #fef2f2; /* rose-50 */
+            color: #9f1239; /* rose-800 */
+        }
+        
+        /* Solution Card */
+        .solution-card {
+            background-color: #ffffff;
+            border-radius: 0.75rem; /* rounded-xl */
+            border-width: 1px;
+            border-color: #e5e7eb; /* gray-200 */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            overflow: hidden; /* To contain rounded corners */
+        }
+        .solution-header {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.25rem;
+            background-color: #f9fafb; /* gray-50 */
+            border-bottom: 1px solid #e5e7eb; /* gray-200 */
+        }
+        .solution-header i {
+            font-size: 1.875rem; /* text-3xl */
+            margin-left: 0.75rem;
+        }
+        .solution-header-title {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 700; /* font-bold */
+        }
+        .solution-body {
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem; /* space-y-4 */
+        }
+        .problem-box {
+            background-color: #fef2f2; /* red-50 */
+            color: #991b1b; /* red-800 */
+            padding: 0.75rem;
+            border-radius: 0.5rem; /* rounded-lg */
+            border-right: 4px solid #ef4444; /* red-500 */
+        }
+        .solution-box {
+            background-color: #f0fdf4; /* green-50 */
+            color: #14532d; /* green-900 */
+            padding: 0.75rem;
+            border-radius: 0.5rem; /* rounded-lg */
+            border-right: 4px solid #22c55e; /* green-500 */
+        }
+
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-6xl mx-auto">
+
+        <!-- Header -->
+        <header class="text-center mb-10 p-6 bg-white rounded-lg shadow-lg">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800">بخش ششم: ارائه الگوی بومی و طرح‌های عملیاتی (فصل ۷)</h1>
+        </header>
+
+        <!-- Slide 25: Dependency Concepts -->
+        <section id="slide-25-concepts" class="mb-8">
+            <div class="p-6 md:p-8 bg-white rounded-lg shadow-md">
+                <h2 class="text-2xl md:text-3xl font-bold text-violet-700 mb-6 text-center">
+                    🔗 طرح عملیاتی ۵: بهینه‌سازی وابستگی‌ها (مدیریت ریسک آبشاری)
+                </h2>
+                
+                <!-- Technical Goal -->
+                <div class="highlight-box">
+                    <h3 class="text-xl font-bold mb-2 text-violet-800">هدف فنی (این طرح چیست؟)</h3>
+                    <p class="text-lg text-gray-700">
+                        «هدف این طرح، "شناسایی" و <strong>"جداسازی" (Decoupling)</strong> وابستگی‌های متقابل بحرانی است. این طرح تضمین می‌کند که شکست یک دارایی (به‌ویژه ریسک #۱)، منجر به <strong>فروپاشی آبشاری</strong> و از کار افتادن کل منطقه نشود.»
+                    </p>
+                </div>
+
+                <!-- Technical Justification -->
+                <div class="mt-8">
+                    <h3 class="text-xl font-bold mb-4 text-blue-800">توجیه فنی (چرا این طرح حیاتی است؟)</h3>
+                    <p class="text-gray-600 mb-6">«تحلیل ما در فصل ۴ نشان داد که "پست برق"، "سیستم تلفن" و "مرکز HSE" دارای پتانسیل بالای ایجاد "خرابی آبشاری" هستند.»</p>
+                </div>
+
+                <!-- Cascading Failure Flowchart -->
+                <div>
+                    <h3 class="text-xl font-bold mb-6 text-blue-800 text-center">شناسایی آسیب‌پذیری سیستمی بحرانی (سناریوی شکست)</h3>
+                    
+                    <div class="flex flex-col items-center justify-center gap-4 text-center">
+                        
+                        <!-- Box 1: Power Post -->
+                        <div class="flow-card">
+                            <h4 class="text-lg">حمله به: ⚡️ پست برق (ریسک ۱)</h4>
+                            <small>(تهدید: پهپادی/هوایی)</small>
+                        </div>
+
+                        <!-- Arrow 1 -->
+                        <i class="fas fa-arrow-down text-4xl text-red-500 animate-pulse"></i>
+
+                        <!-- Box 2: Water Plant -->
+                        <div class="flow-card level-2">
+                            <h4 class="text-lg">شکست در: 💧 تصفیه‌خانه آب (ریسک ۴)</h4>
+                            <small>(وابستگی: پمپ‌ها و SCADA به برق وابسته‌اند)</small>
+                        </div>
+                        
+                        <!-- Arrow 2 -->
+                        <i class="fas fa-arrow-down text-4xl text-red-500 animate-pulse"></i>
+
+                        <!-- Box 3: Industry -->
+                        <div class="flow-card level-3">
+                            <h4 class="text-lg">توقف کامل: 🏭 صنایع شیمیایی/دارویی (ریسک ۲)</h4>
+                            <small>(وابستگی: به آب تصفیه‌خانه برای فرآیند و خنک‌کاری وابسته‌اند)</small>
+                        </div>
+
+                    </div>
+
+                    <!-- Conclusion -->
+                    <div class="mt-8 bg-red-100 border-r-4 border-red-500 p-4 rounded-lg">
+                        <h4 class="text-xl font-bold text-red-800">نتیجه‌گیری فنی:</h4>
+                        <p class="text-lg text-gray-700">«یک حمله موفق به یک دارایی، منجر به از کار افتادن سه سطح از دارایی‌های حیاتی (برق، آب و صنعت) می‌شود. این یک <strong>"آسیب‌پذیری سیستمی غیرقابل قبول"</strong> است.»</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Connector Arrow -->
+        <div class="text-center my-8">
+            <i class="fas fa-arrow-down text-4xl text-gray-400 animate-bounce"></i>
+        </div>
+
+        <!-- Slide 26: Decoupling Solutions -->
+        <section id="slide-26-solutions" class="mb-8">
+            <h2 class="text-2xl md:text-3xl font-bold text-violet-700 mb-6 text-center">
+                ✂️ طرح عملیاتی ۵: راهکارهای فنی "جداسازی" (Decoupling)
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- 1. Decoupling Power -->
+                <div class="solution-card">
+                    <div class="solution-header">
+                        <i class="fas fa-car-battery" style="color: #ef4444;"></i>
+                        <span class="solution-header-title" style="color: #4338ca;">۱. جداسازی وابستگی برق</span>
+                    </div>
+                    <div class="solution-body">
+                        <div class="problem-box">
+                            <strong>مشکل:</strong> وابستگی تصفیه‌خانه، HSE و ساختمان اداری به پست برق (سطح ۱).
+                        </div>
+                        <div class="solution-box">
+                            <strong>راهکار فنی (الزام):</strong>
+                            <p>«الزام به داشتن <strong>برق اضطراری مستقل (Dedicated Backup Generators)</strong> با قابلیت استارت خودکار (ATS) جهت جداسازی کامل وابستگی.»</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Decoupling Water -->
+                <div class="solution-card">
+                    <div class="solution-header">
+                        <i class="fas fa-water-ladder" style="color: #06b6d4;"></i>
+                        <span class="solution-header-title" style="color: #4338ca;">۲. جداسازی وابستگی آب</span>
+                    </div>
+                    <div class="solution-body">
+                        <div class="problem-box">
+                            <strong>مشکل:</strong> وابستگی صنایع حیاتی (شیمیایی/دارویی) به شبکه آب تصفیه‌خانه.
+                        </div>
+                        <div class="solution-box">
+                            <strong>راهکار فنی (الزام):</strong>
+                            <p>«الزام صنایع حیاتی به احداث <strong>مخازن ذخیره آب اضطراری فرآیندی</strong> با ظرفیت حداقل <strong>۷۲ ساعت</strong> کارکرد.»</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Decoupling IT -->
+                <div class="solution-card">
+                    <div class="solution-header">
+                        <i class="fas fa-server" style="color: #3b82f6;"></i>
+                        <span class="solution-header-title" style="color: #4338ca;">۳. جداسازی وابستگی IT</span>
+                    </div>
+                    <div class="solution-body">
+                        <div class="problem-box">
+                            <strong>مشکل:</strong> وابستگی تمام سیستم‌های کنترلی (SCADA) و امنیتی (CCTV) به یک "مرکز داده" واحد.
+                        </div>
+                        <div class="solution-box">
+                            <strong>راهکار فنی (الزام):</strong>
+                            <p>«ایجاد <strong>مرکز داده پشتیبان (Disaster Recovery Site - DR Site)</strong> در مکانی مجزا (با فاصله جغرافیایی ایمن) برای پشتیبان‌گیری همزمان.»</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Supply Chain Resilience -->
+                <div class="solution-card">
+                    <div class="solution-header">
+                        <i class="fas fa-truck-ramp-box" style="color: #f59e0b;"></i>
+                        <span class="solution-header-title" style="color: #4338ca;">۴. تاب‌آوری زنجیره تامین</span>
+                    </div>
+                    <div class="solution-body">
+                        <div class="problem-box">
+                            <strong>مشکل:</strong> وابستگی صنایع (ریسک ۲) به تامین‌کنندگان انحصاری (تهدید اقتصادی).
+                        </div>
+                        <div class="solution-box">
+                            <strong>راهکار فنی (الزام):</strong>
+                            <p>«۱. الزام به تعریف <strong>تامین‌کننده جایگزین (Alternate Suppliers)</strong> برای مواد اولیه حیاتی.»</p>
+                            <p>«۲. ایجاد <strong>"انبار استراتژिक قطعات یدکی" (Strategic Stockpiling)</strong> مشترک بین صنایع.»</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Final Summary -->
+        <section id="summary" class="bg-gray-800 text-white p-6 md:p-8 rounded-lg shadow-lg mt-10">
+            <h2 class="text-2xl font-bold text-right mb-6 border-b-2 border-green-400 pb-2">جمع‌بندی بخش طرح ۵</h2>
+            <p class="mb-4 text-gray-200">«این دو اسلاید نشان می‌دهند که طرح بهینه‌سازی وابستگی ما:»</p>
+            <ul class="list-disc list-outside pr-6 space-y-2 text-green-300">
+                <li><strong>مشکل‌محور (Problem-Oriented)</strong> است (سناریوی آبشاری برق-آب-صنعت را شناسایی کرده).</li>
+                <li><strong>فنی و مهندسی (Engineering-Based)</strong> است (راهکارهای مشخصی مانند ژنراتور اختصاصی، مخازن ۷۲ ساعته، و DR Site ارائه می‌دهد).</li>
+                <li><strong>جامع (Holistic)</strong> است (هم وابستگی‌های فیزیکی، سایبری و هم زنجیره تامین را پوشش می‌دهد).</li>
+            </ul>
+        </section>
+
+    </div> <!-- End max-w-6xl container -->
+
+</body>
+</html>
