@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اینفوگرافیک: طرح کاهش آسیب‌پذیری (طرح ۴)</title>
+    
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Load Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Load Vazirmatn Font (Clean Persian Font) -->
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Apply the Persian font */
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            scroll-behavior: smooth;
+            background-color: #f8fafc; /* gray-50 */
+        }
+
+        /* Custom style for the logical connection */
+        .highlight-box {
+            border-right: 4px solid #6366f1; /* indigo-500 */
+            padding: 1rem 1.5rem 1rem 1rem;
+            background-color: #eef2ff; /* indigo-50 */
+            border-radius: 0 0.5rem 0.5rem 0;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* SPOF Card */
+        .spof-card {
+            background-color: #fffbeb; /* amber-50 */
+            border: 2px solid #f59e0b; /* amber-500 */
+            border-radius: 0.75rem; /* rounded-xl */
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        /* Solution Card (Vulnerability vs Solution) */
+        .solution-card {
+            background-color: #ffffff;
+            border-radius: 0.75rem; /* rounded-xl */
+            border-width: 1px;
+            border-color: #e5e7eb; /* gray-200 */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            padding: 1.5rem;
+        }
+        
+        .before-after-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            text-align: center;
+            padding: 1rem 0;
+            gap: 1rem;
+        }
+        .before-after-box {
+            border: 2px dashed #9ca3af; /* gray-400 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            width: 40%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .before-box {
+            border-color: #ef4444; /* red-500 */
+            background-color: #fef2f2; /* red-50 */
+        }
+        .after-box {
+            border-color: #22c55e; /* green-500 */
+            background-color: #f0fdf4; /* green-50 */
+        }
+        .before-after-arrow {
+            font-size: 2.5rem; /* text-4xl */
+            color: #6b7280; /* gray-500 */
+        }
+
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-6xl mx-auto">
+
+        <!-- Header -->
+        <header class="text-center mb-10 p-6 bg-white rounded-lg shadow-lg">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800">بخش ششم: ارائه الگوی بومی و طرح‌های عملیاتی (فصل ۷)</h1>
+        </header>
+
+        <!-- Slide 27: Vulnerability Reduction Concepts -->
+        <section id="slide-27-concepts" class="mb-8">
+            <div class="p-6 md:p-8 bg-white rounded-lg shadow-md">
+                <h2 class="text-2xl md:text-3xl font-bold text-indigo-700 mb-6 text-center">
+                    📉 طرح عملیاتی ۴: کاهش آسیب‌پذیری (Vulnerability Reduction)
+                </h2>
+                
+                <!-- Technical Goal -->
+                <div class="highlight-box">
+                    <h3 class="text-xl font-bold mb-2 text-indigo-800">هدف فنی (این طرح چیست؟)</h3>
+                    <p class="text-lg text-gray-700">
+                        «این طرح، "مجموعه‌ای از راهکارهای مهندسی پدافندی" است که با استفاده از اصول استاندارد (مانند پراکندگی، اختفا، فریب)، "امتیاز آسیب‌پذیری" (Vulnerability Score) دارایی‌ها را کاهش می‌دهد. این طرح به جای مقاومت در برابر تهدید، سعی در <strong>"اجتناب" (Avoidance)</strong> از تهدید دارد.»
+                    </p>
+                </div>
+
+                <!-- Technical Justification -->
+                <div class="mt-8">
+                    <h3 class="text-xl font-bold mb-4 text-blue-800">توجیه فنی (پاسخ به کدام آسیب‌پذیری؟)</h3>
+                    <p class="text-gray-600 mb-4">«این طرح مستقیماً به آسیب‌پذیری‌های "ساختاری" و "وابستگی‌های مکانی" پاسخ می‌دهد. ما دو نقطه شکست واحد (SPOF) مکانی شناسایی کردیم:»</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="spof-card">
+                            <i class="fas fa-road-barrier text-5xl text-amber-600 mb-3"></i>
+                            <h4 class="text-lg font-semibold mb-2">وابستگی لجستیکی (SPOF)</h4>
+                            <p class="text-gray-700">کل منطقه به <strong class="text-amber-700">"جاده صوفیان-سلماس"</strong> (امتیاز ارزش ۵.۸۴۱) وابسته است.</p>
+                        </div>
+                        <div class="spof-card">
+                            <i class="fas fa-bolt-lightning text-5xl text-red-600 mb-3"></i>
+                            <h4 class="text-lg font-semibold mb-2">تمرکز انرژی (SPOF)</h4>
+                            <p class="text-gray-700">کل منطقه به <strong class="text-red-700">"پست برق"</strong> (ریسک ۶۵۲.۶) وابسته است.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Requirement 1: Dispersion -->
+                <div class="mt-10 solution-card">
+                    <h3 class="text-xl font-bold mb-4 text-blue-800">الزام فنی ۱: اصل پراکندگی/تکثیر (Dispersion/Redundancy)</h3>
+                    
+                    <div class="bg-red-50 border-r-4 border-red-500 p-4 rounded-lg mb-4">
+                        <strong class="text-red-800">آسیب‌پذیری (SPOF لجستیکی):</strong>
+                        <p class="text-gray-700">«وابستگی ۱۰۰٪ لجستیک، امدادرسانی و تخلیه اضطراری منطقه به یک شریان واحد (جاده صوفیان-سلماس).»</p>
+                    </div>
+
+                    <div class="bg-green-50 border-r-4 border-green-500 p-4 rounded-lg">
+                        <strong class="text-green-800">
+                            <i class="fas fa-route"></i> راهکار فنی الزامی (Redundancy):
+                        </strong>
+                        <p class="text-gray-700">«الزام به طراحی و احداث <strong>"مسیر دسترسی اضطراری دوم" (Secondary Emergency Access Route - SEAR)</strong> برای منطقه ویژه، جهت حصول اطمینان از افزونگی در دسترسی و خروج.»</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Connector Arrow -->
+        <div class="text-center my-8">
+            <i class="fas fa-arrow-down text-4xl text-gray-400 animate-bounce"></i>
+        </div>
+
+        <!-- Slide 28: Engineering Solutions -->
+        <section id="slide-28-solutions" class="mb-8">
+            <div class="p-6 md:p-8 bg-white rounded-lg shadow-md">
+                <h2 class="text-2xl md:text-3xl font-bold text-indigo-700 mb-6 text-center">
+                    🛡️ طرح عملیاتی ۴: راهکارهای مهندسی (پاسخ به ریسک #۱)
+                </h2>
+
+                <!-- Requirement 2: Concealment -->
+                <div class="solution-card mb-6">
+                    <h3 class="text-xl font-bold mb-4 text-blue-800">الزام فنی ۲: اصل اختفا و مقاوم‌سازی (پاسخ به ریسک #۱)</h3>
+                    
+                    <div class="bg-red-50 border-r-4 border-red-500 p-4 rounded-lg mb-4">
+                        <strong class="text-red-800">آسیب‌پذیری (ریسک #۱):</strong>
+                        <p class="text-gray-700">«"پست برق" (ریسک ۶۵۲.۶) آسیب‌پذیرترین دارایی ماست، زیرا ذاتاً یک "هدف نرم" (Soft Target) است و امتیاز "امکان شناسایی" (Identification) بسیار بالایی دارد.»</p>
+                    </div>
+
+                    <div class="bg-green-50 border-r-4 border-green-500 p-4 rounded-lg">
+                        <strong class="text-green-800">
+                            <i class="fas fa-shield-alt"></i> راهکار فنی الزامی (تغییر ماهیت):
+                        </strong>
+                        <p class="text-gray-700 mb-4">«الزام به تغییر طراحی پست برق از "پست هوایی" (AIS) به "پست گازی (GIS)" (کمپکت و سرپوشیده) و جانمایی آن در "سازه امن و مستحکم (Bunkerized Structure)"»</p>
+                        
+                        <!-- Before/After Visual -->
+                        <div class="before-after-container">
+                            <div class="before-after-box before-box">
+                                <i class="fas fa-broadcast-tower text-4xl text-red-600 mb-2"></i>
+                                <span class="font-bold">قبل: پست هوایی (AIS)</span>
+                                <span class="text-sm">آسیب‌پذیر، قابل شناسایی</span>
+                            </div>
+                            <i class="fas fa-arrow-left before-after-arrow"></i>
+                            <div class="before-after-box after-box">
+                                <i class="fas fa-building-shield text-4xl text-green-600 mb-2"></i>
+                                <span class="font-bold">بعد: پست گازی (GIS)</span>
+                                <span class="text-sm">کمپکت، مخفی، مستحکم</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Requirement 3: Burial -->
+                <div class="solution-card">
+                    <h3 class="text-xl font-bold mb-4 text-blue-800">الزام فنی ۳: اصل دفنی‌سازی (Burial)</h3>
+                    
+                    <div class="bg-red-50 border-r-4 border-red-500 p-4 rounded-lg mb-4">
+                        <strong class="text-red-800">آسیب‌پذیری:</strong>
+                        <p class="text-gray-700">«خطوط انتقال برق و گاز روباز (Aerial/Above-ground) در برابر ترکش، انفجار و خرابکاری آسیب‌پذیرند.»</p>
+                    </div>
+
+                    <div class="bg-green-50 border-r-4 border-green-500 p-4 rounded-lg">
+                        <strong class="text-green-800">
+                            <i class="fas fa-layer-group"></i> راهکار فنی الزامی (Burial):
+                        </strong>
+                        <p class="text-gray-700 mb-4">«الزام به "دفنی کردن" (Burial) خطوط اصلی انتقال برق و گاز، به‌ویژه در "نقاط پرخطر" (مانند تقاطع‌ها و ورودی‌ها).»</g>
+                        
+                        <!-- Before/After Visual -->
+                        <div class="before-after-container">
+                            <div class="before-after-box before-box">
+                                <i class="fas fa-network-wired text-4xl text-red-600 mb-2"></i>
+                                <span class="font-bold">قبل: خطوط روباز</span>
+                                <span class="text-sm">آسیب‌پذیر، دسترسی آسان</span>
+                            </div>
+                            <i class="fas fa-arrow-left before-after-arrow"></i>
+                            <div class="before-after-box after-box">
+                                <i class="fas fa-layer-group text-4xl text-green-600 mb-2"></i>
+                                <span class="font-bold">بعد: خطوط دفنی</span>
+                                <span class="text-sm">محافظت‌شده، دسترسی سخت</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Final Summary -->
+        <section id="summary" class="bg-gray-800 text-white p-6 md:p-8 rounded-lg shadow-lg mt-10">
+            <h2 class="text-2xl font-bold text-right mb-6 border-b-2 border-green-400 pb-2">جمع‌بندی بخش طرح ۴</h2>
+            <p class="mb-4 text-gray-200">«این دو اسلاید نشان می‌دهند که طرح کاهش آسیب‌پذیری ما:»</p>
+            <ul class="list-disc list-outside pr-6 space-y-2 text-green-300">
+                <li><strong>مبتنی بر اصول (Principles-Based)</strong> است (پراکندگی، اختفا، دفنی‌سازی).</li>
+                <li><strong>مشکل-محور (Problem-Oriented)</strong> است (دو SPOF اصلی، یعنی جاده و پست برق را هدف قرار می‌دهد).</li>
+                <li><strong>فنی و مهندسی (Engineering-Based)</strong> است (راهکارهای مشخصی مانند "مسیر دوم" و "GIS در Bunker" را الزام می‌کند).</li>
+            </ul>
+        </section>
+
+    </div> <!-- End max-w-6xl container -->
+
+</body>
+</html>
