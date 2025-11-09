@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اینفوگرافیک: سناریوهای پرسش و پاسخ دفاعی</title>
+    
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Load Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Load Vazirmatn Font (Clean Persian Font) -->
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Apply the Persian font */
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            scroll-behavior: smooth;
+            background-color: #f1f5f9; /* slate-100 */
+        }
+
+        /* Q&A Card Styles */
+        .challenge-card {
+            background-color: #ffffff;
+            border-radius: 0.75rem; /* rounded-xl */
+            border-width: 1px;
+            border-color: #e2e8f0; /* slate-200 */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -4px rgba(0, 0, 0, 0.07);
+            margin-bottom: 2rem; /* mb-8 */
+            overflow: hidden; /* For header color */
+        }
+        
+        .challenge-header {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background-color: #f8fafc; /* slate-50 */
+            border-bottom: 1px solid #e2e8f0; /* slate-200 */
+        }
+        .challenge-header i {
+            font-size: 1.875rem; /* text-3xl */
+            margin-left: 1rem;
+            color: #475569; /* slate-600 */
+        }
+        .challenge-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 700; /* font-bold */
+            color: #1e293b; /* slate-800 */
+        }
+
+        /* Question Box (The Attack) */
+        .question-box {
+            display: flex;
+            gap: 0.75rem; /* gap-3 */
+            background-color: #fef2f2; /* red-50 */
+            border: 1px solid #fca5a5; /* red-300 */
+            border-right-width: 4px;
+            border-right-color: #ef4444; /* red-500 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            margin: 1.5rem;
+        }
+        .question-box i {
+            font-size: 1.5rem; /* text-2xl */
+            color: #ef4444; /* red-500 */
+            margin-top: 0.25rem;
+        }
+        .question-box strong {
+            color: #b91c1c; /* red-800 */
+        }
+
+        /* Answer Box (The Defense) */
+        .answer-box {
+            display: flex;
+            gap: 0.75rem; /* gap-3 */
+            background-color: #f0fdf4; /* green-50 */
+            border: 1px solid #86efac; /* green-300 */
+            border-right-width: 4px;
+            border-right-color: #22c55e; /* green-500 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1.5rem;
+            margin: 0 1.5rem 1.5rem 1.5rem;
+        }
+        .answer-box i.fa-shield-alt {
+            font-size: 1.75rem; /* text-3xl */
+            color: #22c55e; /* green-500 */
+            margin-top: 0.25rem;
+        }
+        .answer-box strong {
+            color: #166534; /* green-800 */
+        }
+        
+        /* Custom Diagram Styles */
+        .diagram-box {
+            background-color: #f9fafb; /* gray-50 */
+            border: 1px solid #e5e7eb; /* gray-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+        .diagram-flex {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .diagram-node {
+            border: 2px solid #3b82f6; /* blue-500 */
+            background-color: #dbeafe; /* blue-100 */
+            color: #1e3a8a; /* blue-900 */
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 600;
+            position: relative;
+        }
+        .diagram-link {
+            width: 5rem; /* w-20 */
+            height: 4px;
+            background-color: #9ca3af; /* gray-400 */
+        }
+        .diagram-attack {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5rem; /* text-2xl */
+            color: #ef4444; /* red-500 */
+            font-weight: 900;
+        }
+        
+        /* IT/OT Diagram */
+        .network-box {
+            border: 3px dashed #9ca3af; /* gray-400 */
+            border-radius: 0.75rem; /* rounded-xl */
+            padding: 1rem;
+            text-align: center;
+            width: 45%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem; /* gap-2 */
+        }
+        .it-network { border-color: #ef4444; background-color: #fef2f2; }
+        .ot-network { border-color: #22c55e; background-color: #f0fdf4; }
+        .air-gap { width: 10%; text-align: center; }
+
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-6xl mx-auto">
+
+        <!-- Header -->
+        <header class="text-center mb-10 p-6 bg-white rounded-lg shadow-lg">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800">🛡️ آمادگی برای دفاع: سناریوهای پرسش و پاسخ</h1>
+            <p class="text-xl text-gray-600 mt-2">دفاع فنی از یافته‌های طرح پدافند غیرعامل</p>
+        </header>
+
+        <!-- Challenge 1: Living Document -->
+        <div class="challenge-card">
+            <div class="challenge-header">
+                <i class="fas fa-file-signature"></i>
+                <h2 class="challenge-title">چالش ۱: وابستگی به "طرح جامع پیشنهادی"</h2>
+            </div>
+            
+            <!-- Question 1 -->
+            <div class="question-box">
+                <i class="fas fa-question-circle"></i>
+                <div>
+                    <strong>سوال احتمالی داور:</strong>
+                    <p class="text-gray-700">«کل مطالعات شما بر اساس طرح جامع ۱۴۰۳ است. اگر فردا کارفرما به جای صنایع غذایی، پتروشیمی (High-Risk) احداث کند، آیا کل این گزارش بی‌اعتبار نمی‌شود؟»</p>
+                </div>
+            </div>
+            
+            <!-- Answer 1 -->
+            <div class="answer-box">
+                <i class="fas fa-shield-alt"></i>
+                <div>
+                    <strong>پاسخ فنی:</strong>
+                    <ul class="list-disc list-outside pr-5 space-y-2 text-gray-700">
+                        <li>«این سند یک <strong>"سند زنده" (Living Document)</strong> است، نه یک گزارش بایگانی‌شده.»</li>
+                        <li>«هرگونه <strong>"تغییر کاربری عمده" (Major Land-Use Change)</strong>، خصوصاً افزودن صنایع پرخطر که پروفایل تهدید و آسیب‌پذیری را تغییر می‌دهد، قانوناً مستلزم <strong>"بازنگری و اعتبارسنجی مجدد" (Re-validation)</strong> این سند پدافندی است.»</li>
+                        <li>«مدل ریسک ما برای ترکیب دارایی فعلی کالیبره شده و با تغییر دارایی، باید به‌روزرسانی شود. این انطباق، نقطه قوت طرح است نه ضعف آن.»</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Challenge 2: Node vs. Link -->
+        <div class="challenge-card">
+            <div class="challenge-header">
+                <i class="fas fa-project-diagram"></i>
+                <h2 class="challenge-title">چالش ۲: تناقض‌نما در ارزیابی ریسک (Node vs. Link)</h2>
+            </div>
+            
+            <!-- Question 2 -->
+            <div class="question-box">
+                <i class="fas fa-question-circle"></i>
+                <div>
+                    <strong>سوال احتمالی داور:</strong>
+                    <p class="text-gray-700">«در "ارزش‌گذاری دارایی"، "جاده صوفیان" (۵.۸۴۱) را ارزشمندترین دارایی معرفی کردید. اما در "ریسک نهایی"، ریسک آن بسیار پایین (کمتر از ۱۰۰) است. این یک تناقض فنی نیست؟»</p>
+                </div>
+            </div>
+            
+            <!-- Answer 2 -->
+            <div class="answer-box">
+                <i class="fas fa-shield-alt"></i>
+                <div>
+                    <strong>پاسخ فنی:</strong>
+                    <p class="text-gray-700 mb-3">«خیر، این تناقض نیست، بلکه دقیقاً "اعتبار" (Validation) مدل ماست. مدل به درستی بین "ارزش" و "ریسک" تمایز قائل شده است:»</p>
+                    <ol class="list-decimal list-outside pr-5 space-y-2 text-gray-700">
+                        <li><strong>ارزش (Value):</strong> "جاده" ارزش عملکردی بسیار بالایی دارد.</li>
+                        <li><strong>ریسک (Risk):</strong> ریسک = ارزش × تهدید × <strong class="text-red-600">آسیب‌پذیری</strong>. آسیب‌پذیری یک جاده (دارایی "پراکنده" و "خطی") بسیار پایین است. انهدام کامل آن سخت و تعمیر آن آسان است.</li>
+                        <li><strong>نتیجه‌گیری:</strong> «دشمن به "خط" (Link) حمله نمی‌کند، بلکه به "گره" (Node) حمله می‌کند.»</li>
+                    </ol>
+                    
+                    <!-- Node vs. Link Diagram -->
+                    <div class="diagram-box">
+                        <h4 class="font-semibold text-center mb-4">مدل حمله: گره در برابر خط</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="text-center p-3 bg-red-50 rounded-lg border border-red-200">
+                                <strong class="text-red-700">حمله به "خط" (Link) - ریسک پایین</strong>
+                                <div class="diagram-flex mt-3">
+                                    <div class="diagram-node">گره</div>
+                                    <div class="diagram-link relative">
+                                        <span class="diagram-attack">×</span>
+                                    </div>
+                                    <div class="diagram-node">گره</div>
+                                </div>
+                                <p class="text-sm mt-2">تعمیر آسان، انهدام سخت.</p>
+                            </div>
+                            <div class="text-center p-3 bg-green-50 rounded-lg border border-green-200">
+                                <strong class="text-green-700">حمله به "گره" (Node) - ریسک بحرانی</strong>
+                                <div class="diagram-flex mt-3">
+                                    <div class="diagram-node">گره</div>
+                                    <div class="diagram-link"></div>
+                                    <div class="diagram-node" style="background-color: #fca5a5; border-color: #ef4444;">
+                                        <span class="diagram-attack">×</span>
+                                        گره
+                                    </div>
+                                </div>
+                                <p class="text-sm mt-2">"پست برق" یک گره است: تعمیر سخت، انهدام آسان.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Challenge 3: IT vs. OT -->
+        <div class="challenge-card">
+            <div class="challenge-header">
+                <i class="fas fa-network-wired"></i>
+                <h2 class="challenge-title">چالش ۳: تفکیک ریسک سایبری (IT vs. OT)</h2>
+            </div>
+            
+            <!-- Question 3 -->
+            <div class="question-box">
+                <i class="fas fa-question-circle"></i>
+                <div>
+                    <strong>سوال احتمالی داور:</strong>
+                    <p class="text-gray-700">«شما به "ساختمان اداری" (۶.۴۸) امتیاز آسیب‌پذیری بالاتری از "پست برق" (۴.۹۸) داده‌اید. در حالی که خطر اصلی، حمله به SCADA پست برق (OT) است، نه سرور ایمیل (IT). آیا مدل شما اشتباه نکرده؟»</p>
+                </div>
+            </div>
+            
+            <!-- Answer 3 -->
+            <div class="answer-box">
+                <i class="fas fa-shield-alt"></i>
+                <div>
+                    <strong>پاسخ فنی:</strong>
+                    <p class="text-gray-700 mb-3">«مدل دقیقاً درست عمل کرده است. آسیب‌پذیری سایبری، تابعی از "امکان دسترسی" (Access) است.»</p>
+                    <ol class="list-decimal list-outside pr-5 space-y-2 text-gray-700">
+                        <li><strong>شبکه IT (اداری):</strong> به اینترنت متصل است. "سطح حمله" (Attack Surface) آن بالاست، لذا آسیب‌پذیری بالایی (۶.۴۸) دارد.</li>
+                        <li><strong>شبکه OT (صنعتی):</strong> باید ایزوله (Air-Gapped) باشد. "امکان دسترسی" پایین‌تری دارد، لذا آسیب‌پذیری کمتری (۴.۹۸) می‌گیرد.</li>
+                        <li><strong>سناریوی حمله (Vector):</strong> «خطرناک‌ترین سناریو، نفوذ به IT (آسیب‌پذیری بالا) و سپس "حرکت جانبی" (Lateral Movement) از IT به OT است.»</li>
+                        <li><strong>پاسخ ما (طرح ۸):</strong> «به همین دلیل، حیاتی‌ترین الزام در طرح ۸، "جداسازی مطلق" (Air-Gapping) بین IT و OT است تا این مسیر حمله مسدود شود.»</li>
+                    </ol>
+                    
+                    <!-- IT/OT Segregation Diagram -->
+                    <div class="diagram-box mt-4">
+                        <h4 class="font-semibold text-center mb-4">سناریوی حمله: حرکت جانبی (Lateral Movement)</h4>
+                        <div class="diagram-flex items-stretch">
+                            <!-- IT Network (Unsafe) -->
+                            <div class="network-box it-network">
+                                <i class="fas fa-globe text-4xl text-red-600"></i>
+                                <strong class="text-red-700">شبکه IT (اداری)</strong>
+                                <span class="text-sm">اینترنت / ایمیل</span>
+                                <span class="text-xs font-bold text-red-600">آسیب‌پذیری: ۶.۴۸ (بالا)</span>
+                            </div>
+                            
+                            <!-- Pivot / Attack -->
+                            <div class="air-gap flex flex-col justify-center">
+                                <i class="fas fa-arrow-left text-3xl text-red-600 animate-pulse"></i>
+                                <span class="text-xs font-bold text-red-600 text-center">پرش (Pivot)</span>
+                                <i class="fas fa-fire-wall text-5xl text-gray-400 mt-2"></i>
+                            </div>
+                            
+                            <!-- OT Network (Safe) -->
+                            <div class="network-box ot-network">
+                                <i class="fas fa-industry text-4xl text-green-600"></i>
+                                <strong class="text-green-700">شبکه OT (صنعتی)</strong>
+                                <span class="text-sm">SCADA / PLC</span>
+                                <span class="text-xs font-bold text-green-600">آسیب‌پذیری: ۴.۹۸ (پایین)</span>
+                            </div>
+                        </div>
+                        <p class="text-center text-sm mt-3 font-semibold text-blue-700">راهکار (طرح ۸): "جداسازی مطلق" (Air-Gap) این دو شبکه برای مسدود کردن مسیر حمله.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Challenge 4 & 5: Insider & Economic -->
+        <div class="challenge-card">
+            <div class="challenge-header">
+                <i class="fas fa-users-slash"></i>
+                <h2 class="challenge-title">چالش ۴ و ۵: تهدیدات انسانی و اقتصادی</h2>
+            </div>
+            
+            <!-- Question 4 -->
+            <div class="question-box">
+                <i class="fas fa-question-circle"></i>
+                <div>
+                    <strong>سوال ۴ (تهدید انسانی):</strong>
+                    <p class="text-gray-700">«گزارش شما در مورد "عوامل نفوذی" یا "کارکنان ناراضی" (خرابکاری) راهکار فنی مشخصی ندارد.»</p>
+                </div>
+            </div>
+            
+            <!-- Answer 4 -->
+            <div class="answer-box">
+                <i class="fas fa-shield-alt"></i>
+                <div>
+                    <strong>پاسخ فنی:</strong>
+                    <p class="text-gray-700 mb-2">«بخش اصلی مقابله "فرایندی" است و نیازمند یکپارچگی با پروتکل‌های "حراست" و "منابع انسانی" (HR) است. اما راهکارهای فنی ما (طرح ۳ و ۸) بخش کالبدی را پوشش می‌دهند:»</p>
+                    <ul class="list-disc list-outside pr-5 space-y-1 text-gray-700">
+                        <li>کنترل دسترسی هوشمند و دوربین‌های مداربسته.</li>
+                        <li>جداسازی شبکه و مسدودسازی USB (مقابله با نفوذی سایبری).</li>
+                        <li>اصل "حداقل دسترسی لازم" (Least Privilege).</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Question 5 -->
+            <div class="question-box">
+                <i class="fas fa-question-circle"></i>
+                <div>
+                    <strong>سوال ۵ (تهدید اقتصادی):</strong>
+                    <p class="text-gray-700">«تهدید رتبه ۴ "اقتصادی" است. برنامه عملیاتی شما برای تحریم زنجیره تامین چیست؟»</p>
+                </div>
+            </div>
+
+            <!-- Answer 5 -->
+            <div class="answer-box">
+                <i class="fas fa-shield-alt"></i>
+                <div>
+                    <strong>پاسخ فنی (از طرح ۵ - بهینه‌سازی وابستگی‌ها):</strong>
+                    <p class="text-gray-700 mb-2">«طرح ما دو پاسخ عملیاتی مشخص در "طرح ۵" دارد:»</p>
+                    <ul class="list-disc list-outside pr-5 space-y-2 text-gray-700">
+                        <li><strong><i class="fas fa-route ml-2 text-blue-600"></i>۱. تنوع‌بخشی اجباری:</strong> الزام صنایع به تعریف حداقل "دو تامین‌کننده جایگزین" (Alternate Approved Suppliers) برای مواد اولیه حیاتی.</li>
+                        <li><strong><i class="fas fa-warehouse ml-2 text-blue-600"></i>۲. ذخیره‌سازی استراتژیک:</strong> ایجاد "انبار استراتژیک قطعات یدکی" (Strategic Stockpiling) تحریمی و مشترک بین صنایع (در انبارهای امن طرح ۷).</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Challenge 6: Cyber Risk Contradiction 2 -->
+        <div class="challenge-card">
+            <div class="challenge-header">
+                <i class="fas fa-gateway"></i>
+                <h2 class="challenge-title">چالش ۶: تناقض ریسک سایبری (دارایی سطح ۳ علیه تهدید سطح ۳)</h2>
+            </div>
+            
+            <!-- Question 6 -->
+            <div class="question-box">
+                <i class="fas fa-question-circle"></i>
+                <div>
+                    <strong>سوال احتمالی داور:</strong>
+                    <p class="text-gray-700">«در "ارزش‌گذاری"، دارایی‌های IT (دوربین، کابل) را "سطح ۳" (کم‌اهمیت) ارزیابی کرده‌اید. اما "تهدید سایبری" را "سطح ۳" (پراهمیت) دانسته‌اید. چطور یک تهدید پراهمیت به یک دارایی کم‌اهمیت حمله می‌کند؟»</p>
+                </div>
+            </div>
+            
+            <!-- Answer 6 -->
+            <div class="answer-box">
+                <i class="fas fa-shield-alt"></i>
+                <div>
+                    <strong>پاسخ فنی:</strong>
+                    <p class="text-gray-700 mb-3">«این یک تناقض نیست، بلکه دقیق‌ترین یافته‌ی مدل ماست و نشان می‌دهد تهدیدات مدرن چگونه عمل می‌کنند.»</p>
+                    <ol class="list-decimal list-outside pr-5 space-y-2 text-gray-700">
+                        <li><strong>تفکیک ارزش از آسیب‌پذیری:</strong> "ارزش ذاتی اقتصادی" یک "دوربین" (سطح ۳) ارزان است. اما یک هکر به "ارزش اقتصادی" آن حمله نمی‌کند، بلکه به "داده" و "دسترسی" آن حمله می‌کند.</li>
+                        <li><strong>دارایی ارزان، دروازه گران‌قیمت:</strong> «در پدافند سایبری، دارایی‌های سطح ۳ (مانند دوربین CCTV) به عنوان "دروازه" (Gateway) یا "نقطه ورود" (Entry Point) برای حمله به دارایی‌های سطح ۱ (SCADA پست برق) عمل می‌کنند.»</li>
+                    </ol>
+                    
+                    <!-- Gateway Attack Diagram -->
+                    <div class="diagram-box mt-4">
+                        <h4 class="font-semibold text-center mb-4">مدل حمله: استفاده از "دروازه" (Gateway Attack)</h4>
+                        <div class="flex flex-col md:flex-row items-center justify-center gap-2 text-center">
+                            
+                            <div class="p-3 bg-yellow-50 border border-yellow-300 rounded-lg">
+                                <i class="fas fa-camera-cctv text-3xl text-yellow-600"></i>
+                                <div class="font-bold">دارایی سطح ۳ (CCTV)</div>
+                                <div class="text-sm">ارزش ذاتی: پایین</div>
+                                <div class="text-sm font-bold text-red-600">آسیب‌پذیری: بالا</div>
+                            </div>
+                            
+                            <i class="fas fa-arrow-left text-3xl text-red-600 p-2"></i>
+                            
+                            <div class="p-3 bg-red-50 border border-red-300 rounded-lg">
+                                <i class="fas fa-door-open text-3xl text-red-600"></i>
+                                <div class="font-bold">نقطه ورود (Gateway)</div>
+                                <div class="text-sm">تهدید سایبری (سطح ۳)</div>
+                                <div class="text-sm">از این نقطه استفاده می‌کند...</div>
+                            </div>
+                            
+                            <i class="fas fa-arrow-left text-3xl text-red-600 p-2"></i>
+                            
+                            <div class="p-3 bg-green-50 border border-green-300 rounded-lg">
+                                <i class="fas fa-server text-3xl text-green-600"></i>
+                                <div class="font-bold">دارایی سطح ۱ (SCADA)</div>
+                                <div class="text-sm">ارزش ذاتی: بحرانی</div>
+                                <div class="text-sm">... تا به این دارایی حمله کند.</div>
+                            </div>
+                        </div>
+                        <p class="text-center text-sm mt-3 font-semibold text-blue-700">راهکار (طرح ۸): "جداسازی شبکه" (Air-Gapping) دوربین‌ها از SCADA.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Challenge 7: Natural Threats -->
+        <div class="challenge-card">
+            <div class="challenge-header">
+                <i class="fas fa-house-damage"></i>
+                <h2 class="challenge-title">چالش ۷: کم‌اهمیت دیدن تهدیدات طبیعی (زلزله)</h2>
+            </div>
+            
+            <!-- Question 7 -->
+            <div class="question-box">
+                <i class="fas fa-question-circle"></i>
+                <div>
+                    <strong>سوال احتمالی داور:</strong>
+                    <p class="text-gray-700">«شما به گسل سلماس اشاره کرده‌اید، اما تمرکز ۹۰٪ طرح‌ها بر تهدیدات انسان‌ساخت (پهپادی، سایبری) است. آیا تهدیدات طبیعی را نادیده نگرفته‌اید؟»</p>
+                </div>
+            </div>
+            
+            <!-- Answer 7 -->
+            <div class="answer-box">
+                <i class="fas fa-shield-alt"></i>
+                <div>
+                    <strong>پاسخ فنی:</strong>
+                    <p class="text-gray-700 mb-3">«خیر، نادیده گرفته نشده‌اند، بلکه در طرح‌ها "ادغام" (Integrated) شده‌اند. "پیامد" (Impact) زلزله (تخریب سازه) با پیامد تهدید "هوایی" (تخریب سازه) همپوشانی دارد.»</p>
+                    
+                    <!-- Integration Diagram -->
+                    <div class="diagram-box mt-4">
+                        <h4 class="font-semibold text-center mb-4">همپوشانی راهکارها در برابر تهدیدات</h4>
+                        <div class="flex items-start justify-center gap-4">
+                            <!-- Threats -->
+                            <div class="flex flex-col gap-4 w-1/3 text-center">
+                                <div class="p-3 bg-red-50 border border-red-300 rounded-lg">
+                                    <i class="fas fa-person-drone text-3xl text-red-600"></i>
+                                    <div class="font-bold">تهدید انسان‌ساخت</div>
+                                    <div class="text-sm">(پهپادی / انفجار)</div>
+                                </div>
+                                <div class="p-3 bg-yellow-50 border border-yellow-300 rounded-lg">
+                                    <i class="fas fa-house-damage text-3xl text-yellow-600"></i>
+                                    <div class="font-bold">تهدید طبیعی</div>
+                                    <div class="text-sm">(زلزله)</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Arrows -->
+                            <div class="flex flex-col justify-around h-32 pt-6">
+                                <i class="fas fa-arrow-left text-2xl text-gray-500"></i>
+                                <i class="fas fa-arrow-left text-2xl text-gray-500"></i>
+                            </div>
+                            
+                            <!-- Solutions -->
+                            <div class="w-2/3 bg-green-50 border border-green-300 rounded-lg p-3">
+                                <h5 class="font-bold text-green-800 text-center">راهکارهای مشترک (ادغام‌شده)</h5>
+                                <ul class="list-disc list-outside pr-5 space-y-2 text-sm text-gray-700 mt-2">
+                                    <li><strong>طرح ۱ (ERP):</strong> سناریوی "زلزله" و "آتش‌سوزی ثانویه" به صراحت ذکر شده.</li>
+                                    <li><strong>طرح ۲ (BCP):</strong> الزام به "لوله‌های انعطاف‌پذیر ضدزلزله".</li>
+                                    <li><strong>طرح ۴ (کاهش آسیب):</strong> الزام به "مقاوم‌سازی سازه‌ای" و "GIS در Bunker".</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Challenge 8: Governance -->
+        <div class="challenge-card">
+            <div class="challenge-header">
+                <i class="fas fa-gavel"></i>
+                <h2 class="challenge-title">چالش ۸: مدل حاکمیتی و اجرایی طرح‌ها (دولتی vs. خصوصی)</h2>
+            </div>
+            
+            <!-- Question 8 -->
+            <div class="question-box">
+                <i class="fas fa-question-circle"></i>
+                <div>
+                    <strong>سوال احتمالی داور:</strong>
+                    <p class="text-gray-700">«مدل "حاکمیتی" (Governance) شما برای "الزام" شرکت‌های خصوصی به اجرای این طرح‌های پرهزینه چیست؟ چه کسی مسئول است؟»</p>
+                </div>
+            </div>
+            
+            <!-- Answer 8 -->
+            <div class="answer-box">
+                <i class="fas fa-shield-alt"></i>
+                <div>
+                    <strong>پاسخ فنی (تفکیک مسئولیت‌ها بر اساس لایه‌های دفاعی):</strong>
+                    
+                    <!-- Layered Governance Model -->
+                    <div class="space-y-4 mt-3">
+                        <!-- Layer 1: Govt -->
+                        <div class="flex items-start gap-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                            <i class="fas fa-building-user text-4xl text-blue-600 w-1/12"></i>
+                            <div class="w-11/12">
+                                <strong class="text-blue-800">۱. مسئولیت سازمان منطقه ویژه (لایه‌های ۱ و ۲ - محیطی):</strong>
+                                <p class="text-sm text-gray-700">مسئول اجرای طرح‌های "محیطی" و "زیرساخت مشترک".</p>
+                                <p class="text-xs text-gray-600"><strong>مثال:</strong> حفاظت پیرامونی، حصار هوشمند، مسیر اضطراری دوم (طرح ۴)، SOC متمرکز (طرح ۸).</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Layer 2: Private -->
+                        <div class="flex items-start gap-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                            <i class="fas fa-industry text-4xl text-green-600 w-1/12"></i>
+                            <div class="w-11/12">
+                                <strong class="text-green-800">۲. مسئولیت شرکت‌های خصوصی (لایه ۳ - داخلی):</strong>
+                                <p class="text-sm text-gray-700">الزام در "قرارداد واگذاری" به اجرای الزامات پدافندی "داخلی".</p>
+                                <p class="text-xs text-gray-600"><strong>مثال:</strong> اجرای پروتکل Hazmat (طرح ۱)، ذخیره آب ۷۲ ساعته (طرح ۵)، ایزوله‌سازی شبکه OT خود (طرح ۸).</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Layer 3: Oversight -->
+                        <div class="flex items-start gap-4 p-3 bg-gray-100 border border-gray-300 rounded-lg">
+                            <i class="fas fa-clipboard-check text-4xl text-gray-600 w-1/12"></i>
+                            <div class="w-11/12">
+                                <strong class="text-gray-800">۳. نقش حاکمیتی (نظارت و ممیزی):</strong>
+                                <p class="text-sm text-gray-700">نقش سازمان پدافند و مدیریت منطقه ویژه، "نظارتی" و "ممیزی" (Audit) است.</p>
+                                <p class="text-xs text-gray-600"><strong>مثال:</strong> صدور "مجوز بهره‌برداری" نهایی منوط به تایید اجرای الزامات پدافندی لایه ۳ است.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Challenge 9: Insider Threat Low Score -->
+        <div class="challenge-card">
+            <div class="challenge-header">
+                <i class="fas fa-calculator-simple"></i>
+                <h2 class="challenge-title">چالش ۹: ارزیابی پایین تهدیدات خرابکاری و نفوذی</h2>
+            </div>
+            
+            <!-- Question 9 -->
+            <div class="question-box">
+                <i class="fas fa-question-circle"></i>
+                <div>
+                    <strong>سوال احتمالی داور:</strong>
+                    <p class="text-gray-700">«در ارزیابی تهدید (جدول ۳-۳۸)، تهدید "خرابکاری" (۴.۱۵) بسیار پایین‌تر از "پهپادی" (۶.۱۲) رتبه‌بندی شده. آیا ریسک عامل نفوذی را "دست‌کم" (Underestimate) نگرفته‌اید؟»</p>
+                </div>
+            </div>
+            
+            <!-- Answer 9 -->
+            <div class="answer-box">
+                <i class="fas fa-shield-alt"></i>
+                <div>
+                    <strong>پاسخ فنی:</strong>
+                    <p class="text-gray-700 mb-3">«سوال دقیقی است. این امتیاز پایین، به دلیل "متدولوژی" ارزیابی است، نه کم‌اهمیت بودن تهدید. ما این ریسک را در "راهکارها" جبران کرده‌ایم.»</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Part 1: Methodology -->
+                        <div class="p-3 bg-yellow-50 border border-yellow-300 rounded-lg">
+                            <h5 class="font-bold text-yellow-800"><i class="fas fa-calculator ml-2"></i>۱. توجیه متدولوژی (امتیازدهی)</h5>
+                            <p class="text-sm text-gray-700 mt-2">مدل ۵ معیاره ما شامل "سابقه تهدید" و "توانایی دشمن" است. تهدید "پهپادی" یک تهدید "اثبات‌شده" و با "توانایی بالا" است (امتیاز بالا). تهدید "خرابکاری" معمولاً "پراکنده" و با "توانایی فنی پایین‌تر" ارزیابی می‌شود (امتیاز پایین).</p>
+                        </div>
+                        <!-- Part 2: Solution Compensation -->
+                        <div class="p-3 bg-green-100 border border-green-300 rounded-lg">
+                            <h5 class="font-bold text-green-800"><i class="fas fa-tools ml-2"></i>۲. پوشش در راهکارها (جبران مدل)</h5>
+                            <p class="text-sm text-gray-700 mt-2">علیرغم امتیاز پایین‌تر "تهدید"، ما در "راهکارها" (طرح ۳ و ۸) به آن پاسخ جدی داده‌ایم، زیرا "آسیب‌پذیری" ما در برابر آن بالاست:</p>
+                            <ul class="list-disc list-outside pr-5 space-y-1 text-xs text-gray-700 mt-2">
+                                <li><strong>پاسخ سایبری (طرح ۸):</strong> الزام به MFA، اصل "حداقل دسترسی" و مسدودسازی USB.</li>
+                                <li><strong>پاسخ فیزیکی (طرح ۳):</strong> کنترل دسترسی هوشمند و CCTV.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div> <!-- End max-w-6xl container -->
+
+</body>
+</html>
