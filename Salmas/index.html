@@ -592,6 +592,172 @@
 </body>
 </html>
 
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محدوده منطقه ویژه اقتصادی سلماس</title>
+    <!-- فونت وزیر از CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css">
+    <!-- Leaflet CSS از CDN جدید (jsDelivr) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body {
+            font-family: 'Vazir', sans-serif;
+        }
+        .map-wrapper {
+            max-width: 800px;
+            margin: 20px auto;
+            text-align: center;
+        }
+        .map-title {
+            font-family: 'Vazir', sans-serif;
+            font-weight: bold;
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .switch-buttons {
+            margin-bottom: 15px;
+        }
+        .switch-buttons button {
+            font-family: 'Vazir', sans-serif;
+            background: #007cba;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            margin: 0 5px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+        }
+        .switch-buttons button:hover {
+            background: #005a87;
+        }
+        .switch-buttons button.active {
+            background: #f0f0f0;
+            color: #333;
+        }
+        .map-container {
+            height: 450px; /* ارتفاع ثابت */
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+        }
+        .google-map {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        .osm-map {
+            width: 100%;
+            height: 100%;
+        }
+        /* پنهان کردن یکی به طور پیش‌فرض */
+        .osm-container {
+            display: none;
+        }
+        /* attribution OSM با فونت Vazir */
+        .leaflet-control-attribution {
+            font-family: 'Vazir', sans-serif;
+            font-size: 12px;
+        }
+        /* popup مارکر با Vazir */
+        .leaflet-popup-content-wrapper {
+            font-family: 'Vazir', sans-serif;
+        }
+        /* پنهان کردن info window گوگل (CSS) */
+        .google-map ~ .gm-style-iw,
+        .google-map .gm-style-iw {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="map-wrapper">
+        <h1 class="map-title">محدوده منطقه ویژه اقتصادی سلماس</h1>
+        <div class="switch-buttons">
+            <button onclick="showGoogle()" class="active">نقشه گوگل</button>
+            <button onclick="showOSM()">OpenStreetMap</button>
+        </div>
+        
+        <!-- گوگل مپس (pb ساده بدون info window) -->
+        <div id="google-container" class="map-container">
+            <iframe 
+                src="https://maps.google.com/maps?q=38.24275,44.89978&z=15&output=embed" 
+                class="google-map" 
+                allowfullscreen="" 
+                loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+        </div>
+        
+        <!-- OpenStreetMap -->
+        <div id="osm-container" class="osm-container map-container">
+            <div id="osm-map" class="osm-map"></div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS از CDN جدید (jsDelivr) -->
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // مختصات دقیق (همسان با گوگل)
+        var lat = 38.24275;
+        var lon = 44.89978;
+
+        // ایجاد نقشه OSM با مرکز و مارکر دقیق (زوم برای تطبیق ~89km)
+        var map = L.map('osm-map').setView([lat, lon], 11);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // اضافه کردن مارکر با popup
+        L.marker([lat, lon]).addTo(map).bindPopup('موقعیت خاص!');
+
+        // تابع سوئیچ به گوگل
+        function showGoogle() {
+            document.getElementById('google-container').style.display = 'block';
+            document.getElementById('osm-container').style.display = 'none';
+            document.querySelector('button[onclick="showGoogle()"]').classList.add('active');
+            document.querySelector('button[onclick="showOSM()"]').classList.remove('active');
+        }
+
+        // تابع سوئیچ به OSM
+        function showOSM() {
+            document.getElementById('google-container').style.display = 'none';
+            document.getElementById('osm-container').style.display = 'block';
+            document.querySelector('button[onclick="showGoogle()"]').classList.remove('active');
+            document.querySelector('button[onclick="showOSM()"]').classList.add('active');
+
+            // بروزرسانی اندازه نقشه بعد از نمایش
+            map.invalidateSize();
+        }
+
+        // تابع پنهان کردن info window گوگل (JS)
+        function hideGoogleInfoWindow(iframe) {
+            try {
+                const doc = iframe.contentDocument || iframe.contentWindow.document;
+                const infoWindows = doc.querySelectorAll('.gm-style-iw, [class*="info-window"], [class*="bubble"]');
+                infoWindows.forEach(el => el.style.display = 'none');
+                // اگر باز شد، listener اضافه کن
+                const observer = new MutationObserver(() => {
+                    infoWindows.forEach(el => el.style.display = 'none');
+                });
+                observer.observe(doc.body, { childList: true, subtree: true });
+            } catch (e) {
+                console.log('Cross-origin block - CSS handles it');
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+
+        
 </section>
 
 
